@@ -7,6 +7,7 @@
 #include <LoRa.h>
 
 #include "settings.h"
+#include "display.h"
 
 WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
@@ -16,20 +17,26 @@ APRS_IS aprs_is(USER, PASS, TOOL, VERS);
 void setup()
 {
 	Serial.begin(115200);
+	init_display();
+	
 	delay(500);
 	Serial.println("[INFO] LoRa APRS iGate by OE5BPA (Peter Buchegger)");
+	show_display_2("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", 2000);
 
 	WiFiMulti.addAP(WIFI_NAME, WIFI_KEY);
 	Serial.print("[INFO] Waiting for WiFi");
+	show_display_1("INFO", "Waiting for WiFi");
 	while(WiFiMulti.run() != WL_CONNECTED)
 	{
 		Serial.print(".");
+		show_display_2("INFO", "Waiting for WiFi", "....");
 		delay(500);
 	}
 	Serial.println("");
 	Serial.println("[INFO] WiFi connected");
 	Serial.print("[INFO] IP address: ");
 	Serial.println(WiFi.localIP());
+	show_display_2("INFO", "WiFi connected", "IP: ", 2000);
 
 	Serial.println("[INFO] Set SPI pins!");
 	SPI.begin(SCK, MISO, MOSI, SS);
@@ -41,6 +48,7 @@ void setup()
 	Serial.println(freq);
 	if (!LoRa.begin(freq)) {
 		Serial.println("[ERROR] Starting LoRa failed!");
+		show_display_1("ERROR", "Starting LoRa failed!");
 		while (1);
 	}
 	LoRa.setSpreadingFactor(12);
@@ -48,9 +56,16 @@ void setup()
 	LoRa.setCodingRate4(5);
 	LoRa.enableCrc();
 	Serial.println("[INFO] LoRa init done!");
+	show_display_1("INFO", "LoRa init done!", 2000);
 
 	timeClient.begin();
+	if(!timeClient.forceUpdate())
+	{
+		Serial.println("[WARN] NTP Client force update issue!");
+		show_display_1("WARN", "NTP Client force update issue!", 2000);
+	}
 	Serial.println("[INFO] NTP Client init done!");
+	show_display_1("INFO", "NTP Client init done!", 2000);
 
 	delay(500);
 }
@@ -61,6 +76,7 @@ void loop()
 	if(WiFiMulti.run() != WL_CONNECTED)
 	{
 		Serial.println("[ERROR] WiFi not connected!");
+		show_display_1("ERROR", "WiFi not connected!");
 		delay(1000);
 		return;
 	}
@@ -70,19 +86,32 @@ void loop()
 		Serial.print(SERVER);
 		Serial.print(" on port: ");
 		Serial.println(PORT);
+		//show_display_3("INFO", "Connecting to server", SERVER, PORT, 2000);
+		show_display_1("INFO", "Connecting to server", 2000);
 		if(!aprs_is.connect(SERVER, PORT, FILTER))
 		{
 			Serial.println("[ERROR] Connection failed.");
 			Serial.println("[INFO] Waiting 5 seconds before retrying...");
+			show_display_2("ERROR", "Server connection failed!", "waiting 5 sec");
 			delay(5000);
 			return;
 		}
 		Serial.println("[INFO] Connected to server!");
 	}
+	static int update_min = -99;
+	if(timeClient.getMinutes() > update_min + BROADCAST_TIMEOUT)
+	{
+		show_display_1(call, "Broadcast to Server...", 2000);
+		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		aprs_is.sendMessage(BROADCAST_MESSAGE);
+		update_min = timeClient.getMinutes();
+	}
 	if(aprs_is.available() > 0)
 	{
+		String str = aprs_is.getMessage();
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.println(aprs_is.getMessage());
+		Serial.println(str);
+		show_display_2(call, timeClient.getFormattedTime(), str, 0);
 	}
 	int packetSize = LoRa.parsePacket();
 	if(packetSize)
@@ -105,5 +134,7 @@ void loop()
 		Serial.print("[INFO] ");
 		Serial.println(msg.toString());*/
 		aprs_is.sendMessage(str);
+
+		show_display_4(call, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
 	}
 }
