@@ -2,6 +2,7 @@
 #include <WiFiMulti.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
 #include <LoRa.h>
@@ -25,6 +26,7 @@ void setup()
 	Serial.println("[INFO] LoRa APRS iGate by OE5BPA (Peter Buchegger)");
 	show_display_2("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", 2000);
 
+	WiFi.setHostname("LoRa_APRS_iGate");
 	WiFiMulti.addAP(WIFI_NAME, WIFI_KEY);
 	Serial.print("[INFO] Waiting for WiFi");
 	show_display_1("INFO", "Waiting for WiFi");
@@ -39,6 +41,34 @@ void setup()
 	Serial.print("[INFO] IP address: ");
 	Serial.println(WiFi.localIP());
 	show_display_3("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
+
+	ArduinoOTA
+		.onStart([]()
+		{
+			String type;
+			if (ArduinoOTA.getCommand() == U_FLASH)
+				type = "sketch";
+			else // U_SPIFFS
+				type = "filesystem";
+			Serial.println("Start updating " + type);
+		})
+		.onEnd([]()
+		{
+			Serial.println("\nEnd");
+		})
+		.onProgress([](unsigned int progress, unsigned int total)
+		{
+			Serial.printf("Progress: %u%%\r\n", (progress / (total / 100)));
+		})
+		.onError([](ota_error_t error) {
+			Serial.printf("Error[%u]: ", error);
+			if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
+			else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
+			else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
+			else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
+			else if (error == OTA_END_ERROR) Serial.println("End Failed");
+		});
+	ArduinoOTA.begin();
 
 	Serial.println("[INFO] Set SPI pins!");
 	SPI.begin(SCK, MISO, MOSI, SS);
@@ -75,6 +105,7 @@ void setup()
 void loop()
 {
 	timeClient.update();
+	ArduinoOTA.handle();
 	if(WiFiMulti.run() != WL_CONNECTED)
 	{
 		Serial.println("[ERROR] WiFi not connected!");
@@ -89,7 +120,7 @@ void loop()
 		Serial.print(" on port: ");
 		Serial.println(PORT);
 		//show_display_3("INFO", "Connecting to server", SERVER, PORT, 2000);
-		show_display_1("INFO", "Connecting to server", 2000);
+		show_display_1("INFO", "Connecting to server");
 		if(!aprs_is.connect(SERVER, PORT, FILTER))
 		{
 			Serial.println("[ERROR] Connection failed.");
@@ -102,7 +133,7 @@ void loop()
 	}
 	if(next_update == timeClient.getMinutes() || next_update == -1)
 	{
-		show_display_1(call, "Broadcast to Server...", 2000);
+		show_display_1(call, "Broadcast to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		aprs_is.sendMessage(BROADCAST_MESSAGE);
 		next_update = (timeClient.getMinutes() + BROADCAST_TIMEOUT) % 60;
