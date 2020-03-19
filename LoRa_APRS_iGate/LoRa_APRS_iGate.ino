@@ -14,6 +14,8 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
 APRS_IS aprs_is(USER, PASS, TOOL, VERS);
 
+int next_update = -1;
+
 void setup()
 {
 	Serial.begin(115200);
@@ -36,7 +38,7 @@ void setup()
 	Serial.println("[INFO] WiFi connected");
 	Serial.print("[INFO] IP address: ");
 	Serial.println(WiFi.localIP());
-	show_display_2("INFO", "WiFi connected", "IP: ", 2000);
+	show_display_3("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
 
 	Serial.println("[INFO] Set SPI pins!");
 	SPI.begin(SCK, MISO, MOSI, SS);
@@ -98,13 +100,12 @@ void loop()
 		}
 		Serial.println("[INFO] Connected to server!");
 	}
-	static int update_min = -99;
-	if(timeClient.getMinutes() > update_min + BROADCAST_TIMEOUT)
+	if(next_update == timeClient.getMinutes() || next_update == -1)
 	{
 		show_display_1(call, "Broadcast to Server...", 2000);
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		aprs_is.sendMessage(BROADCAST_MESSAGE);
-		update_min = timeClient.getMinutes();
+		next_update = (timeClient.getMinutes() + BROADCAST_TIMEOUT) % 60;
 	}
 	if(aprs_is.available() > 0)
 	{
