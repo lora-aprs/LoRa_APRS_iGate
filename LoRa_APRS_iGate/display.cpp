@@ -13,7 +13,7 @@
 
 Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
 
-void init_display()
+void setup_display()
 {
 	pinMode(OLED_RST, OUTPUT);
 	digitalWrite(OLED_RST, LOW);
@@ -46,7 +46,7 @@ void show_display(String header, int wait)
 	delay(wait);
 }
 
-void show_display_1(String header, String line1, int wait)
+void show_display(String header, String line1, int wait)
 {
 	display.clearDisplay();
 	display.setTextColor(WHITE);
@@ -60,7 +60,7 @@ void show_display_1(String header, String line1, int wait)
 	delay(wait);
 }
 
-void show_display_2(String header, String line1, String line2, int wait)
+void show_display(String header, String line1, String line2, int wait)
 {
 	display.clearDisplay();
 	display.setTextColor(WHITE);
@@ -76,7 +76,7 @@ void show_display_2(String header, String line1, String line2, int wait)
 	delay(wait);
 }
 
-void show_display_3(String header, String line1, String line2, String line3, int wait)
+void show_display(String header, String line1, String line2, String line3, int wait)
 {
 	display.clearDisplay();
 	display.setTextColor(WHITE);
@@ -94,7 +94,7 @@ void show_display_3(String header, String line1, String line2, String line3, int
 	delay(wait);
 }
 
-void show_display_4(String header, String line1, String line2, String line3, String line4, int wait)
+void show_display(String header, String line1, String line2, String line3, String line4, int wait)
 {
 	display.clearDisplay();
 	display.setTextColor(WHITE);
@@ -114,7 +114,7 @@ void show_display_4(String header, String line1, String line2, String line3, Str
 	delay(wait);
 }
 
-void show_display_5(String header, String line1, String line2, String line3, String line4, String line5, int wait)
+void show_display(String header, String line1, String line2, String line3, String line4, String line5, int wait)
 {
 	display.clearDisplay();
 	display.setTextColor(WHITE);
