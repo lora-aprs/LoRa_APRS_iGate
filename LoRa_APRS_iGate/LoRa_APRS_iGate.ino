@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <WiFiMulti.h>
-#include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <NTPClient.h>
+#include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
-#include <LoRa.h>
 
 #include "settings.h"
 #include "display.h"
