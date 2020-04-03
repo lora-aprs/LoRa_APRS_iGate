@@ -4,9 +4,9 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
+#include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
-#include <LoRa.h>
 
 #include "settings.h"
 #include "display.h"
