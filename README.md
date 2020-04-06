@@ -25,7 +25,8 @@ Keep in minde: you need a 433MHz version!
 
 ### Additional boards manager URL (Arduino IDE only)
 
-```https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
+```
+https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
 
 ### Dependencies
