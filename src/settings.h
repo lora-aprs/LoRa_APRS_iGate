@@ -15,14 +15,6 @@
 //#define SERVER "euro.aprs2.net"
 #define PORT 14580
 
-// LoRa Pins:
-#define SCK 5
-#define MISO 19
-#define MOSI 27
-#define SS 18
-#define RST 14
-#define DIO0 26
-
 #define BROADCAST_TIMEOUT 15
 #define BROADCAST_MESSAGE "OE5BPA-10>APRS:=4819.82NI01418.68E&LoRa IGATE (test RX mode), Info: github.com/peterus/LoRa_APRS_iGate"
 

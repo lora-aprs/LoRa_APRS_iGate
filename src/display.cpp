@@ -5,22 +5,16 @@
 
 #include "display.h"
 
-#define OLED_SDA 4
-#define OLED_SCL 15 
-#define OLED_RST 16
-#define SCREEN_WIDTH 128 // OLED display width, in pixels
-#define SCREEN_HEIGHT 64 // OLED display height, in pixels
-
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RST);
+Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, RST_OLED);
 
 void setup_display()
 {
-	pinMode(OLED_RST, OUTPUT);
-	digitalWrite(OLED_RST, LOW);
+	pinMode(RST_OLED, OUTPUT);
+	digitalWrite(RST_OLED, LOW);
 	delay(20);
-	digitalWrite(OLED_RST, HIGH);
+	digitalWrite(RST_OLED, HIGH);
 
-	Wire.begin(OLED_SDA, OLED_SCL);
+	Wire.begin(SDA_OLED, SCL_OLED);
 	if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3c, false, false))
 	{
 		Serial.println("SSD1306 allocation failed");

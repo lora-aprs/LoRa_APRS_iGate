@@ -173,7 +173,7 @@ void setup_lora()
 {
 	Serial.println("[INFO] Set SPI pins!");
 	SPI.begin(SCK, MISO, MOSI, SS);
-	LoRa.setPins(SS, RST, DIO0);
+	LoRa.setPins(SS, RST_LoRa, DIO0);
 	Serial.println("[INFO] Set LoRa pins!");
 
 	long freq = 433775000;
