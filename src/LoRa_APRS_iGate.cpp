@@ -23,6 +23,8 @@ void setup_ota();
 void setup_lora();
 void setup_ntp();
 
+String BeaconMsg;
+
 void setup()
 {
 	Serial.begin(115200);
@@ -36,6 +38,14 @@ void setup()
 	setup_ota();
 	setup_lora();
 	setup_ntp();
+
+	APRSMessage msg;
+	msg.setSource(USER);
+	msg.setDestination("APRS");
+	char body_char[100];
+	sprintf(body_char, "=%sI%s&%s", BEACON_LAT_POS, BEACON_LONG_POS, BEACON_MESSAGE);
+	msg.getAPRSBody()->setData(String(body_char));
+	BeaconMsg = msg.encode();
 	
 	delay(500);
 }
@@ -71,9 +81,9 @@ void loop()
 	}
 	if(next_update == timeClient.getMinutes() || next_update == -1)
 	{
-		show_display(call, "Broadcast to Server...");
+		show_display(USER, "Broadcast to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		aprs_is.sendMessage(BEACON_MESSAGE);
+		aprs_is.sendMessage(BeaconMsg);
 		next_update = (timeClient.getMinutes() + BEACON_TIMEOUT) % 60;
 	}
 	if(aprs_is.available() > 0)
@@ -81,7 +91,7 @@ void loop()
 		String str = aprs_is.getMessage();
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.println(str);
-		show_display(call, timeClient.getFormattedTime(), str, 0);
+		show_display(USER, timeClient.getFormattedTime(), str, 0);
 	}
 	if(LoRa.parsePacket())
 	{
@@ -104,7 +114,7 @@ void loop()
 		Serial.println(msg.toString());*/
 		aprs_is.sendMessage(str);
 
-		show_display(call, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
+		show_display(USER, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
 	}
 }
 

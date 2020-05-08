@@ -16,8 +16,8 @@
 #define PORT 14580
 
 #define BEACON_TIMEOUT 15
-#define BEACON_MESSAGE "OE5BPA-10>APRS:=4819.82NI01418.68E&LoRa IGATE (test RX mode), Info: github.com/peterus/LoRa_APRS_iGate"
-
-String call = "OE5BPA";
+#define BEACON_LAT_POS "4819.82N"
+#define BEACON_LONG_POS "01418.68E"
+#define BEACON_MESSAGE "LoRa IGATE (test RX mode), Info: github.com/peterus/LoRa_APRS_iGate"
 
 #endif
