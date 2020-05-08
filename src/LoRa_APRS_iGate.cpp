@@ -73,8 +73,8 @@ void loop()
 	{
 		show_display(call, "Broadcast to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		aprs_is.sendMessage(BROADCAST_MESSAGE);
-		next_update = (timeClient.getMinutes() + BROADCAST_TIMEOUT) % 60;
+		aprs_is.sendMessage(BEACON_MESSAGE);
+		next_update = (timeClient.getMinutes() + BEACON_TIMEOUT) % 60;
 	}
 	if(aprs_is.available() > 0)
 	{
