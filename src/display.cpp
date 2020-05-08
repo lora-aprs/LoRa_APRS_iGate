@@ -5,16 +5,16 @@
 
 #include "display.h"
 
-Adafruit_SSD1306 display(DISPLAY_WIDTH, DISPLAY_HEIGHT, &Wire, RST_OLED);
+Adafruit_SSD1306 display(128, 64, &Wire, OLED_RST);
 
 void setup_display()
 {
-	pinMode(RST_OLED, OUTPUT);
-	digitalWrite(RST_OLED, LOW);
+	pinMode(OLED_RST, OUTPUT);
+	digitalWrite(OLED_RST, LOW);
 	delay(20);
-	digitalWrite(RST_OLED, HIGH);
+	digitalWrite(OLED_RST, HIGH);
 
-	Wire.begin(SDA_OLED, SCL_OLED);
+	Wire.begin(OLED_SDA, OLED_SCL);
 	if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3c, false, false))
 	{
 		Serial.println("SSD1306 allocation failed");
