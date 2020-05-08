@@ -7,6 +7,9 @@
 #include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
+#ifdef ARDUINO_T_Beam
+#include <axp20x.h>
+#endif
 
 #include "settings.h"
 #include "display.h"
@@ -15,6 +18,9 @@ WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
 APRS_IS aprs_is(USER, PASS, TOOL, VERS);
+#ifdef ARDUINO_T_Beam
+AXP20X_Class axp;
+#endif
 
 int next_update = -1;
 
@@ -22,6 +28,9 @@ void setup_wifi();
 void setup_ota();
 void setup_lora();
 void setup_ntp();
+#ifdef ARDUINO_T_Beam
+void setup_axp();
+#endif
 
 String BeaconMsg;
 
@@ -38,6 +47,9 @@ void setup()
 	setup_ota();
 	setup_lora();
 	setup_ntp();
+	#ifdef ARDUINO_T_Beam
+	setup_axp();
+	#endif
 
 	APRSMessage msg;
 	msg.setSource(USER);
@@ -213,3 +225,20 @@ void setup_ntp()
 	Serial.println("[INFO] NTP Client init done!");
 	show_display("INFO", "NTP Client init done!", 2000);
 }
+
+#ifdef ARDUINO_T_Beam
+void setup_axp()
+{
+	Wire.begin(SDA, SCL);
+	if (!axp.begin(Wire, AXP192_SLAVE_ADDRESS))
+	{
+		Serial.println("LoRa-APRS / Init / AXP192 Begin PASS");
+	} else {
+		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
+	}
+	axp.setPowerOutPut(AXP192_LDO2, AXP202_ON);  // LORA
+	axp.setPowerOutPut(AXP192_LDO3, AXP202_ON);  // GPS
+	axp.setPowerOutPut(AXP192_DCDC1, AXP202_ON); // OLED
+	axp.setDCDC1Voltage(3300);
+}
+#endif
