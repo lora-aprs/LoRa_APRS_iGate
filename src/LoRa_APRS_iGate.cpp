@@ -7,7 +7,7 @@
 #include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
-#ifdef ARDUINO_T_Beam
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 #include <axp20x.h>
 #endif
 
@@ -18,7 +18,7 @@ WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
 APRS_IS aprs_is(USER, PASS, TOOL, VERS);
-#ifdef ARDUINO_T_Beam
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 AXP20X_Class axp;
 #endif
 
@@ -28,7 +28,7 @@ void setup_wifi();
 void setup_ota();
 void setup_lora();
 void setup_ntp();
-#ifdef ARDUINO_T_Beam
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 void setup_axp();
 #endif
 
@@ -47,7 +47,7 @@ void setup()
 	setup_ota();
 	setup_lora();
 	setup_ntp();
-	#ifdef ARDUINO_T_Beam
+	#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 	setup_axp();
 	#endif
 
@@ -226,7 +226,7 @@ void setup_ntp()
 	show_display("INFO", "NTP Client init done!", 2000);
 }
 
-#ifdef ARDUINO_T_Beam
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 void setup_axp()
 {
 	Wire.begin(SDA, SCL);
