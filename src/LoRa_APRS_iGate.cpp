@@ -107,13 +107,26 @@ void loop()
 	}
 	if(LoRa.parsePacket())
 	{
+		// read header:
+		char dummy[4];
+		LoRa.readBytes(dummy, 3);
+		if(dummy[0] != '<')
+		{
+			// is no APRS message, ignore message
+			while(LoRa.available())
+			{
+				LoRa.read();
+			}
+			return;
+		}
+		// read APRS data:
 		String str;
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(" Received packet '");
 		while(LoRa.available())
 		{
 			str += (char)LoRa.read();
 		}
+		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		Serial.print(" Received packet '");
 		Serial.print(str);
 		Serial.print("' with RSSI ");
 		Serial.print(LoRa.packetRssi());
