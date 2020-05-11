@@ -13,6 +13,8 @@ You can use one of the Lora32 boards:
 * Heltec WiFi LoRa 32 V2 (433MHz SX1278) https://heltec.org/project/wifi-lora-32/
 * TTGO LoRa32 V1 (433MHz SX1278)
 * TTGO LoRa32 V2 (433MHz SX1278)
+* TTGO T-Beam V0.7 (433MHz SX1278)
+* TTGO T-Beam V1 (433MHz SX1278)
 * many more...
 
 Here are some amazon-de links for some example boards:
@@ -23,13 +25,11 @@ Here are some amazon-de links for some example boards:
 This boards cost around 20 Euros, they are very cheap but perfect for an LoRa iGate.
 Keep in minde: you need a 433MHz version!
 
-## what you need to compile
+## Compiling
 
-### Additional boards manager URL (Arduino IDE only)
+### How to compile
 
-```
-https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
-```
+The best success is to use PlatformIO. Go to https://platformio.org/ and download the IDE. Just open the folder and you can compile the Firmware.
 
 ### Dependencies
 
@@ -52,3 +52,7 @@ Feel free to add a link to your iGate here:
 ## Future plans
 
 The complete configuration should move to [IotWebConf](https://github.com/prampec/IotWebConf).
+
+## LoRa Tracker
+
+Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_Tracker)

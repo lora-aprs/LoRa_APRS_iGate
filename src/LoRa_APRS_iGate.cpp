@@ -7,6 +7,9 @@
 #include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+#include <axp20x.h>
+#endif
 
 #include "settings.h"
 #include "display.h"
@@ -15,6 +18,9 @@ WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
 APRS_IS aprs_is(USER, PASS, TOOL, VERS);
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+AXP20X_Class axp;
+#endif
 
 int next_update = -1;
 
@@ -22,6 +28,11 @@ void setup_wifi();
 void setup_ota();
 void setup_lora();
 void setup_ntp();
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+void setup_axp();
+#endif
+
+String BeaconMsg;
 
 void setup()
 {
@@ -36,6 +47,17 @@ void setup()
 	setup_ota();
 	setup_lora();
 	setup_ntp();
+	#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+	setup_axp();
+	#endif
+
+	APRSMessage msg;
+	msg.setSource(USER);
+	msg.setDestination("APRS");
+	char body_char[100];
+	sprintf(body_char, "=%sI%s&%s", BEACON_LAT_POS, BEACON_LONG_POS, BEACON_MESSAGE);
+	msg.getAPRSBody()->setData(String(body_char));
+	BeaconMsg = msg.encode();
 	
 	delay(500);
 }
@@ -71,27 +93,40 @@ void loop()
 	}
 	if(next_update == timeClient.getMinutes() || next_update == -1)
 	{
-		show_display(call, "Broadcast to Server...");
+		show_display(USER, "Broadcast to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		aprs_is.sendMessage(BROADCAST_MESSAGE);
-		next_update = (timeClient.getMinutes() + BROADCAST_TIMEOUT) % 60;
+		aprs_is.sendMessage(BeaconMsg);
+		next_update = (timeClient.getMinutes() + BEACON_TIMEOUT) % 60;
 	}
 	if(aprs_is.available() > 0)
 	{
 		String str = aprs_is.getMessage();
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.println(str);
-		show_display(call, timeClient.getFormattedTime(), str, 0);
+		show_display(USER, timeClient.getFormattedTime(), str, 0);
 	}
 	if(LoRa.parsePacket())
 	{
+		// read header:
+		char dummy[4];
+		LoRa.readBytes(dummy, 3);
+		if(dummy[0] != '<')
+		{
+			// is no APRS message, ignore message
+			while(LoRa.available())
+			{
+				LoRa.read();
+			}
+			return;
+		}
+		// read APRS data:
 		String str;
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(" Received packet '");
 		while(LoRa.available())
 		{
 			str += (char)LoRa.read();
 		}
+		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		Serial.print(" Received packet '");
 		Serial.print(str);
 		Serial.print("' with RSSI ");
 		Serial.print(LoRa.packetRssi());
@@ -104,7 +139,7 @@ void loop()
 		Serial.println(msg.toString());*/
 		aprs_is.sendMessage(str);
 
-		show_display(call, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
+		show_display(USER, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
 	}
 }
 
@@ -172,8 +207,8 @@ void setup_ota()
 void setup_lora()
 {
 	Serial.println("[INFO] Set SPI pins!");
-	SPI.begin(SCK, MISO, MOSI, SS);
-	LoRa.setPins(SS, RST_LoRa, DIO0);
+	SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
+	LoRa.setPins(LORA_CS, LORA_RST, LORA_IRQ);
 	Serial.println("[INFO] Set LoRa pins!");
 
 	long freq = 433775000;
@@ -203,3 +238,20 @@ void setup_ntp()
 	Serial.println("[INFO] NTP Client init done!");
 	show_display("INFO", "NTP Client init done!", 2000);
 }
+
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+void setup_axp()
+{
+	Wire.begin(SDA, SCL);
+	if (!axp.begin(Wire, AXP192_SLAVE_ADDRESS))
+	{
+		Serial.println("LoRa-APRS / Init / AXP192 Begin PASS");
+	} else {
+		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
+	}
+	axp.setPowerOutPut(AXP192_LDO2, AXP202_ON);  // LORA
+	axp.setPowerOutPut(AXP192_LDO3, AXP202_ON);  // GPS
+	axp.setPowerOutPut(AXP192_DCDC1, AXP202_ON); // OLED
+	axp.setDCDC1Voltage(3300);
+}
+#endif
