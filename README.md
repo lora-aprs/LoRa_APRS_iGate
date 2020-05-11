@@ -11,6 +11,8 @@ You can use one of the Lora32 boards:
 * Heltec WiFi LoRa 32 V2 (433MHz SX1278) https://heltec.org/project/wifi-lora-32/
 * TTGO LoRa32 V1 (433MHz SX1278)
 * TTGO LoRa32 V2 (433MHz SX1278)
+* TTGO T-Beam V0.7 (433MHz SX1278)
+* TTGO T-Beam V1 (433MHz SX1278)
 * many more...
 
 Here are some amazon-de links for some example boards:
