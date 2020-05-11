@@ -9,7 +9,9 @@
 #define PASS ""
 #define TOOL "ESP32-APRS-IS"
 #define VERS "0.1"
-#define FILTER "r/48.29/14.29/25"
+// comment FILTER out to use no filter on the IS server: will display just LoRa received messages.
+// if FILTER is active: it will be used on login on IS server and will display received messages from server.
+//#define FILTER "r/48.29/14.29/25"
 
 #define SERVER "austria.aprs2.net"
 //#define SERVER "euro.aprs2.net"

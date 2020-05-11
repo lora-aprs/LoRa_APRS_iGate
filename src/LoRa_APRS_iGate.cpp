@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <WiFiMulti.h>
-#include <ESPmDNS.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
@@ -79,9 +78,12 @@ void loop()
 		Serial.print(SERVER);
 		Serial.print(" on port: ");
 		Serial.println(PORT);
-		//show_display("INFO", "Connecting to server", SERVER, PORT, 2000);
 		show_display("INFO", "Connecting to server");
+#ifdef FILTER
 		if(!aprs_is.connect(SERVER, PORT, FILTER))
+#else
+		if(!aprs_is.connect(SERVER, PORT))
+#endif
 		{
 			Serial.println("[ERROR] Connection failed.");
 			Serial.println("[INFO] Waiting 5 seconds before retrying...");
@@ -93,7 +95,7 @@ void loop()
 	}
 	if(next_update == timeClient.getMinutes() || next_update == -1)
 	{
-		show_display(USER, "Broadcast to Server...");
+		show_display(USER, "Beacon to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		aprs_is.sendMessage(BeaconMsg);
 		next_update = (timeClient.getMinutes() + BEACON_TIMEOUT) % 60;
@@ -103,7 +105,9 @@ void loop()
 		String str = aprs_is.getMessage();
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.println(str);
-		show_display(USER, timeClient.getFormattedTime(), str, 0);
+#ifdef FILTER
+		show_display(USER, timeClient.getFormattedTime() + "    IS-Server", str, 0);
+#endif
 	}
 	if(LoRa.parsePacket())
 	{
@@ -125,6 +129,7 @@ void loop()
 		{
 			str += (char)LoRa.read();
 		}
+		show_display(USER, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(LoRa.packetRssi()) + ", SNR: " + String(LoRa.packetSnr()), str, 0);
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
 		Serial.print(str);
@@ -139,15 +144,13 @@ void loop()
 		Serial.println(msg.toString());*/
 		aprs_is.sendMessage(str);
 
-		show_display(USER, timeClient.getFormattedTime(), "RSSI: " + String(LoRa.packetRssi()), "SNR: " + String(LoRa.packetSnr()), str, 0);
 	}
 }
 
 void setup_wifi()
 {
-	char hostname[] = "LoRaAPRSiGate";
 	WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
-	WiFi.setHostname(hostname);
+	WiFi.setHostname(USER);
 	WiFiMulti.addAP(WIFI_NAME, WIFI_KEY);
 	Serial.print("[INFO] Waiting for WiFi");
 	show_display("INFO", "Waiting for WiFi");
@@ -162,8 +165,6 @@ void setup_wifi()
 	Serial.print("[INFO] IP address: ");
 	Serial.println(WiFi.localIP());
 	show_display("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
-
-	MDNS.begin(hostname);
 }
 
 void setup_ota()
@@ -201,6 +202,7 @@ void setup_ota()
 			else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
 			else if (error == OTA_END_ERROR) Serial.println("End Failed");
 		});
+	ArduinoOTA.setHostname(USER);
 	ArduinoOTA.begin();
 }
 
