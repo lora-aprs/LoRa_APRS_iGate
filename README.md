@@ -3,6 +3,8 @@
 The LoRa APRS iGate will work with very cheep hardware which you can buy from amazon, ebay or aliexpress.
 Try it out and be part of the APRS network.
 
+![TTGO LoRa32](pics/iGate.png)
+
 ## Supported boards
 
 You can use one of the Lora32 boards:
