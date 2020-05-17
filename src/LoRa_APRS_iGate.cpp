@@ -52,7 +52,7 @@ void setup()
 
 	APRSMessage msg;
 	msg.setSource(USER);
-	msg.setDestination("APRS");
+	msg.setDestination("APLG0");
 	char body_char[100];
 	sprintf(body_char, "=%sI%s&%s", BEACON_LAT_POS, BEACON_LONG_POS, BEACON_MESSAGE);
 	msg.getAPRSBody()->setData(String(body_char));
