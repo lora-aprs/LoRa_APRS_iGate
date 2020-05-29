@@ -33,6 +33,7 @@ void setup_axp();
 
 String BeaconMsg;
 
+// cppcheck-suppress unusedFunction
 void setup()
 {
 	Serial.begin(115200);
@@ -61,6 +62,7 @@ void setup()
 	delay(500);
 }
 
+// cppcheck-suppress unusedFunction
 void loop()
 {
 	timeClient.update();
