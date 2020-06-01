@@ -6,19 +6,17 @@
 #include <LoRa.h>
 #include <APRS-IS.h>
 #include <APRS-Decoder.h>
-#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-#include <axp20x.h>
-#endif
 
 #include "settings.h"
 #include "display.h"
+#include "power_management.h"
 
 WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
 APRS_IS aprs_is(USER, PASS, TOOL, VERS);
 #if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-AXP20X_Class axp;
+PowerManagement powerManagement;
 #endif
 
 int next_update = -1;
@@ -27,9 +25,6 @@ void setup_wifi();
 void setup_ota();
 void setup_lora();
 void setup_ntp();
-#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-void setup_axp();
-#endif
 
 String BeaconMsg;
 
@@ -37,6 +32,20 @@ String BeaconMsg;
 void setup()
 {
 	Serial.begin(115200);
+
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+	Wire.begin(SDA, SCL);
+	if (!powerManagement.begin(Wire))
+	{
+		Serial.println("LoRa-APRS / Init / AXP192 Begin PASS");
+	} else {
+		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
+	}
+	powerManagement.activateLoRa();
+	powerManagement.activateOLED();
+	powerManagement.deactivateGPS();
+#endif
+
 	setup_display();
 	
 	delay(500);
@@ -47,9 +56,6 @@ void setup()
 	setup_ota();
 	setup_lora();
 	setup_ntp();
-	#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-	setup_axp();
-	#endif
 
 	APRSMessage msg;
 	msg.setSource(USER);
@@ -242,20 +248,3 @@ void setup_ntp()
 	Serial.println("[INFO] NTP Client init done!");
 	show_display("INFO", "NTP Client init done!", 2000);
 }
-
-#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-void setup_axp()
-{
-	Wire.begin(SDA, SCL);
-	if (!axp.begin(Wire, AXP192_SLAVE_ADDRESS))
-	{
-		Serial.println("LoRa-APRS / Init / AXP192 Begin PASS");
-	} else {
-		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
-	}
-	axp.setPowerOutPut(AXP192_LDO2, AXP202_ON);  // LORA
-	axp.setPowerOutPut(AXP192_LDO3, AXP202_ON);  // GPS
-	axp.setPowerOutPut(AXP192_DCDC1, AXP202_ON); // OLED
-	axp.setDCDC1Voltage(3300);
-}
-#endif
