@@ -7,6 +7,7 @@
 class PowerManagement
 {
 public:
+	PowerManagement();
     bool begin(TwoWire port);
 
     void activateLoRa();
