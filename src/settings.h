@@ -17,10 +17,15 @@
 //#define SERVER "euro.aprs2.net"
 #define PORT 14580
 
-#define BEACON_TIMEOUT 15
+#define BEACON_TIMEOUT (15)
 #define BEACON_LAT_POS "4819.82N"
 #define BEACON_LONG_POS "01418.68E"
 #define BEACON_MESSAGE "LoRa IGATE (RX only), Info: github.com/peterus/LoRa_APRS_iGate"
+
+#define LORA_FREQUENCY (433775000)
+#define LORA_SPREADING_FACTOR (12)
+#define LORA_SIGNAL_BANDWIDTH (125E3)
+#define LORA_CODING_RATE4 (5)
 
 //#define ARDUINO_T_Beam_V0_7
 

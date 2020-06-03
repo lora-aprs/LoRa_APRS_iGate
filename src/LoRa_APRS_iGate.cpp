@@ -60,9 +60,7 @@ void setup()
 	APRSMessage msg;
 	msg.setSource(USER);
 	msg.setDestination("APLG0");
-	char body_char[100];
-	sprintf(body_char, "=%sI%s&%s", BEACON_LAT_POS, BEACON_LONG_POS, BEACON_MESSAGE);
-	msg.getAPRSBody()->setData(String(body_char));
+	msg.getAPRSBody()->setData(String("=") + BEACON_LAT_POS + "I" + BEACON_LONG_POS + "&" + BEACON_MESSAGE);
 	BeaconMsg = msg.encode();
 	
 	delay(500);
@@ -221,17 +219,16 @@ void setup_lora()
 	LoRa.setPins(LORA_CS, LORA_RST, LORA_IRQ);
 	Serial.println("[INFO] Set LoRa pins!");
 
-	long freq = 433775000;
 	Serial.print("[INFO] frequency: ");
-	Serial.println(freq);
-	if (!LoRa.begin(freq)) {
+	Serial.println(LORA_FREQUENCY);
+	if (!LoRa.begin(LORA_FREQUENCY)) {
 		Serial.println("[ERROR] Starting LoRa failed!");
 		show_display("ERROR", "Starting LoRa failed!");
 		while (1);
 	}
-	LoRa.setSpreadingFactor(12);
-	LoRa.setSignalBandwidth(125E3);
-	LoRa.setCodingRate4(5);
+	LoRa.setSpreadingFactor(LORA_SPREADING_FACTOR);
+	LoRa.setSignalBandwidth(LORA_SIGNAL_BANDWIDTH);
+	LoRa.setCodingRate4(LORA_CODING_RATE4);
 	LoRa.enableCrc();
 	Serial.println("[INFO] LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
