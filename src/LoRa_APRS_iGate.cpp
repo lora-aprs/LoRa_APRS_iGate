@@ -3,9 +3,9 @@
 #include <NTPClient.h>
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
-#include <LoRa.h>
 #include <APRS-IS.h>
-#include <APRS-Decoder.h>
+
+#include "LoRa_APRS.h"
 
 #include "settings.h"
 #include "display.h"
@@ -18,6 +18,7 @@ APRS_IS aprs_is(USER, PASS, TOOL, VERS);
 #if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
 PowerManagement powerManagement;
 #endif
+LoRa_APRS lora_aprs;
 
 int next_update = -1;
 
@@ -114,42 +115,26 @@ void loop()
 #ifdef FILTER
 		show_display(USER, timeClient.getFormattedTime() + "    IS-Server", str, 0);
 #endif
+#ifdef SEND_MESSAGES_FROM_IS_TO_LORA
+		std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
+		msg->decode(str);
+		lora_aprs.sendMessage(msg);
+#endif
 	}
-	if(LoRa.parsePacket())
+	if(lora_aprs.hasMessage())
 	{
-		// read header:
-		char dummy[4];
-		LoRa.readBytes(dummy, 3);
-		if(dummy[0] != '<')
-		{
-			// is no APRS message, ignore message
-			while(LoRa.available())
-			{
-				LoRa.read();
-			}
-			return;
-		}
-		// read APRS data:
-		String str;
-		while(LoRa.available())
-		{
-			str += (char)LoRa.read();
-		}
-		show_display(USER, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(LoRa.packetRssi()) + ", SNR: " + String(LoRa.packetSnr()), str, 0);
+		std::shared_ptr<APRSMessage> msg = lora_aprs.getMessage();
+
+		show_display(USER, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString(), 0);
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
-		Serial.print(str);
+		Serial.print(msg->toString());
 		Serial.print("' with RSSI ");
-		Serial.print(LoRa.packetRssi());
+		Serial.print(lora_aprs.getMessageRssi());
 		Serial.print(" and SNR ");
-		Serial.println(LoRa.packetSnr());
+		Serial.println(lora_aprs.getMessageSnr());
 
-		/*APRSMessage msg;
-		msg.decode(str);
-		Serial.print("[INFO] ");
-		Serial.println(msg.toString());*/
-		aprs_is.sendMessage(str);
-
+		aprs_is.sendMessage(msg->encode());
 	}
 }
 
@@ -214,22 +199,15 @@ void setup_ota()
 
 void setup_lora()
 {
-	Serial.println("[INFO] Set SPI pins!");
-	SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
-	LoRa.setPins(LORA_CS, LORA_RST, LORA_IRQ);
-	Serial.println("[INFO] Set LoRa pins!");
-
 	Serial.print("[INFO] frequency: ");
-	Serial.println(LORA_FREQUENCY);
-	if (!LoRa.begin(LORA_FREQUENCY)) {
+	Serial.println(LORA_RX_FREQUENCY);
+	
+	if (!lora_aprs.begin())
+	{
 		Serial.println("[ERROR] Starting LoRa failed!");
 		show_display("ERROR", "Starting LoRa failed!");
 		while (1);
 	}
-	LoRa.setSpreadingFactor(LORA_SPREADING_FACTOR);
-	LoRa.setSignalBandwidth(LORA_SIGNAL_BANDWIDTH);
-	LoRa.setCodingRate4(LORA_CODING_RATE4);
-	LoRa.enableCrc();
 	Serial.println("[INFO] LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
 }
