@@ -10,7 +10,7 @@ jobs:
   precompile:
     runs-on: ubuntu-latest
     steps:
-      - run: pip3 install platformio
+      - run: pip3 install setuptools platformio
       - uses: actions/checkout@v2
       - run: platformio run
     
