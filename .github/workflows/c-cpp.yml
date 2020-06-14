@@ -7,10 +7,15 @@ on:
     branches: [ master ]
 
 jobs:
+  precompile:
+    runs-on: ubuntu-latest
+    steps:
+      - run: pip3 install platformio
+      - uses: actions/checkout@v2
+      - run: platformio run
+    
   build:
-
     runs-on: self-hosted
-
     steps:
     - uses: actions/checkout@v2
     - name: check for updates
