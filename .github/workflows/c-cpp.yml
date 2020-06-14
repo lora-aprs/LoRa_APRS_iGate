@@ -10,8 +10,8 @@ jobs:
   precompile:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install python3-setuptools
-      - run: pip3 install wheel platformio
+      - run: sudo apt-get install python3-setuptools python3-wheel
+      - run: pip3 install platformio
       - uses: actions/checkout@v2
       - run: platformio run
     
