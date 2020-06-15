@@ -13,7 +13,7 @@ jobs:
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: export PATH="~/.local/bin:$PATH"
       - run: pip3 -v install platformio
-      - run: which platformio
+      - run: echo $PATH
       - uses: actions/checkout@v2
       - run: pio run
     
