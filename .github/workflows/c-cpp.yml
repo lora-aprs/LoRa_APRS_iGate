@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
+      - run: export PATH="~/.local/bin:$PATH"
       - run: pip3 -v install platformio
       - run: which platformio
       - uses: actions/checkout@v2
