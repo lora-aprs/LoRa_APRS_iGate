@@ -12,8 +12,13 @@ jobs:
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: pip3 -v install platformio
+      - run: echo "::add-path::~/.local/bin"
       - uses: actions/checkout@v2
-      - run: PATH="~/.local/bin:$PATH" pio run
+      - run: PLATFORMIO_BUILD_CACHE_DIR="build_cache/" pio run
+      - uses: actions/upload-artifact@v1
+        with:
+          name: build_cache
+          path: build_cache
     
   build:
     runs-on: self-hosted
