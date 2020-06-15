@@ -11,11 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
-      - run: PATH="~/.local/bin:$PATH"
       - run: pip3 -v install platformio
-      - run: echo $PATH
       - uses: actions/checkout@v2
-      - run: pio run
+      - run: PATH="~/.local/bin:$PATH" pio run
     
   build:
     runs-on: self-hosted
