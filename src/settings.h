@@ -2,16 +2,24 @@
 #ifndef SETTINGS_H_
 #define SETTINGS_H_
 
+///////////////////////////////////////////////////
+///////   DON'T CHANGE THIS FILE ANYMORE!   ///////
+///////////////////////////////////////////////////
+///////   Use the json file in the folder   ///////
+///////   'data' to configure your iGate    ///////
+///////   and upload it via 'Upload File    ///////
+///////   System image'! These settings     ///////
+///////   will be removed soon!             ///////
+///////////////////////////////////////////////////
+
+
+
+
 #define WIFI_NAME ""
 #define WIFI_KEY ""
 
 #define USER "NOCALL-10"
 #define PASS ""
-#define TOOL "ESP32-APRS-IS"
-#define VERS "0.1"
-// if FILTER is NOT active: it will use no filter on the IS server: will display just LoRa received messages as there are no messages coming from the server.
-// if FILTER is active: it will be used on login on IS server and will display received messages from server. More Info: http://www.aprs-is.net/javAPRSFilter.aspx
-//#define FILTER "r/48.29/14.29/25"
 
 #define SERVER "austria.aprs2.net"
 //#define SERVER "euro.aprs2.net"

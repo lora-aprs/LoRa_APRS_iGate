@@ -1,0 +1,24 @@
+{
+	"Wifi":
+	{
+		"Name":"",
+		"Password":""
+	},
+	"IS":
+	{
+		"Call":"",
+		"Password":"",
+		"Server":"austria.aprs2.net",
+		"Port":14580
+	},
+	"Beacon":
+	{
+		"Message":"LoRa IGATE (RX only), Info: github.com/peterus/LoRa_APRS_iGate",
+		"Pos":
+		{
+			"Lat":"4819.82N",
+			"Long":"01418.68E"
+		},
+		"Timeout":15
+	}
+}
