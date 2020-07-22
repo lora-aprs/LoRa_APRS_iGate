@@ -42,6 +42,7 @@ String Configuration::getWifiName() const
 	return mData["Wifi"]["Name"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setWifiName(String WifiName)
 {
 	mData["Wifi"]["Name"] = WifiName;
@@ -52,6 +53,7 @@ String Configuration::getWifiPassword() const
 	return mData["Wifi"]["Password"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setWifiPassword(String WifiPassword)
 {
 	mData["Wifi"]["Password"] = WifiPassword;
@@ -62,6 +64,7 @@ String Configuration::getIsCall() const
 	return mData["IS"]["Call"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setIsCall(String IsCall)
 {
 	mData["IS"]["Call"] = IsCall;
@@ -72,6 +75,7 @@ String Configuration::getIsPassword() const
 	return mData["IS"]["Password"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setIsPassword(String IsPassword)
 {
 	mData["IS"]["Password"] = IsPassword;
@@ -82,6 +86,7 @@ String Configuration::getIsServer() const
 	return mData["IS"]["Server"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setIsServer(String IsServer)
 {
 	mData["IS"]["Server"] = IsServer;
@@ -92,6 +97,7 @@ int Configuration::getIsPort() const
 	return mData["IS"]["Port"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setIsPort(int IsPort)
 {
 	mData["IS"]["Port"] = IsPort;
@@ -102,6 +108,7 @@ String Configuration::getBeaconMessage() const
 	return mData["Beacon"]["Message"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setBeaconMessage(String BeaconMessage)
 {
 	mData["Beacon"]["Message"] = BeaconMessage;
@@ -112,6 +119,7 @@ String Configuration::getBeaconPosLat() const
 	return mData["Beacon"]["Pos"]["Lat"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setBeaconPosLat(String BeaconPosLat)
 {
 	mData["Beacon"]["Pos"]["Lat"] = BeaconPosLat;
@@ -122,6 +130,7 @@ String Configuration::getBeaconPosLong() const
 	return mData["Beacon"]["Pos"]["Long"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setBeaconPosLong(String BeaconPosLong)
 {
 	mData["Beacon"]["Pos"]["Long"] = BeaconPosLong;
@@ -132,6 +141,7 @@ int Configuration::getBeaconTimeout() const
 	return mData["Beacon"]["Timeout"];
 }
 
+// cppcheck-suppress unusedFunction
 void Configuration::setBeaconTimeout(int BeaconTimeout)
 {
 	mData["Beacon"]["Timeout"] = BeaconTimeout;
