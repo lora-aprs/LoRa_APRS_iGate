@@ -6,7 +6,7 @@
 	},
 	"IS":
 	{
-		"Call":"",
+		"Call":"NOCALL-10",
 		"Password":"",
 		"Server":"austria.aprs2.net",
 		"Port":14580
