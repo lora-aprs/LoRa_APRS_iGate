@@ -7,6 +7,7 @@
 
 #include "LoRa_APRS.h"
 
+#include "pins.h"
 #include "settings.h"
 #include "display.h"
 #include "power_management.h"

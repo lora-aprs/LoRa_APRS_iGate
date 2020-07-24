@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 
 #include "display.h"
+#include "pins.h"
 
 Adafruit_SSD1306 display(128, 64, &Wire, OLED_RST);
 
