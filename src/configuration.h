@@ -7,7 +7,7 @@
 class Configuration
 {
 public:
-	Configuration(String FilePath);
+	explicit Configuration(String FilePath);
 
 	void readFile();
 	void writeFile();

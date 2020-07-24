@@ -17,12 +17,12 @@ jobs:
       - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
       - run: platformio run
     
-  build:
-    runs-on: self-hosted
-    needs: precompile
-    steps:
-    - uses: actions/checkout@v2
-    - name: check for updates
-      run: platformio update
-    - name: compile
-      run: platformio run -e ttgo-lora32-v1
+#  build:
+#    runs-on: self-hosted
+#    needs: precompile
+#    steps:
+#    - uses: actions/checkout@v2
+#    - name: check for updates
+#      run: platformio update
+#    - name: compile
+#      run: platformio run -e ttgo-lora32-v1
