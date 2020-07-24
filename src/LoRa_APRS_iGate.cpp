@@ -100,6 +100,7 @@ void loop()
 	{
 		show_display(Config->getIsCall(), "Beacon to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		Serial.print(BeaconMsg);
 		aprs_is->sendMessage(BeaconMsg);
 		next_update = (timeClient.getMinutes() + Config->getBeaconTimeout()) % 60;
 	}
