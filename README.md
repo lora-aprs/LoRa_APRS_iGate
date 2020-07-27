@@ -15,12 +15,14 @@ You can use one of the Lora32 boards:
 * TTGO LoRa32 V2 (433MHz SX1278)
 * TTGO T-Beam V0.7 (433MHz SX1278)
 * TTGO T-Beam V1 (433MHz SX1278)
+* Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
 * many more...
 
 Here are some amazon-de links for some example boards:
-* [Link](https://www.amazon.de/gp/product/B07VPHYYJD/)
-* [Link](https://www.amazon.de/gp/product/B078LXL5ZK/)
-* [Link](https://www.amazon.de/gp/product/B07QRG89ZV/).
+* [LoRa32 V1](https://www.amazon.de/dp/B07VPHYYJD)
+* [LoRa32 V1](https://www.amazon.de/dp/B07QRG89ZV)
+* [LoRa32 V2](https://www.amazon.de/dp/B07VL97VNH)
+* [T-Beam V1.0](https://www.amazon.de/dp/B07RT9FKPL)
 
 This boards cost around 20 Euros, they are very cheap and perfect for an LoRa iGate.
 Keep in minde: you need a 433MHz version!
@@ -47,6 +49,7 @@ But you don't need to download all this libs, PlatformIO will take care for you 
 ## Configuration
 
 Change your configuration in data/is-cfg.json and upload it via 'Upload File System image' in PlatformIO!
+To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration and search for 'Upload File System image'.
 
 ## LoRa APRS iGates on aprs.fi
 
@@ -56,7 +59,12 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
-The complete configuration should move to [IotWebConf](https://github.com/prampec/IotWebConf).
+* add FTP server support to upload configuration
+* add web server for configuration and other things
+* add statistics for received packages
+* show received packages on a map
+* add better library to support multiple OLEDs
+* etc.
 
 ## LoRa Tracker
 
