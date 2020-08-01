@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  precompile:
+  PlatformIO-Check:
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
@@ -15,14 +15,16 @@ jobs:
       - run: echo "::add-path::~/.local/bin"
       - uses: actions/checkout@v2
       - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
+
+  PlatformIO-Build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get install python3-setuptools python3-wheel
+      - run: pip3 install platformio
+      - run: echo "::add-path::~/.local/bin"
+      - uses: actions/checkout@v2
       - run: platformio run
-    
-#  build:
-#    runs-on: self-hosted
-#    needs: precompile
-#    steps:
-#    - uses: actions/checkout@v2
-#    - name: check for updates
-#      run: platformio update
-#    - name: compile
-#      run: platformio run -e ttgo-lora32-v1
+      - uses: actions/upload-artifact@v2
+        with:
+          name: firmware
+          path: .pio/build/*/firmware.bin
