@@ -1,0 +1,67 @@
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Upload Release Asset
+
+jobs:
+  build:
+    name: Upload Release Asset
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get install python3-setuptools python3-wheel
+      - run: pip3 install platformio
+      - run: echo "::add-path::~/.local/bin"
+      - uses: actions/checkout@v2
+      - run: platformio run
+      - id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/TrackerD-OE1ACM/firmware.bin
+          asset_name: TrackerD-OE1ACM.bin
+          asset_content_type: application/bin
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-lora32-v1/firmware.bin
+          asset_name: ttgo-lora32-v1.bin
+          asset_content_type: application/bin
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-lora32-v2/firmware.bin
+          asset_name: ttgo-lora32-v2.bin
+          asset_content_type: application/bin
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-t-beam-v0_7/firmware.bin
+          asset_name: ttgo-t-beam-v0_7.bin
+          asset_content_type: application/bin
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-t-beam-v1/firmware.bin
+          asset_name: ttgo-t-beam-v1.bin
+          asset_content_type: application/bin
