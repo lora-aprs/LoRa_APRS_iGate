@@ -12,7 +12,7 @@ Try it out and be part of the APRS network.
 
 You can use one of the Lora32 boards:
 
-  * Heltec WiFi LoRa 32 V1 (433MHz SX1278)
+* Heltec WiFi LoRa 32 V1 (433MHz SX1278)
   * Heltec WiFi LoRa 32 V2 (433MHz SX1278)
   * TTGO LoRa32 V1 (433MHz SX1278)
   * TTGO LoRa32 V2 (433MHz SX1278)
