@@ -14,7 +14,7 @@ jobs:
       - run: pip3 install platformio
       - run: echo "::add-path::~/.local/bin"
       - uses: actions/checkout@v2
-      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
+      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr" -v
 
   PlatformIO-Build:
     runs-on: ubuntu-latest
