@@ -1,5 +1,6 @@
 # LoRa APRS iGate
 
+![PlatformIO CI](https://github.com/lora-aprs/LoRa_APRS_iGate/workflows/PlatformIO%20CI/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0b7452d5b3b747b88c736e253dda51e6)](https://app.codacy.com/gh/lora-aprs/LoRa_APRS_iGate?utm_source=github.com&utm_medium=referral&utm_content=lora-aprs/LoRa_APRS_iGate&utm_campaign=Badge_Grade_Dashboard)
 
 The LoRa APRS iGate will work with very cheep hardware which you can buy from amazon, ebay or aliexpress.
