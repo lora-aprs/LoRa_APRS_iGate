@@ -52,7 +52,7 @@ But you don't need to download all this libs, PlatformIO will take care for you 
 ## Configuration
 
 Change your configuration in data/is-cfg.json and upload it via 'Upload File System image' in PlatformIO!
-To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration and search for 'Upload File System image'.
+To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration, click on 'Platform' and search for 'Upload File System image'.
 
 ## LoRa APRS iGates on aprs.fi
 
@@ -62,11 +62,14 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
+*   show time until next beaconing
+*   add better OLED library to support multiple different OLEDs
+*   add support to turn OLED on, off and dimming
+*   add support for temperature chips (BMExxx)
 *   add FTP server support to upload configuration
 *   add web server for configuration and other things
 *   add statistics for received packages
 *   show received packages on a map
-*   add better library to support multiple OLEDs
 *   etc.
 
 ## LoRa Tracker
