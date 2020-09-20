@@ -62,7 +62,7 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
-[ ]   show time until next beaconing
+[x]   show time until next beaconing
 [ ]   show login issues from IS server
 [ ]   add better OLED library to support multiple different OLEDs
 [ ]   add support to turn OLED on, off and dimming

@@ -23,6 +23,10 @@ PowerManagement powerManagement;
 #endif
 LoRa_APRS lora_aprs;
 
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+hw_timer_t * timer = NULL;
+volatile bool timerTick = false;
+
 int next_update = -1;
 
 void load_config();
@@ -31,6 +35,7 @@ void setup_ota();
 void setup_lora();
 void setup_ntp();
 void setup_aprs_is();
+void setup_timer();
 
 String BeaconMsg;
 
@@ -64,6 +69,7 @@ void setup()
 	setup_lora();
 	setup_ntp();
 	setup_aprs_is();
+	setup_timer();
 
 	delay(500);
 }
@@ -71,6 +77,13 @@ void setup()
 // cppcheck-suppress unusedFunction
 void loop()
 {
+	if(timerTick)
+	{
+		portENTER_CRITICAL(&timerMux);
+		timerTick = false;
+		portEXIT_CRITICAL(&timerMux);
+		next_update--;
+	}
 	timeClient.update();
 	ArduinoOTA.handle();
 	if(WiFiMulti.run() != WL_CONNECTED)
@@ -97,13 +110,13 @@ void loop()
 		}
 		Serial.println("[INFO] Connected to server!");
 	}
-	if(next_update == timeClient.getMinutes() || next_update == -1)
+	if(next_update < 0)
 	{
 		show_display(Config->getIsCall(), "Beacon to Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(BeaconMsg);
 		aprs_is->sendMessage(BeaconMsg);
-		next_update = (timeClient.getMinutes() + Config->getBeaconTimeout()) % 60;
+		next_update = Config->getBeaconTimeout() * 60;
 	}
 	if(aprs_is->available() > 0)
 	{
@@ -120,7 +133,7 @@ void loop()
 	{
 		std::shared_ptr<APRSMessage> msg = lora_aprs.getMessage();
 
-		show_display(Config->getIsCall(), timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString(), 0);
+		show_display(Config->getIsCall(), timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString());
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
 		Serial.print(msg->toString());
@@ -130,6 +143,11 @@ void loop()
 		Serial.println(lora_aprs.getMessageSnr());
 
 		aprs_is->sendMessage(msg->encode());
+	}
+	static int _next_update = 0;
+	if(next_update != _next_update)
+	{
+		show_display(Config->getIsCall(), "Time to next beaconing: " + String(next_update));
 	}
 }
 
@@ -240,4 +258,19 @@ void setup_aprs_is()
 	msg.setDestination("APLG0");
 	msg.getAPRSBody()->setData(String("=") + Config->getBeaconPosLat() + "I" + Config->getBeaconPosLong() + "&" + Config->getBeaconMessage());
 	BeaconMsg = msg.encode();
+}
+
+void IRAM_ATTR onTimer()
+{
+	portENTER_CRITICAL_ISR(&timerMux);
+	timerTick = true;
+	portEXIT_CRITICAL_ISR(&timerMux);
+}
+
+void setup_timer()
+{
+	timer = timerBegin(0, 80, true);
+	timerAlarmWrite(timer, 1000000, true);
+	timerAttachInterrupt(timer, &onTimer, true);
+	timerAlarmEnable(timer);
 }
