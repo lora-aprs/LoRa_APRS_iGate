@@ -1,45 +1,84 @@
 #ifndef CONFIGURATION_H_
 #define CONFIGURATION_H_
 
+#include <list>
+
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
 class Configuration
 {
 public:
-	explicit Configuration(String FilePath);
+	class Wifi
+	{
+	public:
+		class AP
+		{
+		public:
+			String SSID;
+			String password;
+		};
 
-	void readFile();
-	void writeFile();
+		Wifi() : active(false) {}
 
-	String getWifiName() const;
-	void   setWifiName(String WifiName);
-	String getWifiPassword() const;
-	void   setWifiPassword(String WifiPassword);
+		bool active;
+		std::list<AP> APs;
+	};
 
-	String getIsCall() const;
-	void   setIsCall(String IsCall);
-	String getIsPassword() const;
-	void   setIsPassword(String IsPassword);
-	String getIsServer() const;
-	void   setIsServer(String IsServer);
-	int    getIsPort() const;
-	void   setIsPort(int IsPort);
+	class Beacon
+	{
+	public:
+		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate") {}
 
-	String getBeaconMessage() const;
-	void   setBeaconMessage(String BeaconMessage);
-	String getBeaconPosLat() const;
-	void   setBeaconPosLat(String BeaconPosLat);
-	String getBeaconPosLong() const;
-	void   setBeaconPosLong(String BeaconPosLong);
-	int    getBeaconTimeout() const;
-	void   setBeaconTimeout(int BeaconTimeout);
+		String message;
+		double positionLatitude;
+		double positionLongitude;
+	};
 
+	class APRS_IS
+	{
+	public:
+		APRS_IS() : active(false), server("euro.aprs2.net"), port(14580), beacon(true), beaconTimeout(15) {}
+
+		bool active;
+		String password;
+		String server;
+		int port;
+		bool beacon;
+		int beaconTimeout;
+	};
+
+	class Digi
+	{
+	public:
+		Digi() : active(false), forwardTimeout(5), beacon(true), beaconTimeout(30) {}
+
+		bool active;
+		int forwardTimeout;
+		bool beacon;
+		int beaconTimeout;
+	};
+
+	Configuration() : version(1), callsign("NOCALL-10") {};
+
+	int version;
+	String callsign;
+	Wifi wifi;
+	Beacon beacon;
+	APRS_IS aprs_is;
+	Digi digi;
+};
+
+class ConfigurationManagement
+{
+public:
+	explicit ConfigurationManagement(String FilePath);
+
+	Configuration readConfiguration();
+	void writeConfiguration(Configuration conf);
 
 private:
 	const String mFilePath;
-
-	DynamicJsonDocument mData;
 };
 
 #endif

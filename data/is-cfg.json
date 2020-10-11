@@ -1,24 +1,36 @@
 {
-	"Wifi":
+	"version":1,
+	"callsign":"NOCALL-10",
+	"wifi":
 	{
-		"Name":"",
-		"Password":""
+		"active":false,
+		"AP": [
+			{ "SSID":"", "password":"" }
+		]
 	},
-	"IS":
+	"beacon":
 	{
-		"Call":"NOCALL-10",
-		"Password":"",
-		"Server":"austria.aprs2.net",
-		"Port":14580
-	},
-	"Beacon":
-	{
-		"Message":"LoRa IGATE (RX only), Info: github.com/peterus/LoRa_APRS_iGate",
-		"Pos":
+		"message":"LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate",
+		"position":
 		{
-			"Lat":"4819.82N",
-			"Long":"01418.68E"
-		},
-		"Timeout":15
+			"latitude":0.000000,
+			"longitude":0.000000
+		}
+	},
+	"aprs_is":
+	{
+		"active":false,
+		"password":"",
+		"server":"euro.aprs2.net",
+		"port":14580,
+		"beacon":true,
+		"beacon_timeout":15
+	},
+	"digi":
+	{
+		"active":false,
+		"forward_timeout":5,
+		"beacon":true,
+		"beacon_timeout":30
 	}
 }

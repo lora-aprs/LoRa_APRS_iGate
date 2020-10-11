@@ -4,8 +4,8 @@
 #include "settings.h"
 
 
-Configuration::Configuration(String FilePath)
-	: mFilePath(FilePath), mData(1024)
+ConfigurationManagement::ConfigurationManagement(String FilePath)
+	: mFilePath(FilePath)
 {
 	if(!SPIFFS.begin(true))
 	{
@@ -17,150 +17,55 @@ Configuration::Configuration(String FilePath)
 			return;
 		}
 	}
-	if(SPIFFS.exists(mFilePath))
+	if(!SPIFFS.exists(mFilePath))
 	{
-		readFile();
-	}
-	else
-	{
-		mData["Wifi"]["Name"] = WIFI_NAME;
-		mData["Wifi"]["Password"] = WIFI_KEY;
-		mData["IS"]["Call"] = USER;
-		mData["IS"]["Password"] = PASS;
-		mData["IS"]["Server"] = SERVER;
-		mData["IS"]["Port"] = PORT;
-		mData["Beacon"]["Message"] = BEACON_MESSAGE;
-		mData["Beacon"]["Pos"]["Lat"] = BEACON_LAT_POS;
-		mData["Beacon"]["Pos"]["Long"] = BEACON_LONG_POS;
-		mData["Beacon"]["Timeout"] = BEACON_TIMEOUT;
-		writeFile();
+		Configuration conf;
+		writeConfiguration(conf);
 	}
 }
 
-String Configuration::getWifiName() const
-{
-	return mData["Wifi"]["Name"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setWifiName(String WifiName)
-{
-	mData["Wifi"]["Name"] = WifiName;
-}
-
-String Configuration::getWifiPassword() const
-{
-	return mData["Wifi"]["Password"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setWifiPassword(String WifiPassword)
-{
-	mData["Wifi"]["Password"] = WifiPassword;
-}
-
-String Configuration::getIsCall() const
-{
-	return mData["IS"]["Call"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setIsCall(String IsCall)
-{
-	mData["IS"]["Call"] = IsCall;
-}
-
-String Configuration::getIsPassword() const
-{
-	return mData["IS"]["Password"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setIsPassword(String IsPassword)
-{
-	mData["IS"]["Password"] = IsPassword;
-}
-
-String Configuration::getIsServer() const
-{
-	return mData["IS"]["Server"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setIsServer(String IsServer)
-{
-	mData["IS"]["Server"] = IsServer;
-}
-
-int Configuration::getIsPort() const
-{
-	return mData["IS"]["Port"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setIsPort(int IsPort)
-{
-	mData["IS"]["Port"] = IsPort;
-}
-
-String Configuration::getBeaconMessage() const
-{
-	return mData["Beacon"]["Message"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setBeaconMessage(String BeaconMessage)
-{
-	mData["Beacon"]["Message"] = BeaconMessage;
-}
-
-String Configuration::getBeaconPosLat() const
-{
-	return mData["Beacon"]["Pos"]["Lat"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setBeaconPosLat(String BeaconPosLat)
-{
-	mData["Beacon"]["Pos"]["Lat"] = BeaconPosLat;
-}
-
-String Configuration::getBeaconPosLong() const
-{
-	return mData["Beacon"]["Pos"]["Long"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setBeaconPosLong(String BeaconPosLong)
-{
-	mData["Beacon"]["Pos"]["Long"] = BeaconPosLong;
-}
-
-int Configuration::getBeaconTimeout() const
-{
-	return mData["Beacon"]["Timeout"];
-}
-
-// cppcheck-suppress unusedFunction
-void Configuration::setBeaconTimeout(int BeaconTimeout)
-{
-	mData["Beacon"]["Timeout"] = BeaconTimeout;
-}
-
-
-void Configuration::readFile()
+Configuration ConfigurationManagement::readConfiguration()
 {
 	File file = SPIFFS.open(mFilePath);
 	if(!file)
 	{
 		Serial.println("Failed to open file for reading...");
-		return;
+		return Configuration();
 	}
-	deserializeJson(mData, file);
+	DynamicJsonDocument data(1024);
+	deserializeJson(data, file);
 	file.close();
+
+	Configuration conf;
+	conf.version                  = data["version"];
+	conf.callsign                 = data["callsign"].as<String>();
+	conf.wifi.active              = data["wifi"]["active"];
+	JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
+	for(JsonVariant v : aps)
+	{
+		Configuration::Wifi::AP ap;
+		ap.SSID = v["SSID"].as<String>();
+		ap.password = v["password"].as<String>();
+		conf.wifi.APs.push_back(ap);
+	}
+	conf.beacon.message           = data["beacon"]["message"].as<String>();
+	conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"];
+	conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"];
+	conf.aprs_is.active           = data["aprs_is"]["active"];
+	conf.aprs_is.password         = data["aprs_is"]["password"].as<String>();
+	conf.aprs_is.server           = data["aprs_is"]["server"].as<String>();
+	conf.aprs_is.port             = data["aprs_is"]["port"];
+	conf.aprs_is.beacon           = data["aprs_is"]["beacon"];
+	conf.aprs_is.beaconTimeout    = data["aprs_is"]["beacon_timeout"];
+	conf.digi.active              = data["digi"]["active"];
+	conf.digi.forwardTimeout      = data["digi"]["forward_timeout"];
+	conf.digi.beacon              = data["digi"]["beacon"];
+	conf.digi.beaconTimeout       = data["digi"]["beacon_timeout"];
+
+	return conf;
 }
 
-void Configuration::writeFile()
+void ConfigurationManagement::writeConfiguration(Configuration conf)
 {
 	File file = SPIFFS.open(mFilePath, "w");
 	if(!file)
@@ -168,8 +73,35 @@ void Configuration::writeFile()
 		Serial.println("Failed to open file for writing...");
 		return;
 	}
-	serializeJson(mData, file);
-	serializeJson(mData, Serial);
+	DynamicJsonDocument data(1024);
+
+	data["version"]                         = conf.version;
+	data["callsign"]                        = conf.callsign;
+	data["wifi"]["active"]                  = conf.wifi.active;
+	JsonArray aps = data["wifi"]["AP"].to<JsonArray>();
+	for(Configuration::Wifi::AP ap : conf.wifi.APs)
+	{
+		JsonVariant v;
+		v["SSID"] = ap.SSID;
+		v["password"] = ap.password;
+		aps.add(v);
+	}
+	data["beacon"]["message"]               = conf.beacon.message;
+	data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
+	data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
+	data["aprs_is"]["active"]               = conf.aprs_is.active;
+	data["aprs_is"]["password"]             = conf.aprs_is.password;
+	data["aprs_is"]["server"]               = conf.aprs_is.server;
+	data["aprs_is"]["port"]                 = conf.aprs_is.port;
+	data["aprs_is"]["beacon"]               = conf.aprs_is.beacon;
+	data["aprs_is"]["beacon_timeout"]       = conf.aprs_is.beaconTimeout;
+	data["digi"]["active"]                  = conf.digi.active;
+	data["digi"]["forward_timeout"]         = conf.digi.forwardTimeout;
+	data["digi"]["beacon"]                  = conf.digi.beacon;
+	data["digi"]["beacon_timeout"]          = conf.digi.beaconTimeout;
+
+	serializeJson(data, file);
+	serializeJson(data, Serial);
 	Serial.println();
 	file.close();
 }

@@ -1,3 +1,5 @@
+#include <map>
+
 #include <Arduino.h>
 #include <WiFiMulti.h>
 #include <NTPClient.h>
@@ -10,24 +12,29 @@
 #include "pins.h"
 #include "settings.h"
 #include "display.h"
-#include "power_management.h"
 #include "configuration.h"
+
+#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
+#include "power_management.h"
+PowerManagement powerManagement;
+#endif
+
+portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
+hw_timer_t * timer = NULL;
+volatile uint secondsSinceLastAPRSISBeacon = 0;
+volatile uint secondsSinceLastDigiBeacon = 0;
+volatile uint secondsSinceStartup = 0;
 
 WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
-Configuration * Config = 0;
+Configuration Config;
 APRS_IS * aprs_is = 0;
-#if defined(ARDUINO_T_Beam) && !defined(ARDUINO_T_Beam_V0_7)
-PowerManagement powerManagement;
-#endif
 LoRa_APRS lora_aprs;
+std::shared_ptr<APRSMessage> BeaconMsg;
 
-portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
-hw_timer_t * timer = NULL;
-volatile bool timerTick = false;
-
-int next_update = -1;
+String create_lat_aprs(double lat);
+String create_long_aprs(double lng);
 
 void load_config();
 void setup_wifi();
@@ -37,7 +44,7 @@ void setup_ntp();
 void setup_aprs_is();
 void setup_timer();
 
-String BeaconMsg;
+std::map<uint, std::shared_ptr<APRSMessage>> lastMessages;
 
 // cppcheck-suppress unusedFunction
 void setup()
@@ -60,47 +67,58 @@ void setup()
 	setup_display();
 	
 	delay(500);
-	Serial.println("[INFO] LoRa APRS iGate by OE5BPA (Peter Buchegger)");
-	show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", 3000);
+	Serial.println("[INFO] LoRa APRS iGate & Digi by OE5BPA (Peter Buchegger)");
+	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", 3000);
 
 	load_config();
-	setup_wifi();
-	setup_ota();
+	if(Config.wifi.active) setup_wifi();
+	if(Config.wifi.active) setup_ota();
 	setup_lora();
-	setup_ntp();
-	setup_aprs_is();
+	if(Config.wifi.active) setup_ntp();
+	if(Config.aprs_is.active) setup_aprs_is();
 	setup_timer();
 
 	delay(500);
+	Serial.println("setup done...");
 }
 
 // cppcheck-suppress unusedFunction
 void loop()
 {
-	if(timerTick)
+	static bool beacon_aprs_is = Config.aprs_is.active && Config.aprs_is.beacon;
+	static bool beacon_digi = Config.digi.active && Config.digi.beacon;
+
+	if(Config.aprs_is.active && Config.aprs_is.beacon && secondsSinceLastAPRSISBeacon >= (Config.aprs_is.beaconTimeout*60))
 	{
 		portENTER_CRITICAL(&timerMux);
-		timerTick = false;
+		secondsSinceLastAPRSISBeacon -= (Config.aprs_is.beaconTimeout*60);
 		portEXIT_CRITICAL(&timerMux);
-		next_update--;
+		beacon_aprs_is = true;
 	}
-	timeClient.update();
-	ArduinoOTA.handle();
-	if(WiFiMulti.run() != WL_CONNECTED)
+	if(Config.digi.active && Config.digi.beacon && secondsSinceLastDigiBeacon >= (Config.digi.beaconTimeout*60))
+	{
+		portENTER_CRITICAL(&timerMux);
+		secondsSinceLastDigiBeacon -= (Config.digi.beaconTimeout*60);
+		portEXIT_CRITICAL(&timerMux);
+		beacon_digi = true;
+	}
+
+	if(Config.wifi.active) ArduinoOTA.handle();
+	if(Config.wifi.active && WiFiMulti.run() != WL_CONNECTED)
 	{
 		Serial.println("[ERROR] WiFi not connected!");
 		show_display("ERROR", "WiFi not connected!");
 		delay(1000);
 		return;
 	}
-	if(!aprs_is->connected())
+	if(Config.aprs_is.active && !aprs_is->connected())
 	{
 		Serial.print("[INFO] connecting to server: ");
-		Serial.print(Config->getIsServer());
+		Serial.print(Config.aprs_is.server);
 		Serial.print(" on port: ");
-		Serial.println(Config->getIsPort());
+		Serial.println(Config.aprs_is.port);
 		show_display("INFO", "Connecting to server");
-		if(!aprs_is->connect(Config->getIsServer(), Config->getIsPort()))
+		if(!aprs_is->connect(Config.aprs_is.server, Config.aprs_is.port))
 		{
 			Serial.println("[ERROR] Connection failed.");
 			Serial.println("[INFO] Waiting 5 seconds before retrying...");
@@ -110,30 +128,17 @@ void loop()
 		}
 		Serial.println("[INFO] Connected to server!");
 	}
-	if(next_update < 0)
-	{
-		show_display(Config->getIsCall(), "Beacon to Server...");
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(BeaconMsg);
-		aprs_is->sendMessage(BeaconMsg);
-		next_update = Config->getBeaconTimeout() * 60;
-	}
-	if(aprs_is->available() > 0)
+	if(Config.aprs_is.active && aprs_is->available() > 0)
 	{
 		String str = aprs_is->getMessage();
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.println(str);
-#ifdef SEND_MESSAGES_FROM_IS_TO_LORA
-		std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
-		msg->decode(str);
-		lora_aprs.sendMessage(msg);
-#endif
 	}
 	if(lora_aprs.hasMessage())
 	{
 		std::shared_ptr<APRSMessage> msg = lora_aprs.getMessage();
 
-		show_display(Config->getIsCall(), timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString());
+		show_display(Config.callsign, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString());
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
 		Serial.print(msg->toString());
@@ -142,22 +147,109 @@ void loop()
 		Serial.print(" and SNR ");
 		Serial.println(lora_aprs.getMessageSnr());
 
-		aprs_is->sendMessage(msg->encode());
+		if(Config.aprs_is.active)
+		{
+			aprs_is->sendMessage(msg->encode());
+		}
+		if(Config.digi.active)
+		{
+			if(msg->getSource().indexOf(Config.callsign) != -1)
+			{
+				Serial.print("Message already received as repeater: '");
+				Serial.print(msg->toString());
+				Serial.print("' with RSSI ");
+				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(" and SNR ");
+				Serial.println(lora_aprs.getMessageSnr());
+				return;
+			}
+
+			// lets try not to flood the LoRa frequency in limiting the same messages:
+			std::map<uint, std::shared_ptr<APRSMessage>>::iterator foundMsg = std::find_if(lastMessages.begin(), lastMessages.end(), [&](std::pair<const unsigned int, std::shared_ptr<APRSMessage> > & old_msg)
+				{
+					if(msg->getSource() == old_msg.second->getSource() &&
+						msg->getDestination() == old_msg.second->getDestination() &&
+						msg->getAPRSBody()->getData() == old_msg.second->getAPRSBody()->getData())
+					{
+						return true;
+					}
+					return false;
+				});
+
+			if(foundMsg == lastMessages.end())
+			{
+				show_display(Config.callsign, "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString(), 0);
+				Serial.print("Received packet '");
+				Serial.print(msg->toString());
+				Serial.print("' with RSSI ");
+				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(" and SNR ");
+				Serial.println(lora_aprs.getMessageSnr());
+				msg->setPath(String(Config.callsign) + "*");
+				lora_aprs.sendMessage(msg);
+				lastMessages.insert({secondsSinceStartup, msg});
+			}
+			else
+			{
+				Serial.print("Message already received (timeout): '");
+				Serial.print(msg->toString());
+				Serial.print("' with RSSI ");
+				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(" and SNR ");
+				Serial.println(lora_aprs.getMessageSnr());
+			}
+			return;
+		}
 	}
-	static int _next_update = 0;
-	if(next_update != _next_update)
+	if(Config.digi.active)
 	{
-		show_display(Config->getIsCall(), "Time to next beaconing: " + String(next_update));
+		for(std::map<uint, std::shared_ptr<APRSMessage>>::iterator iter = lastMessages.begin(); iter != lastMessages.end(); )
+		{
+			if(secondsSinceStartup >= iter->first + Config.digi.forwardTimeout*60)
+			{
+				iter = lastMessages.erase(iter);
+			}
+			else
+			{
+				iter++;
+			}
+		}
+	}
+	if(beacon_digi)
+	{
+		beacon_digi = false;
+		show_display(Config.callsign, "Beacon to HF...");
+		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		Serial.print(BeaconMsg->encode());
+		lora_aprs.sendMessage(BeaconMsg);
+		Serial.println("finished TXing...");
+	}
+	if(beacon_aprs_is)
+	{
+		beacon_aprs_is = false;
+		show_display(Config.callsign, "Beacon to APRS IS Server...");
+		Serial.print("[" + timeClient.getFormattedTime() + "] ");
+		Serial.print(BeaconMsg->encode());
+		aprs_is->sendMessage(BeaconMsg);
 	}
 }
 
 void load_config()
 {
-	Config = new Configuration("/is-cfg.json");
-	if(Config->getIsCall() == "NOCALL-10" || Config->getWifiName() == "")
+	ConfigurationManagement confmg("/is-cfg.json");
+	Config = confmg.readConfiguration();
+	if(Config.callsign == "NOCALL-10")
 	{
 		Serial.println("[ERROR] You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
 		show_display("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+		while (true)
+		{}
+	}
+
+	if(Config.aprs_is.active && !Config.wifi.active)
+	{
+		Serial.println("[ERROR] You have to activate Wifi for APRS IS to work, please check your settings!");
+		show_display("ERROR", "You have to activate Wifi for APRS IS to work, please check your settings!");
 		while (true)
 		{}
 	}
@@ -166,8 +258,11 @@ void load_config()
 void setup_wifi()
 {
 	WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
-	WiFi.setHostname(Config->getIsCall().c_str());
-	WiFiMulti.addAP(Config->getWifiName().c_str(), Config->getWifiPassword().c_str());
+	WiFi.setHostname(Config.callsign.c_str());
+	for(Configuration::Wifi::AP ap : Config.wifi.APs)
+	{
+		WiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
+	}
 	Serial.print("[INFO] Waiting for WiFi");
 	show_display("INFO", "Waiting for WiFi");
 	while(WiFiMulti.run() != WL_CONNECTED)
@@ -218,15 +313,13 @@ void setup_ota()
 			else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
 			else if (error == OTA_END_ERROR) Serial.println("End Failed");
 		});
-	ArduinoOTA.setHostname(Config->getIsCall().c_str());
+	ArduinoOTA.setHostname(Config.callsign.c_str());
 	ArduinoOTA.begin();
 }
 
 void setup_lora()
 {
-	Serial.print("[INFO] frequency: ");
-	Serial.println(LORA_RX_FREQUENCY);
-	
+	lora_aprs.tx_frequency = LORA_RX_FREQUENCY;
 	if (!lora_aprs.begin())
 	{
 		Serial.println("[ERROR] Starting LoRa failed!");
@@ -235,6 +328,13 @@ void setup_lora()
 	}
 	Serial.println("[INFO] LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
+
+	BeaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
+	BeaconMsg->setSource(Config.callsign);
+	BeaconMsg->setDestination("APLG0");
+	String lat = create_lat_aprs(Config.beacon.positionLatitude);
+	String lng = create_long_aprs(Config.beacon.positionLongitude);
+	BeaconMsg->getAPRSBody()->setData(String("=") + lat + "I" + lng + "&" + Config.beacon.message);
 }
 
 void setup_ntp()
@@ -251,19 +351,15 @@ void setup_ntp()
 
 void setup_aprs_is()
 {
-	aprs_is = new APRS_IS(Config->getIsCall(), Config->getIsPassword() , "ESP32-APRS-IS", "0.1");
-
-	APRSMessage msg;
-	msg.setSource(Config->getIsCall());
-	msg.setDestination("APLG0");
-	msg.getAPRSBody()->setData(String("=") + Config->getBeaconPosLat() + "I" + Config->getBeaconPosLong() + "&" + Config->getBeaconMessage());
-	BeaconMsg = msg.encode();
+	aprs_is = new APRS_IS(Config.callsign, Config.aprs_is.password , "ESP32-APRS-IS", "0.1");
 }
 
 void IRAM_ATTR onTimer()
 {
 	portENTER_CRITICAL_ISR(&timerMux);
-	timerTick = true;
+	secondsSinceLastAPRSISBeacon++;
+	secondsSinceLastDigiBeacon++;
+	secondsSinceStartup++;
 	portEXIT_CRITICAL_ISR(&timerMux);
 }
 
@@ -273,4 +369,32 @@ void setup_timer()
 	timerAlarmWrite(timer, 1000000, true);
 	timerAttachInterrupt(timer, &onTimer, true);
 	timerAlarmEnable(timer);
+}
+
+String create_lat_aprs(double lat)
+{
+	char str[20];
+	char n_s = 'N';
+	if(lat < 0)
+	{
+		n_s = 'S';
+	}
+	lat = std::abs(lat);
+	sprintf(str, "%02d%05.2f%c", (int)lat, (lat - (double)((int)lat)) * 60.0, n_s);
+	String lat_str(str);
+	return lat_str;
+}
+
+String create_long_aprs(double lng)
+{
+	char str[20];
+	char e_w = 'E';
+	if(lng < 0)
+	{
+		e_w = 'W';
+	}
+	lng = std::abs(lng);
+	sprintf(str, "%03d%05.2f%c", (int)lng, (lng - (double)((int)lng)) * 60.0, e_w);
+	String lng_str(str);
+	return lng_str;
 }
