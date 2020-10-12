@@ -12,7 +12,7 @@ jobs:
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: pip3 install platformio
-      - run: echo "::add-path::~/.local/bin"
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
       - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr" -v
 
@@ -21,7 +21,7 @@ jobs:
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: pip3 install platformio
-      - run: echo "::add-path::~/.local/bin"
+      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
       - run: platformio run
       - uses: actions/upload-artifact@v2
