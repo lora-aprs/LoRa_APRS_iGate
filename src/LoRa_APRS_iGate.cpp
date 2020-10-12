@@ -71,10 +71,13 @@ void setup()
 	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", 3000);
 
 	load_config();
-	if(Config.wifi.active) setup_wifi();
-	if(Config.wifi.active) setup_ota();
 	setup_lora();
-	if(Config.wifi.active) setup_ntp();
+	if(Config.wifi.active)
+	{
+		setup_wifi();
+		setup_ota();
+		setup_ntp();
+	}
 	if(Config.aprs_is.active) setup_aprs_is();
 	setup_timer();
 
@@ -211,7 +214,7 @@ void loop()
 			}
 			else
 			{
-				iter++;
+				iter++; // cppcheck-suppress postfixOperator
 			}
 		}
 	}
