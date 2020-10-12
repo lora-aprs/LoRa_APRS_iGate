@@ -214,7 +214,7 @@ void loop()
 			}
 			else
 			{
-				iter++; // cppcheck-suppress postfixOperator
+				++iter;
 			}
 		}
 	}
