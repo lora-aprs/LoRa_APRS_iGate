@@ -59,6 +59,7 @@ void setup()
 	} else {
 		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
 	}
+	Wire.begin(SDA, SCL);
 	powerManagement.activateLoRa();
 	powerManagement.activateOLED();
 	powerManagement.deactivateGPS();
