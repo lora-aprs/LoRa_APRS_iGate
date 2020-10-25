@@ -5,7 +5,7 @@
 	{
 		"active":false,
 		"AP": [
-			{ "SSID":"", "password":"" }
+			{ "SSID":"YOURSSID", "password":"YOURPASSWORD" }
 		]
 	},
 	"beacon":
