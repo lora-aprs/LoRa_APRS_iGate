@@ -23,4 +23,19 @@
 	#define OLED_RST	25
 #endif
 
+
+
+#undef KEY_BUILTIN
+#if defined(TTGO_T_Beam_V0_7)
+	#define KEY_BUILTIN 39
+#endif
+
+#if defined(TTGO_T_Beam_V1_0)
+	#define KEY_BUILTIN 38
+#endif
+
+#ifndef KEY_BUILTIN
+	#define KEY_BUILTIN 0
+#endif
+
 #endif

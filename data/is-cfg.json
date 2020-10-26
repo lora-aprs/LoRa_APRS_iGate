@@ -1,5 +1,5 @@
 {
-	"version":1,
+	"version":2,
 	"callsign":"NOCALL-10",
 	"wifi":
 	{
@@ -32,5 +32,17 @@
 		"forward_timeout":5,
 		"beacon":true,
 		"beacon_timeout":30
+	},
+	"lora":
+	{
+		"frequency_rx":433775000,
+		"frequency_tx":433775000,
+		"power":20
+	},
+	"display":
+	{
+		"always_on": true,
+		"timeout":10,
+		"overwrite_pin":0
 	}
 }

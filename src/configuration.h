@@ -59,7 +59,27 @@ public:
 		int beaconTimeout;
 	};
 
-	Configuration() : version(1), callsign("NOCALL-10") {};
+	class LoRa
+	{
+	public:
+		LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20) {}
+
+		long frequencyRx;
+		long frequencyTx;
+		int power;
+	};
+
+	class Display
+	{
+	public:
+		Display() : alwaysOn(true), timeout(10), overwritePin(0) {}
+
+		bool alwaysOn;
+		int timeout;
+		int overwritePin;
+	};
+
+	Configuration() : version(2), callsign("NOCALL-10") {};
 
 	int version;
 	String callsign;
@@ -67,6 +87,8 @@ public:
 	Beacon beacon;
 	APRS_IS aprs_is;
 	Digi digi;
+	LoRa lora;
+	Display display;
 };
 
 class ConfigurationManagement

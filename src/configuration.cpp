@@ -37,7 +37,6 @@ Configuration ConfigurationManagement::readConfiguration()
 	file.close();
 
 	Configuration conf;
-	conf.version                  = data["version"];
 	conf.callsign                 = data["callsign"].as<String>();
 	conf.wifi.active              = data["wifi"]["active"];
 	JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
@@ -61,6 +60,16 @@ Configuration ConfigurationManagement::readConfiguration()
 	conf.digi.forwardTimeout      = data["digi"]["forward_timeout"];
 	conf.digi.beacon              = data["digi"]["beacon"];
 	conf.digi.beaconTimeout       = data["digi"]["beacon_timeout"];
+
+	if(data["version"] >= 2)
+	{
+		conf.lora.frequencyRx     = data["lora"]["frequency_rx"];
+		conf.lora.frequencyTx     = data["lora"]["frequency_tx"];
+		conf.lora.power           = data["lora"]["power"];
+		conf.display.alwaysOn     = data["display"]["always_on"];
+		conf.display.timeout      = data["display"]["timeout"];
+		conf.display.overwritePin = data["display"]["overwrite_pin"];
+	}
 
 	return conf;
 }
@@ -99,6 +108,12 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["digi"]["forward_timeout"]         = conf.digi.forwardTimeout;
 	data["digi"]["beacon"]                  = conf.digi.beacon;
 	data["digi"]["beacon_timeout"]          = conf.digi.beaconTimeout;
+	data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
+	data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
+	data["lora"]["power"]                   = conf.lora.power;
+	data["display"]["always_on"]            = conf.display.alwaysOn;
+	data["display"]["timeout"]              = conf.display.timeout;
+	data["display"]["overwrite_pin"]        = conf.display.overwritePin;
 
 	serializeJson(data, file);
 	serializeJson(data, Serial);

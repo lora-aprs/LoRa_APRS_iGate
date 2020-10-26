@@ -21,13 +21,11 @@ void setup_display()
 		Serial.println("SSD1306 allocation failed");
 		while (1);
 	}
+}
 
-	display.clearDisplay();
-	display.setTextColor(WHITE);
-	display.setTextSize(1);
-	display.setCursor(0,0);
-	display.print("LORA SENDER ");
-	display.display();
+void turn_off_display()
+{
+	display.ssd1306_command(SSD1306_DISPLAYOFF);
 }
 
 void show_display(String header, int wait)

@@ -24,6 +24,7 @@ hw_timer_t * timer = NULL;
 volatile uint secondsSinceLastAPRSISBeacon = 0;
 volatile uint secondsSinceLastDigiBeacon = 0;
 volatile uint secondsSinceStartup = 0;
+volatile uint secondsSinceDisplay = 0;
 
 WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
@@ -82,13 +83,34 @@ void setup()
 	if(Config.aprs_is.active) setup_aprs_is();
 	setup_timer();
 
+	if(Config.display.overwritePin != 0)
+	{
+		pinMode(Config.display.overwritePin, INPUT);
+		pinMode(Config.display.overwritePin, INPUT_PULLUP);
+	}
+
 	delay(500);
 	Serial.println("setup done...");
+	secondsSinceDisplay = 0;
 }
 
 // cppcheck-suppress unusedFunction
 void loop()
 {
+	static bool display_is_on = true;
+	if(Config.display.overwritePin != 0 && !digitalRead(Config.display.overwritePin))
+	{
+		secondsSinceDisplay = 0;
+		display_is_on = true;
+		setup_display();
+	} else
+	if(!Config.display.alwaysOn && secondsSinceDisplay > Config.display.timeout && display_is_on)
+	{
+		turn_off_display();
+		display_is_on = false;
+		Serial.println("-");
+	}
+
 	static bool beacon_aprs_is = Config.aprs_is.active && Config.aprs_is.beacon;
 	static bool beacon_digi = Config.digi.active && Config.digi.beacon;
 
@@ -110,6 +132,7 @@ void loop()
 	if(Config.wifi.active) ArduinoOTA.handle();
 	if(Config.wifi.active && WiFiMulti.run() != WL_CONNECTED)
 	{
+		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		Serial.println("[ERROR] WiFi not connected!");
 		show_display("ERROR", "WiFi not connected!");
 		delay(1000);
@@ -117,6 +140,7 @@ void loop()
 	}
 	if(Config.aprs_is.active && !aprs_is->connected())
 	{
+		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		Serial.print("[INFO] connecting to server: ");
 		Serial.print(Config.aprs_is.server);
 		Serial.print(" on port: ");
@@ -142,6 +166,7 @@ void loop()
 	{
 		std::shared_ptr<APRSMessage> msg = lora_aprs.getMessage();
 
+		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		show_display(Config.callsign, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString());
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
@@ -182,6 +207,7 @@ void loop()
 
 			if(foundMsg == lastMessages.end())
 			{
+				setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 				show_display(Config.callsign, "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString(), 0);
 				Serial.print("Received packet '");
 				Serial.print(msg->toString());
@@ -222,19 +248,23 @@ void loop()
 	if(beacon_digi)
 	{
 		beacon_digi = false;
+		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		show_display(Config.callsign, "Beacon to HF...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(BeaconMsg->encode());
 		lora_aprs.sendMessage(BeaconMsg);
 		Serial.println("finished TXing...");
+		show_display(Config.callsign, "Standby...");
 	}
 	if(beacon_aprs_is)
 	{
 		beacon_aprs_is = false;
+		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		show_display(Config.callsign, "Beacon to APRS IS Server...");
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(BeaconMsg->encode());
 		aprs_is->sendMessage(BeaconMsg);
+		show_display(Config.callsign, "Standby...");
 	}
 }
 
@@ -256,6 +286,11 @@ void load_config()
 		show_display("ERROR", "You have to activate Wifi for APRS IS to work, please check your settings!");
 		while (true)
 		{}
+	}
+
+	if(KEY_BUILTIN != 0 && Config.display.overwritePin == 0)
+	{
+		Config.display.overwritePin = KEY_BUILTIN;
 	}
 }
 
@@ -323,13 +358,15 @@ void setup_ota()
 
 void setup_lora()
 {
-	lora_aprs.tx_frequency = LORA_RX_FREQUENCY;
+	lora_aprs.rx_frequency = Config.lora.frequencyRx;
+	lora_aprs.tx_frequency = Config.lora.frequencyTx;
 	if (!lora_aprs.begin())
 	{
 		Serial.println("[ERROR] Starting LoRa failed!");
 		show_display("ERROR", "Starting LoRa failed!");
 		while (1);
 	}
+	lora_aprs.setTxPower(Config.lora.power);
 	Serial.println("[INFO] LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
 
@@ -364,6 +401,7 @@ void IRAM_ATTR onTimer()
 	secondsSinceLastAPRSISBeacon++;
 	secondsSinceLastDigiBeacon++;
 	secondsSinceStartup++;
+	secondsSinceDisplay++;
 	portEXIT_CRITICAL_ISR(&timerMux);
 }
 
