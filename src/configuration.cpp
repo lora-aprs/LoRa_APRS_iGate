@@ -1,7 +1,6 @@
 #include "SPIFFS.h"
 
 #include "configuration.h"
-#include "settings.h"
 
 
 ConfigurationManagement::ConfigurationManagement(String FilePath)
