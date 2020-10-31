@@ -167,14 +167,14 @@ void loop()
 		std::shared_ptr<APRSMessage> msg = lora_aprs.getMessage();
 
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
-		show_display(Config.callsign, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString());
+		show_display(Config.callsign, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.packetRssi()) + ", SNR: " + String(lora_aprs.packetSnr()), msg->toString());
 		Serial.print("[" + timeClient.getFormattedTime() + "] ");
 		Serial.print(" Received packet '");
 		Serial.print(msg->toString());
 		Serial.print("' with RSSI ");
-		Serial.print(lora_aprs.getMessageRssi());
+		Serial.print(lora_aprs.packetRssi());
 		Serial.print(" and SNR ");
-		Serial.println(lora_aprs.getMessageSnr());
+		Serial.println(lora_aprs.packetSnr());
 
 		if(Config.aprs_is.active)
 		{
@@ -187,9 +187,9 @@ void loop()
 				Serial.print("Message already received as repeater: '");
 				Serial.print(msg->toString());
 				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(lora_aprs.packetRssi());
 				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.getMessageSnr());
+				Serial.println(lora_aprs.packetSnr());
 				return;
 			}
 
@@ -208,13 +208,13 @@ void loop()
 			if(foundMsg == lastMessages.end())
 			{
 				setup_display(); secondsSinceDisplay = 0; display_is_on = true;
-				show_display(Config.callsign, "RSSI: " + String(lora_aprs.getMessageRssi()) + ", SNR: " + String(lora_aprs.getMessageSnr()), msg->toString(), 0);
+				show_display(Config.callsign, "RSSI: " + String(lora_aprs.packetRssi()) + ", SNR: " + String(lora_aprs.packetSnr()), msg->toString(), 0);
 				Serial.print("Received packet '");
 				Serial.print(msg->toString());
 				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(lora_aprs.packetRssi());
 				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.getMessageSnr());
+				Serial.println(lora_aprs.packetSnr());
 				msg->setPath(String(Config.callsign) + "*");
 				lora_aprs.sendMessage(msg);
 				lastMessages.insert({secondsSinceStartup, msg});
@@ -224,9 +224,9 @@ void loop()
 				Serial.print("Message already received (timeout): '");
 				Serial.print(msg->toString());
 				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.getMessageRssi());
+				Serial.print(lora_aprs.packetRssi());
 				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.getMessageSnr());
+				Serial.println(lora_aprs.packetSnr());
 			}
 			return;
 		}
@@ -358,9 +358,9 @@ void setup_ota()
 
 void setup_lora()
 {
-	lora_aprs.rx_frequency = Config.lora.frequencyRx;
-	lora_aprs.tx_frequency = Config.lora.frequencyTx;
-	if (!lora_aprs.begin())
+	lora_aprs.setRxFrequency(Config.lora.frequencyRx);
+	lora_aprs.setTxFrequency(Config.lora.frequencyTx);
+	if (!lora_aprs.begin(lora_aprs.getRxFrequency()))
 	{
 		Serial.println("[ERROR] Starting LoRa failed!");
 		show_display("ERROR", "Starting LoRa failed!");
