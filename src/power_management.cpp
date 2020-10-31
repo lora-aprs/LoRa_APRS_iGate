@@ -7,7 +7,7 @@ PowerManagement::PowerManagement()
 }
 
 // cppcheck-suppress unusedFunction
-bool PowerManagement::begin(TwoWire port)
+bool PowerManagement::begin(TwoWire & port)
 {
     bool result = axp.begin(port, AXP192_SLAVE_ADDRESS);
     if(!result)
