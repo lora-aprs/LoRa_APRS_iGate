@@ -71,7 +71,7 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
-<<<<<<< HEAD
+
 - [x]  show time until next beaconing
 - [ ]  show login issues from IS server
 - [ ]  add better OLED library to support multiple different OLEDs
@@ -82,18 +82,7 @@ Feel free to add a link to your iGate here:
 - [ ]  add statistics for received packages
 - [ ]  show received packages on a map
 - [ ]  etc.
-=======
-- [x]   show time until next beaconing
-- [ ]   show login issues from IS server
-- [ ]   add better OLED library to support multiple different OLEDs
-- [x]   add support to turn OLED on, off and dimming
-- [ ]   add support for temperature chips (BMExxx)
-- [ ]   add FTP server support to upload configuration
-- [ ]   add web server for configuration and other things
-- [ ]   add statistics for received packages
-- [ ]   show received packages on a map
-- [ ]   etc.
->>>>>>> 0b548652895d3c21276829da326de6e87bb1400a
+
 
 ## LoRa Tracker
 
