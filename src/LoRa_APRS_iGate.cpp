@@ -78,6 +78,12 @@ void setup()
 		setup_ota();
 		setup_ntp();
 	}
+	else
+	{
+		// make sure wifi and bt is off if we don't need it:
+		WiFi.mode(WIFI_OFF);
+		btStop();
+	}
 	if(Config.aprs_is.active) setup_aprs_is();
 	setup_timer();
 
