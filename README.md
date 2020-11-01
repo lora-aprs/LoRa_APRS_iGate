@@ -18,13 +18,15 @@ You can use one of the Lora32 boards without changings :
 
 *   Heltec WiFi LoRa 32 V1 (433MHz SX1278)
 *   Heltec WiFi LoRa 32 V2 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V1 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V2 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V2.1 (433MHz SX1278)
-*   Wemos® TTGO T-Beam V0.7 (433MHz SX1278)
-*   Wemos® TTGO T-Beam V1 (433MHz SX1278)
 *   Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
-*   many more...
+
+### Boards produced by different manufacturers
+*   TTGO LoRa32 V1 (433MHz SX1278)
+*   TTGO LoRa32 V2 (433MHz SX1278)
+*   TTGO LoRa32 V2.1 (433MHz SX1278)
+*   TTGO T-Beam V0.7 (433MHz SX1278)
+*   TTGO T-Beam V1 (433MHz SX1278)
+*   and many more...
 
 Here are some amazon-de links for some example boards:
 *   [LoRa32 V1](https://www.amazon.de/dp/B07VPHYYJD)
@@ -69,16 +71,16 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
-- [x] show time until next beaconing
-- [ ] show login issues from IS server
-- [ ] add better OLED library to support multiple different OLEDs
-- [x] add support to turn OLED on, off and dimming
-- [ ] add support for temperature chips (BMExxx)
-- [ ] add FTP server support to upload configuration
-- [ ] add web server for configuration and other things
-- [ ] add statistics for received packages
-- [ ] show received packages on a map
-- [ ] etc.
+- [x]  show time until next beaconing
+- [ ]  show login issues from IS server
+- [ ]  add better OLED library to support multiple different OLEDs
+- [x]  add support to turn OLED on, off and dimming
+- [ ]  add support for temperature chips (BMExxx)
+- [ ]  add FTP server support to upload configuration
+- [ ]  add web server for configuration and other things
+- [ ]  add statistics for received packages
+- [ ]  show received packages on a map
+- [ ]  etc.
 
 ## LoRa Tracker
 
