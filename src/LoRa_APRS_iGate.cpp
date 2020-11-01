@@ -365,6 +365,9 @@ void setup_lora()
 		while (1);
 	}
 	lora_aprs.setTxPower(Config.lora.power);
+	lora_aprs.setSpreadingFactor(Config.lora.spreadingFactor);
+	lora_aprs.setSignalBandwidth(Config.lora.signalBandwidth);
+	lora_aprs.setCodingRate4(Config.lora.codingRate4);
 	Serial.println("[INFO] LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
 
