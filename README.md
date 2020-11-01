@@ -1,4 +1,4 @@
-# LoRa APRS iGate
+## LoRa APRS iGate
 
 ![PlatformIO CI](https://github.com/lora-aprs/LoRa_APRS_iGate/workflows/PlatformIO%20CI/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0b7452d5b3b747b88c736e253dda51e6)](https://app.codacy.com/gh/lora-aprs/LoRa_APRS_iGate?utm_source=github.com&utm_medium=referral&utm_content=lora-aprs/LoRa_APRS_iGate&utm_campaign=Badge_Grade_Dashboard)
@@ -71,6 +71,7 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
+<<<<<<< HEAD
 - [x]  show time until next beaconing
 - [ ]  show login issues from IS server
 - [ ]  add better OLED library to support multiple different OLEDs
@@ -81,6 +82,18 @@ Feel free to add a link to your iGate here:
 - [ ]  add statistics for received packages
 - [ ]  show received packages on a map
 - [ ]  etc.
+=======
+- [x]   show time until next beaconing
+- [ ]   show login issues from IS server
+- [ ]   add better OLED library to support multiple different OLEDs
+- [x]   add support to turn OLED on, off and dimming
+- [ ]   add support for temperature chips (BMExxx)
+- [ ]   add FTP server support to upload configuration
+- [ ]   add web server for configuration and other things
+- [ ]   add statistics for received packages
+- [ ]   show received packages on a map
+- [ ]   etc.
+>>>>>>> 0b548652895d3c21276829da326de6e87bb1400a
 
 ## LoRa Tracker
 
