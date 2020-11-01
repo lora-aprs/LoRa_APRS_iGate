@@ -1,4 +1,4 @@
-## LoRa APRS iGate
+# LoRa APRS iGate
 
 ![PlatformIO CI](https://github.com/lora-aprs/LoRa_APRS_iGate/workflows/PlatformIO%20CI/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/0b7452d5b3b747b88c736e253dda51e6)](https://app.codacy.com/gh/lora-aprs/LoRa_APRS_iGate?utm_source=github.com&utm_medium=referral&utm_content=lora-aprs/LoRa_APRS_iGate&utm_campaign=Badge_Grade_Dashboard)
@@ -11,8 +11,6 @@ Try it out and be part of the APRS network.
 ![TTGO LoRa32](pics/iGate.png)
 
 ## Supported boards
-
-You can use one of the Lora32 boards:
 
 You can use one of the Lora32 boards without changings :
 
