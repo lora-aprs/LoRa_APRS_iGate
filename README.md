@@ -76,7 +76,7 @@ Feel free to add a link to your iGate here:
 *   [x] show time until next beaconing
 *   [ ] show login issues from IS server
 *   [ ] add better OLED library to support multiple different OLEDs
-*   [x] add support to turn OLED on, off and dimming
+*   [ ] add support to turn OLED on, off and dimming
 *   [ ] add support for temperature chips (BMExxx)
 *   [ ] add FTP server support to upload configuration
 *   [ ] add web server for configuration and other things
