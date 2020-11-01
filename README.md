@@ -16,24 +16,22 @@ You can use one of the Lora32 boards:
 
 You can use one of the Lora32 boards without changings :
 
-
-
-* Heltec WiFi LoRa 32 V1 (433MHz SX1278)
-* Heltec WiFi LoRa 32 V2 (433MHz SX1278)
-* Wemos® TTGO LoRa32 V1 (433MHz SX1278)
-* Wemos® TTGO LoRa32 V2 (433MHz SX1278)
-* Wemos® TTGO LoRa32 V2.1 (433MHz SX1278)
-* Wemos® TTGO T-Beam V0.7 (433MHz SX1278)
-* Wemos® TTGO T-Beam V1 (433MHz SX1278)
-* Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
-* many more...
+*   Heltec WiFi LoRa 32 V1 (433MHz SX1278)
+*   Heltec WiFi LoRa 32 V2 (433MHz SX1278)
+*   Wemos® TTGO LoRa32 V1 (433MHz SX1278)
+*   Wemos® TTGO LoRa32 V2 (433MHz SX1278)
+*   Wemos® TTGO LoRa32 V2.1 (433MHz SX1278)
+*   Wemos® TTGO T-Beam V0.7 (433MHz SX1278)
+*   Wemos® TTGO T-Beam V1 (433MHz SX1278)
+*   Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
+*   many more...
 
 Here are some amazon-de links for some example boards:
-* [LoRa32 V1] (https://www.amazon.de/dp/B07VPHYYJD)
-* [LoRa32 V1] (https://www.amazon.de/dp/B07QRG89ZV)
-* [LoRa32 V2] (https://www.amazon.de/dp/B07VL97VNH)
-* [LoRa32 V2.1] (https://www.amazon.de/dp/B07RXSKPBX)
-* [T-Beam V1.0] (https://www.amazon.de/dp/B07RT9FKPL)
+*   [LoRa32 V1] (https://www.amazon.de/dp/B07VPHYYJD)
+*   [LoRa32 V1] (https://www.amazon.de/dp/B07QRG89ZV)
+*   [LoRa32 V2] (https://www.amazon.de/dp/B07VL97VNH)
+*   [LoRa32 V2.1] (https://www.amazon.de/dp/B07RXSKPBX)
+*   [T-Beam V1.0] (https://www.amazon.de/dp/B07RT9FKPL)
 
 This boards cost around 20 Euros, they are very cheap and perfect for an LoRa iGate.
 Keep in minde: you need a 433MHz version!
@@ -91,7 +89,7 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 
 ### Here are some peculiarities of the different boards.
 
-* Wemos® TTGO T-Beam V1
+*   Wemos® TTGO T-Beam V1
 
 When adding a 0,96" OLED display direct to the board you have to be careful becouse thre are two different pinout versions. 
 For direct mount you need 'VCC - GND - SCL - SDA'. for example (https://www.amazon.de/dp/B07RXSKPBX) 
