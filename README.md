@@ -18,22 +18,22 @@ You can use one of the Lora32 boards without changings :
 
 
 
-*   Heltec WiFi LoRa 32 V1			(433MHz SX1278)
-*   Heltec WiFi LoRa 32 V2			(433MHz SX1278)
-*   Wemos® TTGO LoRa32 V1 			(433MHz SX1278)
-*   Wemos® TTGO LoRa32 V2			(433MHz SX1278)
-*	Wemos® TTGO LoRa32 V2.1			(433MHz SX1278)
-*	Wemos® TTGO T-Beam V0.7			(433MHz SX1278)
-*	Wemos® TTGO T-Beam V1			(433MHz SX1278)
-*	Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
-*	many more...
+* Heltec WiFi LoRa 32 V1 (433MHz SX1278)
+* Heltec WiFi LoRa 32 V2 (433MHz SX1278)
+* Wemos® TTGO LoRa32 V1 (433MHz SX1278)
+* Wemos® TTGO LoRa32 V2 (433MHz SX1278)
+* Wemos® TTGO LoRa32 V2.1 (433MHz SX1278)
+* Wemos® TTGO T-Beam V0.7 (433MHz SX1278)
+* Wemos® TTGO T-Beam V1 (433MHz SX1278)
+* Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
+* many more...
 
 Here are some amazon-de links for some example boards:
-*   [LoRa32 V1]		(https://www.amazon.de/dp/B07VPHYYJD)
-*   [LoRa32 V1]		(https://www.amazon.de/dp/B07QRG89ZV)
-*   [LoRa32 V2]		(https://www.amazon.de/dp/B07VL97VNH)
-*	[LoRa32 V2.1]	(https://www.amazon.de/dp/B07RXSKPBX)
-*   [T-Beam V1.0]	(https://www.amazon.de/dp/B07RT9FKPL)
+* [LoRa32 V1] (https://www.amazon.de/dp/B07VPHYYJD)
+* [LoRa32 V1] (https://www.amazon.de/dp/B07QRG89ZV)
+* [LoRa32 V2] (https://www.amazon.de/dp/B07VL97VNH)
+* [LoRa32 V2.1] (https://www.amazon.de/dp/B07RXSKPBX)
+* [T-Beam V1.0] (https://www.amazon.de/dp/B07RT9FKPL)
 
 This boards cost around 20 Euros, they are very cheap and perfect for an LoRa iGate.
 Keep in minde: you need a 433MHz version!
@@ -46,14 +46,14 @@ The best success is to use PlatformIO. Go to [PlatformIO](https://platformio.org
 
 ### Dependencies
 
-*   [LoRa]				(https://github.com/sandeepmistry/arduino-LoRa) 	by Sandeep Mistry
-*   [APRS-IS-Lib]		(https://github.com/peterus/APRS-IS-Lib) 			by Peter Buchegger
-*   [APRS-Decoder-Lib]	(https://github.com/peterus/APRS-Decoder-Lib)		by Peter Buchegger
-*   [LoRa-APRS-Lib]		(https://github.com/peterus/LoRa-APRS-Lib)			by Peter Buchegger
-*   [ArduinoJson]		(https://github.com/bblanchon/ArduinoJson)			by Benoit Blanchon
-*   [AXP202X_Library]	(https://github.com/lewisxhe/AXP202X_Library) 		by Lewis He
-*   [Adafruit SSD1306]	(https://github.com/adafruit/Adafruit_SSD1306) 		by Adafruit (with all dependecies)
-*   [NTPClient]			(https://github.com/arduino-libraries/NTPClient)	by Fabrice Weinberg
+*   [LoRa] (https://github.com/sandeepmistry/arduino-LoRa) by Sandeep Mistry
+*   [APRS-IS-Lib] (https://github.com/peterus/APRS-IS-Lib) by Peter Buchegger
+*   [APRS-Decoder-Lib] (https://github.com/peterus/APRS-Decoder-Lib) by Peter Buchegger
+*   [LoRa-APRS-Lib] (https://github.com/peterus/LoRa-APRS-Lib) by Peter Buchegger
+*   [ArduinoJson] (https://github.com/bblanchon/ArduinoJson) by Benoit Blanchon
+*   [AXP202X_Library] (https://github.com/lewisxhe/AXP202X_Library) by Lewis He
+*   [Adafruit SSD1306] (https://github.com/adafruit/Adafruit_SSD1306) by Adafruit (with all dependecies)
+*   [NTPClient] (https://github.com/arduino-libraries/NTPClient) by Fabrice Weinberg
 
 But you don't need to download all this libs, PlatformIO will take care for you ;)
 
