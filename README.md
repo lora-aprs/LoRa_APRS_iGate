@@ -27,11 +27,11 @@ You can use one of the Lora32 boards without changings :
 *   many more...
 
 Here are some amazon-de links for some example boards:
-*   [LoRa32 V1] (https://www.amazon.de/dp/B07VPHYYJD)
-*   [LoRa32 V1] (https://www.amazon.de/dp/B07QRG89ZV)
-*   [LoRa32 V2] (https://www.amazon.de/dp/B07VL97VNH)
-*   [LoRa32 V2.1] (https://www.amazon.de/dp/B07RXSKPBX)
-*   [T-Beam V1.0] (https://www.amazon.de/dp/B07RT9FKPL)
+*   [LoRa32 V1](https://www.amazon.de/dp/B07VPHYYJD)
+*   [LoRa32 V1](https://www.amazon.de/dp/B07QRG89ZV)
+*   [LoRa32 V2](https://www.amazon.de/dp/B07VL97VNH)
+*   [LoRa32 V2.1](https://www.amazon.de/dp/B07RXSKPBX)
+*   [T-Beam V1.0](https://www.amazon.de/dp/B07RT9FKPL)
 
 This boards cost around 20 Euros, they are very cheap and perfect for an LoRa iGate.
 Keep in minde: you need a 433MHz version!
@@ -44,14 +44,14 @@ The best success is to use PlatformIO. Go to [PlatformIO](https://platformio.org
 
 ### Dependencies
 
-*   [LoRa] (https://github.com/sandeepmistry/arduino-LoRa) by Sandeep Mistry
-*   [APRS-IS-Lib] (https://github.com/peterus/APRS-IS-Lib) by Peter Buchegger
-*   [APRS-Decoder-Lib] (https://github.com/peterus/APRS-Decoder-Lib) by Peter Buchegger
-*   [LoRa-APRS-Lib] (https://github.com/peterus/LoRa-APRS-Lib) by Peter Buchegger
-*   [ArduinoJson] (https://github.com/bblanchon/ArduinoJson) by Benoit Blanchon
-*   [AXP202X_Library] (https://github.com/lewisxhe/AXP202X_Library) by Lewis He
-*   [Adafruit SSD1306] (https://github.com/adafruit/Adafruit_SSD1306) by Adafruit (with all dependecies)
-*   [NTPClient] (https://github.com/arduino-libraries/NTPClient) by Fabrice Weinberg
+*   [LoRa](https://github.com/sandeepmistry/arduino-LoRa) by Sandeep Mistry
+*   [APRS-IS-Lib](https://github.com/peterus/APRS-IS-Lib) by Peter Buchegger
+*   [APRS-Decoder-Lib](https://github.com/peterus/APRS-Decoder-Lib) by Peter Buchegger
+*   [LoRa-APRS-Lib](https://github.com/peterus/LoRa-APRS-Lib) by Peter Buchegger
+*   [ArduinoJson](https://github.com/bblanchon/ArduinoJson) by Benoit Blanchon
+*   [AXP202X_Library](https://github.com/lewisxhe/AXP202X_Library) by Lewis He
+*   [Adafruit SSD1306](https://github.com/adafruit/Adafruit_SSD1306) by Adafruit (with all dependecies)
+*   [NTPClient](https://github.com/arduino-libraries/NTPClient) by Fabrice Weinberg
 
 But you don't need to download all this libs, PlatformIO will take care for you ;)
 
@@ -84,15 +84,16 @@ Feel free to add a link to your iGate here:
 
 Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_Tracker)
 
-
 ## Hints
 
-### Here are some peculiarities of the different boards.
+### Here are some peculiarities of the different boards
 
 *   Wemos® TTGO T-Beam V1
 
 When adding a 0,96" OLED display direct to the board you have to be careful becouse thre are two different pinout versions. 
-For direct mount you need 'VCC - GND - SCL - SDA'. for example (https://www.amazon.de/dp/B07RXSKPBX) 
-The other works too but you have to change VCC and GND. A direct mount is not possible.
+For direct mount you need this Pinout -> 'VCC - GND - SCL - SDA' 
+For example (https://www.amazon.de/dp/B07RXSKPBX) 
+The other display works too but you have to change VCC and GND.
+A direct mount is not possible to the board is not possible without damage the display!
 
 feel free to add hints!
