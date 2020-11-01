@@ -69,16 +69,16 @@ Feel free to add a link to your iGate here:
 
 ## Future plans
 
-*   [x] show time until next beaconing
-*   [ ] show login issues from IS server
-*   [ ] add better OLED library to support multiple different OLEDs
-*   [x] add support to turn OLED on, off and dimming
-*   [ ] add support for temperature chips (BMExxx)
-*   [ ] add FTP server support to upload configuration
-*   [ ] add web server for configuration and other things
-*   [ ] add statistics for received packages
-*   [ ] show received packages on a map
-*   [ ] etc.
+- [x] show time until next beaconing
+- [ ] show login issues from IS server
+- [ ] add better OLED library to support multiple different OLEDs
+- [x] add support to turn OLED on, off and dimming
+- [ ] add support for temperature chips (BMExxx)
+- [ ] add FTP server support to upload configuration
+- [ ] add web server for configuration and other things
+- [ ] add statistics for received packages
+- [ ] show received packages on a map
+- [ ] etc.
 
 ## LoRa Tracker
 
@@ -91,7 +91,7 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 *   Wemos® TTGO T-Beam V1
 
 When adding a 0,96" OLED display direct to the board you have to be careful becouse thre are two different pinout versions. 
-For direct mount you need this Pinout -> 'VCC - GND - SCL - SDA' 
+For direct mount you need this Pinout -> 'VCC - GND - SCL - SDA'
 For example (https://www.amazon.de/dp/B07RXSKPBX) 
 The other display works too but you have to change VCC and GND.
 A direct mount is not possible to the board is not possible without damage the display!
