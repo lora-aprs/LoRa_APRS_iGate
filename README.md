@@ -43,7 +43,7 @@ Keep in minde: you need a 433MHz version!
 The best success is to use PlatformIO. 
 *  Go to [PlatformIO](https://platformio.org/) download and install the IDE. 
 *  If installed open the IDE, go to the left side and klick on 'extensions' then search for 'PatformIO' and install.
-*  When installed click on the ant head on the left and import the project.
+*  When installed click 'the ant head' on the left and choose import the project on the right.
 *  Just open the folder and you can compile the Firmware.
 
 ### Dependencies
