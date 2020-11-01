@@ -8,19 +8,19 @@ class PowerManagement
 {
 public:
 	PowerManagement();
-    bool begin(TwoWire port);
+	bool begin(TwoWire & port);
 
-    void activateLoRa();
-    void deactivateLoRa();
+	void activateLoRa();
+	void deactivateLoRa();
 
-    void activateGPS();
-    void deactivateGPS();
+	void activateGPS();
+	void deactivateGPS();
 
-    void activateOLED();
-    void decativateOLED();
+	void activateOLED();
+	void decativateOLED();
 
 private:
-    AXP20X_Class axp;
+	AXP20X_Class axp;
 };
 
 #endif

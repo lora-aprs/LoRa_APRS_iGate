@@ -10,7 +10,6 @@
 #include "LoRa_APRS.h"
 
 #include "pins.h"
-#include "settings.h"
 #include "display.h"
 #include "configuration.h"
 
@@ -60,7 +59,6 @@ void setup()
 	} else {
 		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
 	}
-	Wire.begin(SDA, SCL);
 	powerManagement.activateLoRa();
 	powerManagement.activateOLED();
 	powerManagement.deactivateGPS();
