@@ -91,7 +91,7 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 
 ### Here are some peculiarities of the different boards
 
-*   Wemos® TTGO T-Beam V1
+*   TTGO T-Beam V1
 
 When adding a 0,96" OLED display direct to the board you have to be careful, thre are two different pinout
 versions on the market. 
