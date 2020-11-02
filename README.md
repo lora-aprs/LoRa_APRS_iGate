@@ -16,13 +16,13 @@ You can use one of the Lora32 boards without changings :
 
 *   Heltec WiFi LoRa 32 V1 (433MHz SX1278)
 *   Heltec WiFi LoRa 32 V2 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V1 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V2 (433MHz SX1278)
-*   Wemos® TTGO LoRa32 V2.1 (433MHz SX1278)
-*   Wemos® TTGO T-Beam V0.7 (433MHz SX1278)
-*   Wemos® TTGO T-Beam V1 (433MHz SX1278)
+*   TTGO LoRa32 V1 (433MHz SX1278)
+*   TTGO LoRa32 V2 (433MHz SX1278)
+*   TTGO LoRa32 V2.1 (433MHz SX1278)
+*   TTGO T-Beam V0.7 (433MHz SX1278)
+*   TTGO T-Beam V1 (433MHz SX1278)
 *   Tracker D from [OE1ACM and OE1CGC](https://www.lora-aprs.at/)
-*   many more...
+*   and sure many more...
 
 Here are some amazon-de links for some example boards:
 *   [LoRa32 V1](https://www.amazon.de/dp/B07VPHYYJD)
@@ -39,6 +39,7 @@ Keep in minde: you need a 433MHz version!
 ### How to compile
 
 The best success is to use PlatformIO. 
+
 *   Go to [PlatformIO](https://platformio.org/) download and install the IDE. 
 *   If installed open the IDE, go to the left side and klick on 'extensions' then search for 'PatformIO' and install.
 *   When installed click 'the ant head' on the left and choose import the project on the right.
@@ -59,9 +60,9 @@ But you don't need to download all this libs, PlatformIO will take care for you 
 
 ## Configuration
 
-You can find all nessesary settings to change for your configuration in **data/is-cfg.json**.
-To upload it to your board you have to do this via **Upload File System image** in PlatformIO!
-To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration, click on 'Platform' and search for 'Upload File System image'.
+*   You can find all nessesary settings to change for your configuration in **data/is-cfg.json**.
+*   To upload it to your board you have to do this via **Upload File System image** in PlatformIO!
+*   To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration, click on 'Platform' and search for 'Upload File System image'.
 
 ## LoRa APRS iGates on aprs.fi
 
@@ -74,7 +75,7 @@ Feel free to add a link to your iGate here:
 *   [x] show time until next beaconing
 *   [ ] show login issues from IS server
 *   [ ] add better OLED library to support multiple different OLEDs
-*   [ ] add support to turn OLED on, off and dimming
+*   [x] add support to turn OLED on, off and dimming
 *   [ ] add support for temperature chips (BMExxx)
 *   [ ] add FTP server support to upload configuration
 *   [ ] add web server for configuration and other things
@@ -90,12 +91,12 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 
 ### Here are some peculiarities of the different boards
 
-*   Wemos® TTGO T-Beam V1
+*   TTGO T-Beam V1
 
-When adding a 0,96" OLED display direct to the board you have to be careful becouse thre are two different pinout versions. 
-For direct mount you need this Pinout -> 'VCC - GND - SCL - SDA'
-For example (https://www.amazon.de/dp/B07RXSKPBX) 
-The other display works too but you have to change VCC and GND.
-A direct mount is not possible to the board is not possible without damage the display!
+When adding a 0,96" OLED display direct to the board you have to be careful, there are two different pinout
+versions on the market. 
+For direct mount you need a display with this Pinout -> [VCC - GND - SCL - SDA](pics/display-right.jpg).
+A direct mount of the [other display](pics/display-wrong.jpg) is not possible without damage the display!
+The 'wrong' display works too but you have to change VCC and GND by wire !
 
 feel free to add hints!
