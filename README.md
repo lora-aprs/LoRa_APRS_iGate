@@ -93,7 +93,7 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 
 *   TTGO T-Beam V1
 
-When adding a 0,96" OLED display direct to the board you have to be careful, thre are two different pinout
+When adding a 0,96" OLED display direct to the board you have to be careful, there are two different pinout
 versions on the market. 
 For direct mount you need a display with this Pinout -> [VCC - GND - SCL - SDA](pics/display-right.jpg).
 A direct mount of the [other display](pics/display-wrong.jpg) is not possible without damage the display!
