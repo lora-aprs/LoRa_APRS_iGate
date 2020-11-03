@@ -47,5 +47,12 @@
 		"always_on": true,
 		"timeout":10,
 		"overwrite_pin":0
+	},
+	"ftp":
+	{
+		"active":false,
+		"user": [
+			{ "name":"ftp", "password":"ftp" }
+		]
 	}
 }

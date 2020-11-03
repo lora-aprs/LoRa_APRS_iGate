@@ -139,17 +139,20 @@ void loop()
 		beacon_digi = true;
 	}
 
-	ftpServer.handle();
-	static bool configWasOpen = false;
-	if(configWasOpen && ftpServer.countConnections() == 0)
+	if(Config.ftp.active)
 	{
-		Serial.println("[WARN] Configuration maybe changed via FTP, will restart now...");
-		Serial.println();
-		ESP.restart();
-	}
-	if(ftpServer.countConnections() > 0)
-	{
-		configWasOpen = true;
+		ftpServer.handle();
+		static bool configWasOpen = false;
+		if(configWasOpen && ftpServer.countConnections() == 0)
+		{
+			Serial.println("[WARN] Maybe the config has been changed via FTP, lets restart now to get the new config...");
+			Serial.println();
+			ESP.restart();
+		}
+		if(ftpServer.countConnections() > 0)
+		{
+			configWasOpen = true;
+		}
 	}
 
 	if(Config.wifi.active) ArduinoOTA.handle();
@@ -445,9 +448,16 @@ void setup_timer()
 
 void setup_ftp()
 {
-#define FTP_USER "ftp"
-#define FTP_PASSWORD "ftp"
-	ftpServer.addUser(FTP_USER, FTP_PASSWORD);
+	if(!Config.ftp.active)
+	{
+		return;
+	}
+	for(Configuration::Ftp::User user : Config.ftp.users)
+	{
+		Serial.print("[INFO] Adding user to FTP Server: ");
+		Serial.println(user.name);
+		ftpServer.addUser(user.name, user.password);
+	}
 	ftpServer.addFilesystem("SPIFFS", &SPIFFS);
 	ftpServer.begin();
 	Serial.println("[INFO] FTP Server init done!");
