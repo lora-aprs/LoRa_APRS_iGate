@@ -82,7 +82,7 @@ public:
 		int overwritePin;
 	};
 
-	Configuration() : version(2), callsign("NOCALL-10") {};
+	Configuration() : version(3), callsign("NOCALL-10") {};
 
 	int version;
 	String callsign;

@@ -94,7 +94,7 @@ void setup()
 	}
 
 	delay(500);
-	Serial.println("setup done...");
+	Serial.println("[INFO] setup done...");
 	secondsSinceDisplay = 0;
 }
 
@@ -296,6 +296,7 @@ void load_config()
 	{
 		Config.display.overwritePin = KEY_BUILTIN;
 	}
+	Serial.println("[INFO] Configuration loaded!");
 }
 
 void setup_wifi()
@@ -304,6 +305,8 @@ void setup_wifi()
 	WiFi.setHostname(Config.callsign.c_str());
 	for(Configuration::Wifi::AP ap : Config.wifi.APs)
 	{
+		Serial.print("[INFO] Looking for AP: ");
+		Serial.println(ap.SSID);
 		WiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
 	}
 	Serial.print("[INFO] Waiting for WiFi");
@@ -358,6 +361,7 @@ void setup_ota()
 		});
 	ArduinoOTA.setHostname(Config.callsign.c_str());
 	ArduinoOTA.begin();
+	Serial.println("[INFO] OTA init done!");
 }
 
 void setup_lora()

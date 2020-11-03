@@ -76,6 +76,9 @@ Configuration ConfigurationManagement::readConfiguration()
 		conf.lora.codingRate4     = data["lora"]["coding_rate4"];
 	}
 
+	// update config in memory to get the new fields:
+	writeConfiguration(conf);
+
 	return conf;
 }
 
@@ -92,13 +95,12 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["version"]                         = conf.version;
 	data["callsign"]                        = conf.callsign;
 	data["wifi"]["active"]                  = conf.wifi.active;
-	JsonArray aps = data["wifi"]["AP"].to<JsonArray>();
+	JsonArray aps = data["wifi"].createNestedArray("AP");
 	for(Configuration::Wifi::AP ap : conf.wifi.APs)
 	{
-		JsonVariant v;
+		JsonObject v = aps.createNestedObject();
 		v["SSID"] = ap.SSID;
 		v["password"] = ap.password;
-		aps.add(v);
 	}
 	data["beacon"]["message"]               = conf.beacon.message;
 	data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
@@ -124,7 +126,7 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["display"]["overwrite_pin"]        = conf.display.overwritePin;
 
 	serializeJson(data, file);
-	serializeJson(data, Serial);
-	Serial.println();
+	//serializeJson(data, Serial);
+	//Serial.println();
 	file.close();
 }
