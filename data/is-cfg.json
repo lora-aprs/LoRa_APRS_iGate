@@ -1,5 +1,5 @@
 {
-	"version":2,
+	"version":3,
 	"callsign":"NOCALL-10",
 	"wifi":
 	{
@@ -37,7 +37,10 @@
 	{
 		"frequency_rx":433775000,
 		"frequency_tx":433775000,
-		"power":20
+		"power":20,
+		"spreading_factor":12,
+		"signal_bandwidth":125000,
+		"coding_rate4":5
 	},
 	"display":
 	{
