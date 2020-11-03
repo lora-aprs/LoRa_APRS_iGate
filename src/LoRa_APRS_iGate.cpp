@@ -6,6 +6,9 @@
 #include <WiFiUdp.h>
 #include <ArduinoOTA.h>
 #include <APRS-IS.h>
+#include <SPIFFS.h>
+#include <ESP-FTP-Server-Lib.h>
+#include <FTPFilesystem.h>
 
 #include "LoRa_APRS.h"
 
@@ -28,6 +31,7 @@ volatile uint secondsSinceDisplay = 0;
 WiFiMulti WiFiMulti;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, 60*60);
+FTPServer ftpServer;
 Configuration Config;
 APRS_IS * aprs_is = 0;
 LoRa_APRS lora_aprs;
@@ -43,6 +47,7 @@ void setup_lora();
 void setup_ntp();
 void setup_aprs_is();
 void setup_timer();
+void setup_ftp();
 
 std::map<uint, std::shared_ptr<APRSMessage>> lastMessages;
 
@@ -77,6 +82,7 @@ void setup()
 		setup_wifi();
 		setup_ota();
 		setup_ntp();
+		setup_ftp();
 	}
 	else
 	{
@@ -131,6 +137,19 @@ void loop()
 		secondsSinceLastDigiBeacon -= (Config.digi.beaconTimeout*60);
 		portEXIT_CRITICAL(&timerMux);
 		beacon_digi = true;
+	}
+
+	ftpServer.handle();
+	static bool configWasOpen = false;
+	if(configWasOpen && ftpServer.countConnections() == 0)
+	{
+		Serial.println("[WARN] Configuration maybe changed via FTP, will restart now...");
+		Serial.println();
+		ESP.restart();
+	}
+	if(ftpServer.countConnections() > 0)
+	{
+		configWasOpen = true;
 	}
 
 	if(Config.wifi.active) ArduinoOTA.handle();
@@ -422,6 +441,16 @@ void setup_timer()
 	timerAlarmWrite(timer, 1000000, true);
 	timerAttachInterrupt(timer, &onTimer, true);
 	timerAlarmEnable(timer);
+}
+
+void setup_ftp()
+{
+#define FTP_USER "ftp"
+#define FTP_PASSWORD "ftp"
+	ftpServer.addUser(FTP_USER, FTP_PASSWORD);
+	ftpServer.addFilesystem("SPIFFS", &SPIFFS);
+	ftpServer.begin();
+	Serial.println("[INFO] FTP Server init done!");
 }
 
 String create_lat_aprs(double lat)
