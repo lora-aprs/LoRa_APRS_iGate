@@ -82,7 +82,23 @@ public:
 		int overwritePin;
 	};
 
-	Configuration() : version(3), callsign("NOCALL-10") {};
+	class Ftp
+	{
+	public:
+		class User
+		{
+		public:
+			String name;
+			String password;
+		};
+
+		Ftp() : active(false) {}
+
+		bool active;
+		std::list<User> users;
+	};
+
+	Configuration() : version(4), callsign("NOCALL-10") {};
 
 	int version;
 	String callsign;
@@ -92,6 +108,7 @@ public:
 	Digi digi;
 	LoRa lora;
 	Display display;
+	Ftp ftp;
 };
 
 class ConfigurationManagement

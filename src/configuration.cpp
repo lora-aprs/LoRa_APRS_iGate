@@ -31,19 +31,21 @@ Configuration ConfigurationManagement::readConfiguration()
 		Serial.println("Failed to open file for reading...");
 		return Configuration();
 	}
-	DynamicJsonDocument data(1024);
+	DynamicJsonDocument data(2048);
 	deserializeJson(data, file);
+	//serializeJson(data, Serial);
+	//Serial.println();
 	file.close();
 
 	Configuration conf;
 	conf.callsign                 = data["callsign"].as<String>();
 	conf.wifi.active              = data["wifi"]["active"];
-	JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
+	JsonArray aps                 = data["wifi"]["AP"].as<JsonArray>();
 	for(JsonVariant v : aps)
 	{
 		Configuration::Wifi::AP ap;
-		ap.SSID = v["SSID"].as<String>();
-		ap.password = v["password"].as<String>();
+		ap.SSID                   = v["SSID"].as<String>();
+		ap.password               = v["password"].as<String>();
 		conf.wifi.APs.push_back(ap);
 	}
 	conf.beacon.message           = data["beacon"]["message"].as<String>();
@@ -75,6 +77,18 @@ Configuration ConfigurationManagement::readConfiguration()
 		conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"];
 		conf.lora.codingRate4     = data["lora"]["coding_rate4"];
 	}
+	if(data["version"] >= 4)
+	{
+		conf.ftp.active           = data["ftp"]["active"];
+		JsonArray users           = data["ftp"]["user"].as<JsonArray>();
+		for(JsonVariant u : users)
+		{
+			Configuration::Ftp::User us;
+			us.name               = u["name"].as<String>();
+			us.password           = u["password"].as<String>();
+			conf.ftp.users.push_back(us);
+		}
+	}
 
 	// update config in memory to get the new fields:
 	writeConfiguration(conf);
@@ -90,7 +104,7 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 		Serial.println("Failed to open file for writing...");
 		return;
 	}
-	DynamicJsonDocument data(1024);
+	DynamicJsonDocument data(2048);
 
 	data["version"]                         = conf.version;
 	data["callsign"]                        = conf.callsign;
@@ -124,6 +138,14 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["display"]["always_on"]            = conf.display.alwaysOn;
 	data["display"]["timeout"]              = conf.display.timeout;
 	data["display"]["overwrite_pin"]        = conf.display.overwritePin;
+	data["ftp"]["active"]                   = conf.ftp.active;
+	JsonArray users = data["ftp"].createNestedArray("user");
+	for(Configuration::Ftp::User u : conf.ftp.users)
+	{
+		JsonObject v = users.createNestedObject();
+		v["name"] = u.name;
+		v["password"] = u.password;
+	}
 
 	serializeJson(data, file);
 	//serializeJson(data, Serial);
