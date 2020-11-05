@@ -16,7 +16,7 @@ ConfigurationManagement::ConfigurationManagement(String FilePath)
 			return;
 		}
 	}
-	}
+}
 
 Configuration ConfigurationManagement::readConfiguration()
 {
@@ -38,7 +38,7 @@ Configuration ConfigurationManagement::readConfiguration()
 
 	Configuration conf;
 	conf.callsign                 = data["callsign"].as<String>();
-	conf.wifi.active              = data["wifi"]["active"];
+	conf.wifi.active              = data["wifi"]["active"]					| false;
 	JsonArray aps                 = data["wifi"]["AP"].as<JsonArray>();
 	for(JsonVariant v : aps)
 	{
@@ -48,45 +48,37 @@ Configuration ConfigurationManagement::readConfiguration()
 		conf.wifi.APs.push_back(ap);
 	}
 	conf.beacon.message           = data["beacon"]["message"].as<String>();
-	conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"];
-	conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"];
-	conf.aprs_is.active           = data["aprs_is"]["active"];
+	conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"]	| 0.0;
+	conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"]	| 0.0;
+	conf.aprs_is.active           = data["aprs_is"]["active"]				| false;
 	conf.aprs_is.password         = data["aprs_is"]["password"].as<String>();
 	conf.aprs_is.server           = data["aprs_is"]["server"].as<String>();
-	conf.aprs_is.port             = data["aprs_is"]["port"];
-	conf.aprs_is.beacon           = data["aprs_is"]["beacon"];
-	conf.aprs_is.beaconTimeout    = data["aprs_is"]["beacon_timeout"];
-	conf.digi.active              = data["digi"]["active"];
-	conf.digi.forwardTimeout      = data["digi"]["forward_timeout"];
-	conf.digi.beacon              = data["digi"]["beacon"];
-	conf.digi.beaconTimeout       = data["digi"]["beacon_timeout"];
+	conf.aprs_is.port             = data["aprs_is"]["port"]					| 14580;
+	conf.aprs_is.beacon           = data["aprs_is"]["beacon"]				| true;
+	conf.aprs_is.beaconTimeout    = data["aprs_is"]["beacon_timeout"]		| 15;
+	conf.digi.active              = data["digi"]["active"]					| false;
+	conf.digi.forwardTimeout      = data["digi"]["forward_timeout"]			| 5;
+	conf.digi.beacon              = data["digi"]["beacon"]					| true;
+	conf.digi.beaconTimeout       = data["digi"]["beacon_timeout"]			| 30;
 
-	if(data["version"] >= 2)
+	conf.lora.frequencyRx         = data["lora"]["frequency_rx"]			| 433775000;
+	conf.lora.frequencyTx         = data["lora"]["frequency_tx"]			| 433775000;
+	conf.lora.power               = data["lora"]["power"]					| 20;
+	conf.lora.spreadingFactor     = data["lora"]["spreading_factor"]		| 12;
+	conf.lora.signalBandwidth     = data["lora"]["signal_bandwidth"]		| 125000;
+	conf.lora.codingRate4         = data["lora"]["coding_rate4"]			| 5;
+	conf.display.alwaysOn         = data["display"]["always_on"]			| true;
+	conf.display.timeout          = data["display"]["timeout"]				| 10;
+	conf.display.overwritePin     = data["display"]["overwrite_pin"]		| 0;
+
+	conf.ftp.active               = data["ftp"]["active"]					| false;
+	JsonArray users               = data["ftp"]["user"].as<JsonArray>();
+	for(JsonVariant u : users)
 	{
-		conf.lora.frequencyRx     = data["lora"]["frequency_rx"];
-		conf.lora.frequencyTx     = data["lora"]["frequency_tx"];
-		conf.lora.power           = data["lora"]["power"];
-		conf.display.alwaysOn     = data["display"]["always_on"];
-		conf.display.timeout      = data["display"]["timeout"];
-		conf.display.overwritePin = data["display"]["overwrite_pin"];
-	}
-	if(data["version"] >= 3)
-	{
-		conf.lora.spreadingFactor = data["lora"]["spreading_factor"];
-		conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"];
-		conf.lora.codingRate4     = data["lora"]["coding_rate4"];
-	}
-	if(data["version"] >= 4)
-	{
-		conf.ftp.active           = data["ftp"]["active"];
-		JsonArray users           = data["ftp"]["user"].as<JsonArray>();
-		for(JsonVariant u : users)
-		{
-			Configuration::Ftp::User us;
-			us.name               = u["name"].as<String>();
-			us.password           = u["password"].as<String>();
-			conf.ftp.users.push_back(us);
-		}
+		Configuration::Ftp::User us;
+		us.name                   = u["name"].as<String>();
+		us.password               = u["password"].as<String>();
+		conf.ftp.users.push_back(us);
 	}
 
 	// update config in memory to get the new fields:
