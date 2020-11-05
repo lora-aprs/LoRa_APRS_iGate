@@ -106,7 +106,6 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	}
 	DynamicJsonDocument data(2048);
 
-	data["version"]                         = conf.version;
 	data["callsign"]                        = conf.callsign;
 	data["wifi"]["active"]                  = conf.wifi.active;
 	JsonArray aps = data["wifi"].createNestedArray("AP");

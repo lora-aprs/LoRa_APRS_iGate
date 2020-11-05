@@ -98,9 +98,8 @@ public:
 		std::list<User> users;
 	};
 
-	Configuration() : version(4), callsign("NOCALL-10") {};
+	Configuration() : callsign("NOCALL-10") {};
 
-	int version;
 	String callsign;
 	Wifi wifi;
 	Beacon beacon;
