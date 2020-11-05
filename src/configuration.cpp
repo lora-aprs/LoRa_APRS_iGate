@@ -16,12 +16,7 @@ ConfigurationManagement::ConfigurationManagement(String FilePath)
 			return;
 		}
 	}
-	if(!SPIFFS.exists(mFilePath))
-	{
-		Configuration conf;
-		writeConfiguration(conf);
 	}
-}
 
 Configuration ConfigurationManagement::readConfiguration()
 {
@@ -32,7 +27,11 @@ Configuration ConfigurationManagement::readConfiguration()
 		return Configuration();
 	}
 	DynamicJsonDocument data(2048);
-	deserializeJson(data, file);
+	DeserializationError error = deserializeJson(data, file);
+	if(error)
+	{
+		Serial.println("Failed to read file, using default configuration.");
+	}
 	//serializeJson(data, Serial);
 	//Serial.println();
 	file.close();
