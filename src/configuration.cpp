@@ -2,7 +2,6 @@
 
 #include "configuration.h"
 
-
 ConfigurationManagement::ConfigurationManagement(String FilePath)
 	: mFilePath(FilePath)
 {
