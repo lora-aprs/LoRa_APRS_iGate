@@ -69,6 +69,12 @@ Configuration ConfigurationManagement::readConfiguration()
 		conf.display.timeout      = data["display"]["timeout"];
 		conf.display.overwritePin = data["display"]["overwrite_pin"];
 	}
+	if(data["version"] >= 3)
+	{
+		conf.lora.spreadingFactor = data["lora"]["spreading_factor"];
+		conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"];
+		conf.lora.codingRate4     = data["lora"]["coding_rate4"];
+	}
 
 	return conf;
 }
@@ -110,6 +116,9 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
 	data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
 	data["lora"]["power"]                   = conf.lora.power;
+	data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
+	data["lora"]["signal_bandwidth"]        = conf.lora.signalBandwidth;
+	data["lora"]["coding_rate4"]            = conf.lora.codingRate4;
 	data["display"]["always_on"]            = conf.display.alwaysOn;
 	data["display"]["timeout"]              = conf.display.timeout;
 	data["display"]["overwrite_pin"]        = conf.display.overwritePin;
