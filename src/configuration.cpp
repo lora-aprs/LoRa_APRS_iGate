@@ -1,17 +1,18 @@
-#include "SPIFFS.h"
+#include <SPIFFS.h>
 
 #include "configuration.h"
+#include "logger.h"
 
 ConfigurationManagement::ConfigurationManagement(String FilePath)
 	: mFilePath(FilePath)
 {
 	if(!SPIFFS.begin(true))
 	{
-		Serial.println("[ERROR] Mounting SPIFFS was not possible. Trying to format SPIFFS...");
+		logPrintlnE("Mounting SPIFFS was not possible. Trying to format SPIFFS...");
 		SPIFFS.format();
 		if(!SPIFFS.begin())
 		{
-			Serial.println("[ERROR] Formating SPIFFS was not okay!");
+			logPrintlnE("Formating SPIFFS was not okay!");
 		}
 	}
 }
@@ -21,14 +22,14 @@ Configuration ConfigurationManagement::readConfiguration()
 	File file = SPIFFS.open(mFilePath);
 	if(!file)
 	{
-		Serial.println("Failed to open file for reading...");
+		logPrintlnE("Failed to open file for reading...");
 		return Configuration();
 	}
 	DynamicJsonDocument data(2048);
 	DeserializationError error = deserializeJson(data, file);
 	if(error)
 	{
-		Serial.println("Failed to read file, using default configuration.");
+		logPrintlnW("Failed to read file, using default configuration.");
 	}
 	//serializeJson(data, Serial);
 	//Serial.println();
@@ -102,7 +103,7 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	File file = SPIFFS.open(mFilePath, "w");
 	if(!file)
 	{
-		Serial.println("Failed to open file for writing...");
+		logPrintlnE("Failed to open file for writing...");
 		return;
 	}
 	DynamicJsonDocument data(2048);

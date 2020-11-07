@@ -10,6 +10,8 @@
 #include <ESP-FTP-Server-Lib.h>
 #include <FTPFilesystem.h>
 
+#include "logger.h"
+
 #include "LoRa_APRS.h"
 
 #include "pins.h"
@@ -60,20 +62,22 @@ void setup()
 	Wire.begin(SDA, SCL);
 	if (!powerManagement.begin(Wire))
 	{
-		Serial.println("LoRa-APRS / Init / AXP192 Begin PASS");
-	} else {
-		Serial.println("LoRa-APRS / Init / AXP192 Begin FAIL");
+		logPrintlnI("AXP192 init done!");
+	}
+	else
+	{
+		logPrintlnE("AXP192 init failed!");
 	}
 	powerManagement.activateLoRa();
 	powerManagement.activateOLED();
 	powerManagement.deactivateGPS();
 #endif
 
-	setup_display();
-	
 	delay(500);
-	Serial.println("[INFO] LoRa APRS iGate & Digi by OE5BPA (Peter Buchegger)");
-	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", 3000);
+	logPrintlnA("LoRa APRS iGate & Digi by OE5BPA (Peter Buchegger)");
+	logPrintlnA("Version: 1.0.0-dev");
+	setup_display();
+	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", "1.0.0-dev", 3000);
 
 	load_config();
 	setup_lora();
@@ -100,7 +104,7 @@ void setup()
 	}
 
 	delay(500);
-	Serial.println("[INFO] setup done...");
+	logPrintlnI("setup done...");
 	secondsSinceDisplay = 0;
 }
 
@@ -118,7 +122,6 @@ void loop()
 	{
 		turn_off_display();
 		display_is_on = false;
-		Serial.println("-");
 	}
 
 	static bool beacon_aprs_is = Config.aprs_is.active && Config.aprs_is.beacon;
@@ -145,7 +148,7 @@ void loop()
 		static bool configWasOpen = false;
 		if(configWasOpen && ftpServer.countConnections() == 0)
 		{
-			Serial.println("[WARN] Maybe the config has been changed via FTP, lets restart now to get the new config...");
+			logPrintlnW("Maybe the config has been changed via FTP, lets restart now to get the new config...");
 			Serial.println();
 			ESP.restart();
 		}
@@ -159,7 +162,7 @@ void loop()
 	if(Config.wifi.active && WiFiMulti.run() != WL_CONNECTED)
 	{
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
-		Serial.println("[ERROR] WiFi not connected!");
+		logPrintlnE("WiFi not connected!");
 		show_display("ERROR", "WiFi not connected!");
 		delay(1000);
 		return;
@@ -167,26 +170,26 @@ void loop()
 	if(Config.aprs_is.active && !aprs_is->connected())
 	{
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
-		Serial.print("[INFO] connecting to server: ");
-		Serial.print(Config.aprs_is.server);
-		Serial.print(" on port: ");
-		Serial.println(Config.aprs_is.port);
-		show_display("INFO", "Connecting to server");
+		logPrintI("connecting to APRS-IS server: ");
+		logPrintI(Config.aprs_is.server);
+		logPrintI(" on port: ");
+		logPrintlnI(String(Config.aprs_is.port));
+		show_display("INFO", "Connecting to APRS-IS server");
 		if(!aprs_is->connect(Config.aprs_is.server, Config.aprs_is.port))
 		{
-			Serial.println("[ERROR] Connection failed.");
-			Serial.println("[INFO] Waiting 5 seconds before retrying...");
+			logPrintlnE("Connection failed.");
+			logPrintlnI("Waiting 5 seconds before retrying...");
 			show_display("ERROR", "Server connection failed!", "waiting 5 sec");
 			delay(5000);
 			return;
 		}
-		Serial.println("[INFO] Connected to server!");
+		logPrintlnI("Connected to APRS-IS server!");
 	}
 	if(Config.aprs_is.active && aprs_is->available() > 0)
 	{
 		String str = aprs_is->getMessage();
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.println(str);
+		logPrintD("[" + timeClient.getFormattedTime() + "] ");
+		logPrintlnD(str);
 	}
 	if(lora_aprs.hasMessage())
 	{
@@ -194,13 +197,13 @@ void loop()
 
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		show_display(Config.callsign, timeClient.getFormattedTime() + "         LoRa", "RSSI: " + String(lora_aprs.packetRssi()) + ", SNR: " + String(lora_aprs.packetSnr()), msg->toString());
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(" Received packet '");
-		Serial.print(msg->toString());
-		Serial.print("' with RSSI ");
-		Serial.print(lora_aprs.packetRssi());
-		Serial.print(" and SNR ");
-		Serial.println(lora_aprs.packetSnr());
+		logPrintD("[" + timeClient.getFormattedTime() + "] ");
+		logPrintD(" Received packet '");
+		logPrintD(msg->toString());
+		logPrintD("' with RSSI ");
+		logPrintD(String(lora_aprs.packetRssi()));
+		logPrintD(" and SNR ");
+		logPrintlnD(String(lora_aprs.packetSnr()));
 
 		if(Config.aprs_is.active)
 		{
@@ -210,12 +213,12 @@ void loop()
 		{
 			if(msg->getSource().indexOf(Config.callsign) != -1)
 			{
-				Serial.print("Message already received as repeater: '");
-				Serial.print(msg->toString());
-				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.packetRssi());
-				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.packetSnr());
+				logPrintD("Message already received as repeater: '");
+				logPrintD(msg->toString());
+				logPrintD("' with RSSI ");
+				logPrintD(String(lora_aprs.packetRssi()));
+				logPrintD(" and SNR ");
+				logPrintlnD(String(lora_aprs.packetSnr()));
 				return;
 			}
 
@@ -235,24 +238,24 @@ void loop()
 			{
 				setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 				show_display(Config.callsign, "RSSI: " + String(lora_aprs.packetRssi()) + ", SNR: " + String(lora_aprs.packetSnr()), msg->toString(), 0);
-				Serial.print("Received packet '");
-				Serial.print(msg->toString());
-				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.packetRssi());
-				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.packetSnr());
+				logPrintD("Received packet '");
+				logPrintD(msg->toString());
+				logPrintD("' with RSSI ");
+				logPrintD(String(lora_aprs.packetRssi()));
+				logPrintD(" and SNR ");
+				logPrintlnD(String(lora_aprs.packetSnr()));
 				msg->setPath(String(Config.callsign) + "*");
 				lora_aprs.sendMessage(msg);
 				lastMessages.insert({secondsSinceStartup, msg});
 			}
 			else
 			{
-				Serial.print("Message already received (timeout): '");
-				Serial.print(msg->toString());
-				Serial.print("' with RSSI ");
-				Serial.print(lora_aprs.packetRssi());
-				Serial.print(" and SNR ");
-				Serial.println(lora_aprs.packetSnr());
+				logPrintD("Message already received (timeout): '");
+				logPrintD(msg->toString());
+				logPrintD("' with RSSI ");
+				logPrintD(String(lora_aprs.packetRssi()));
+				logPrintD(" and SNR ");
+				logPrintlnD(String(lora_aprs.packetSnr()));
 			}
 			return;
 		}
@@ -276,19 +279,19 @@ void loop()
 		beacon_digi = false;
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		show_display(Config.callsign, "Beacon to HF...");
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(BeaconMsg->encode());
+		logPrintD("[" + timeClient.getFormattedTime() + "] ");
+		logPrintlnD(BeaconMsg->encode());
 		lora_aprs.sendMessage(BeaconMsg);
-		Serial.println("finished TXing...");
+		logPrintlnD("finished TXing...");
 		show_display(Config.callsign, "Standby...");
 	}
 	if(beacon_aprs_is)
 	{
 		beacon_aprs_is = false;
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
-		show_display(Config.callsign, "Beacon to APRS IS Server...");
-		Serial.print("[" + timeClient.getFormattedTime() + "] ");
-		Serial.print(BeaconMsg->encode());
+		show_display(Config.callsign, "Beacon to APRS-IS Server...");
+		logPrintD("[" + timeClient.getFormattedTime() + "] ");
+		logPrintlnD(BeaconMsg->encode());
 		aprs_is->sendMessage(BeaconMsg);
 		show_display(Config.callsign, "Standby...");
 	}
@@ -300,7 +303,7 @@ void load_config()
 	Config = confmg.readConfiguration();
 	if(Config.callsign == "NOCALL-10")
 	{
-		Serial.println("[ERROR] You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+		logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
 		show_display("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
 		while (true)
 		{}
@@ -308,7 +311,7 @@ void load_config()
 
 	if(Config.aprs_is.active && !Config.wifi.active)
 	{
-		Serial.println("[ERROR] You have to activate Wifi for APRS IS to work, please check your settings!");
+		logPrintlnE("You have to activate Wifi for APRS IS to work, please check your settings!");
 		show_display("ERROR", "You have to activate Wifi for APRS IS to work, please check your settings!");
 		while (true)
 		{}
@@ -318,7 +321,7 @@ void load_config()
 	{
 		Config.display.overwritePin = KEY_BUILTIN;
 	}
-	Serial.println("[INFO] Configuration loaded!");
+	logPrintlnI("Configuration loaded!");
 }
 
 void setup_wifi()
@@ -327,22 +330,20 @@ void setup_wifi()
 	WiFi.setHostname(Config.callsign.c_str());
 	for(Configuration::Wifi::AP ap : Config.wifi.APs)
 	{
-		Serial.print("[INFO] Looking for AP: ");
-		Serial.println(ap.SSID);
+		logPrintD("Looking for AP: ");
+		logPrintlnD(ap.SSID);
 		WiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
 	}
-	Serial.print("[INFO] Waiting for WiFi");
+	logPrintlnI("Waiting for WiFi");
 	show_display("INFO", "Waiting for WiFi");
 	while(WiFiMulti.run() != WL_CONNECTED)
 	{
-		Serial.print(".");
 		show_display("INFO", "Waiting for WiFi", "....");
 		delay(500);
 	}
-	Serial.println("");
-	Serial.println("[INFO] WiFi connected");
-	Serial.print("[INFO] IP address: ");
-	Serial.println(WiFi.localIP());
+	logPrintlnI("WiFi connected");
+	logPrintD("IP address: ");
+	logPrintlnD(WiFi.localIP().toString());
 	show_display("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
 }
 
@@ -383,7 +384,7 @@ void setup_ota()
 		});
 	ArduinoOTA.setHostname(Config.callsign.c_str());
 	ArduinoOTA.begin();
-	Serial.println("[INFO] OTA init done!");
+	logPrintlnI("OTA init done!");
 }
 
 void setup_lora()
@@ -392,7 +393,7 @@ void setup_lora()
 	lora_aprs.setTxFrequency(Config.lora.frequencyTx);
 	if (!lora_aprs.begin(lora_aprs.getRxFrequency()))
 	{
-		Serial.println("[ERROR] Starting LoRa failed!");
+		logPrintlnE("Starting LoRa failed!");
 		show_display("ERROR", "Starting LoRa failed!");
 		while (1);
 	}
@@ -400,7 +401,7 @@ void setup_lora()
 	lora_aprs.setSpreadingFactor(Config.lora.spreadingFactor);
 	lora_aprs.setSignalBandwidth(Config.lora.signalBandwidth);
 	lora_aprs.setCodingRate4(Config.lora.codingRate4);
-	Serial.println("[INFO] LoRa init done!");
+	logPrintlnI("LoRa init done!");
 	show_display("INFO", "LoRa init done!", 2000);
 
 	BeaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
@@ -416,10 +417,10 @@ void setup_ntp()
 	timeClient.begin();
 	if(!timeClient.forceUpdate())
 	{
-		Serial.println("[WARN] NTP Client force update issue!");
+		logPrintlnW("NTP Client force update issue!");
 		show_display("WARN", "NTP Client force update issue!", 2000);
 	}
-	Serial.println("[INFO] NTP Client init done!");
+	logPrintlnI("NTP Client init done!");
 	show_display("INFO", "NTP Client init done!", 2000);
 }
 
@@ -454,13 +455,13 @@ void setup_ftp()
 	}
 	for(Configuration::Ftp::User user : Config.ftp.users)
 	{
-		Serial.print("[INFO] Adding user to FTP Server: ");
-		Serial.println(user.name);
+		logPrintD("Adding user to FTP Server: ");
+		logPrintlnD(user.name);
 		ftpServer.addUser(user.name, user.password);
 	}
 	ftpServer.addFilesystem("SPIFFS", &SPIFFS);
 	ftpServer.begin();
-	Serial.println("[INFO] FTP Server init done!");
+	logPrintlnI("FTP Server init done!");
 }
 
 String create_lat_aprs(double lat)
