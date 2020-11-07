@@ -45,6 +45,8 @@ The best success is to use PlatformIO.
 *   When installed click 'the ant head' on the left and choose import the project on the right.
 *   Just open the folder and you can compile the Firmware.
 
+Here is a [Video](https://www.youtube.com/watch?v=C7hfVe32pXs&feature=emb_logo) tutorial in german language how to install the software.
+
 ### Dependencies
 
 *   [LoRa](https://github.com/sandeepmistry/arduino-LoRa) by Sandeep Mistry
