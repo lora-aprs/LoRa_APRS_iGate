@@ -24,7 +24,7 @@ public:
 
 	~Logger() {}
 
-	void setSerial(HardwareSerial & serial = Serial);
+	void setSerial(const HardwareSerial & serial = Serial);
 	void setDebugLevel(debug_level_t level);
 
 	// print always:

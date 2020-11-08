@@ -28,16 +28,19 @@ Logger::Logger()
 {
 }
 
-void Logger::setSerial(HardwareSerial & serial)
+// cppcheck-suppress unusedFunction
+void Logger::setSerial(const HardwareSerial & serial)
 {
 	_serial = serial;
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::setDebugLevel(debug_level_t level)
 {
 	_level = level;
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printA(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_NONE);
@@ -46,6 +49,7 @@ void Logger::printA(const String & text, const char * file, uint32_t line)
 	printEndColor(DEBUG_LEVEL_NONE);
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printE(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_ERROR);
@@ -54,6 +58,7 @@ void Logger::printE(const String & text, const char * file, uint32_t line)
 	printEndColor(DEBUG_LEVEL_ERROR);
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnA(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_NONE);
@@ -62,6 +67,7 @@ void Logger::printlnA(const String & text, const char * file, uint32_t line)
 	printEndColor(DEBUG_LEVEL_NONE);
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnE(const String & text, const char * file, uint32_t line)
 {
 	printStartColor(DEBUG_LEVEL_ERROR);
@@ -70,6 +76,7 @@ void Logger::printlnE(const String & text, const char * file, uint32_t line)
 	printEndColor(DEBUG_LEVEL_ERROR);
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printV(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_VERBOSE)
@@ -81,6 +88,7 @@ void Logger::printV(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printD(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_DEBUG)
@@ -92,6 +100,7 @@ void Logger::printD(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printI(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_INFO)
@@ -103,6 +112,7 @@ void Logger::printI(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printW(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_WARN)
@@ -114,6 +124,7 @@ void Logger::printW(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnV(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_VERBOSE)
@@ -125,6 +136,7 @@ void Logger::printlnV(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnD(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_DEBUG)
@@ -136,6 +148,7 @@ void Logger::printlnD(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnI(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_INFO)
@@ -147,6 +160,7 @@ void Logger::printlnI(const String & text, const char * file, uint32_t line)
 	}
 }
 
+// cppcheck-suppress unusedFunction
 void Logger::printlnW(const String & text, const char * file, uint32_t line)
 {
 	if (_level >= DEBUG_LEVEL_WARN)
