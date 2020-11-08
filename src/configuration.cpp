@@ -48,14 +48,14 @@ Configuration ConfigurationManagement::readConfiguration()
 		ap.password					= v["password"].as<String>();
 		conf.wifi.APs.push_back(ap);
 	}
-	if(data.containsKey("beacon") && data.containsKey("message"))
+	if(data.containsKey("beacon") && data["beacon"].containsKey("message"))
 		conf.beacon.message			= data["beacon"]["message"].as<String>();
 	conf.beacon.positionLatitude	= data["beacon"]["position"]["latitude"]	| 0.0;
 	conf.beacon.positionLongitude	= data["beacon"]["position"]["longitude"]	| 0.0;
 	conf.aprs_is.active				= data["aprs_is"]["active"]					| false;
-	if(data.containsKey("aprs_is") && data.containsKey("password"))
+	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("password"))
 		conf.aprs_is.password		= data["aprs_is"]["password"].as<String>();
-	if(data.containsKey("aprs_is") && data.containsKey("server"))
+	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
 		conf.aprs_is.server			= data["aprs_is"]["server"].as<String>();
 	conf.aprs_is.port				= data["aprs_is"]["port"]					| 14580;
 	conf.aprs_is.beacon				= data["aprs_is"]["beacon"]					| true;
