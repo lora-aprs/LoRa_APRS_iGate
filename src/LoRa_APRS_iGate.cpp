@@ -415,10 +415,10 @@ void setup_lora()
 void setup_ntp()
 {
 	timeClient.begin();
-	if(!timeClient.forceUpdate())
+	while(!timeClient.forceUpdate())
 	{
-		logPrintlnW("NTP Client force update issue!");
-		show_display("WARN", "NTP Client force update issue!", 2000);
+		logPrintlnW("NTP Client force update issue! Waiting 1 sek...");
+		show_display("WARN", "NTP Client force update issue! Waiting 1 sek...", 1000);
 	}
 	logPrintlnI("NTP Client init done!");
 	show_display("INFO", "NTP Client init done!", 2000);
