@@ -16,6 +16,8 @@ Try it out and be part of the APRS network.
 * [Manuel Lausmann - Tracker](https://www.youtube.com/watch?v=clIlTEFbWLk) (youtube - german) 02.11.2020
 * [OE1ROT](https://www.aronaut.at/2019/12/lora-aprs-tracker-mit-ttgo-t-beam-433mhz/) (blog post - german) 09.12.2019
 
+feel free  to add yours or create a ticket if you want to be added.
+
 ## Supported boards
 
 You can use one of the Lora32 boards without changings:
@@ -61,7 +63,7 @@ The best success is to use PlatformIO (and it is the only platform where I can s
 
 ## Branches in this repository and version system
 
-This Firmware is developed in a rolling release system: everyday a new release could be created. But there are still rules where new pull requests has to go and and how the version system looks like.
+This firmware is developed in a rolling release system: everyday a new release could be created. But there are still rules where new pull requests has to go and and how the version system looks like.
 
 ### Branches
 
@@ -69,9 +71,9 @@ There are 2 main branches:
 * *master* and
 * *develop*
 
-The *master* branch has all releases and is the most stable one. With the different tags you can jump to different versions or if you take the most current master branch you will just get the last version. There will be no side releases which are branch of from master. If there is a bugfix version it will be done directly on the master branch and a tag will be generated with a new version.
+The *master* branch has all releases and is the most stable one. With the different tags you can jump to different versions or if you take the most current *master* branch you will just get the latest, stable version. There will be no side releases which are branched of from *master*. If there is a bugfix version it will be done directly on the *master* branch and a tag will be generated with a new version.
 
-The *develop* branch is used for new feature development. It will be also used to stabilize the current development to create a new stable version (merge request to *master* branch). **Again:** all new development (pull requests) has to go directly into the *develop* branch!
+The *develop* branch is used for new feature development. It will be also used to stabilize the current development to create a new stable version (pull request to *master* branch). **Again:** all new development (pull requests) has to go directly into the *develop* branch!
 
 ### Version system
 
@@ -80,7 +82,7 @@ If the *develop* branch is stable enough for a new release it will be merged wit
 The versions are based on this settings:
 * major: the current year (2 digits)
 * minor: the current week of the year
-* patch: if there is a patch for an release, just increment the number, otherwise 0
+* patch: if there is a important fix for an release, just increment the number, otherwise 0
 
 *example*: a new release will be created on the 11/14/2020, this version numbers will be used: 
 * major: 20
