@@ -1,4 +1,4 @@
-name: PlatformIO checks and build
+name: Build check and build
 
 on:
   push:
