@@ -1,6 +1,12 @@
-name: PlatformIO CI
+name: Build check and build
 
-on: [push, pull_request]
+on:
+  push:
+    paths-ignore:
+      - '*.md'
+  pull_request:
+    paths-ignore:
+      - '*.md'
 
 jobs:
   PlatformIO-Check:
