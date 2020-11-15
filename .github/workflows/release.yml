@@ -1,14 +1,13 @@
 on:
   push:
-    # Sequence of patterns matched against refs/tags
     tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+      - 'v*'
 
-name: Upload Release Asset
+name: Upload Release Assets
 
 jobs:
   build:
-    name: Upload Release Asset
+    name: Upload Release Assets
     runs-on: ubuntu-latest
     steps:
       - run: sudo apt-get install python3-setuptools python3-wheel
@@ -25,14 +24,25 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+      # upload heltec_wifi_lora_32_v1
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/TrackerD-OE1ACM/firmware.bin
-          asset_name: TrackerD-OE1ACM.bin
+          asset_path: .pio/build/heltec_wifi_lora_32_v1/firmware.bin
+          asset_name: heltec_wifi_lora_32_v1.bin
           asset_content_type: application/bin
+      # upload heltec_wifi_lora_32_v2
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/heltec_wifi_lora_32_v2/firmware.bin
+          asset_name: heltec_wifi_lora_32_v2.bin
+          asset_content_type: application/bin
+      # upload ttgo-lora32-v1
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -41,6 +51,7 @@ jobs:
           asset_path: .pio/build/ttgo-lora32-v1/firmware.bin
           asset_name: ttgo-lora32-v1.bin
           asset_content_type: application/bin
+      # upload ttgo-lora32-v2
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -49,6 +60,7 @@ jobs:
           asset_path: .pio/build/ttgo-lora32-v2/firmware.bin
           asset_name: ttgo-lora32-v2.bin
           asset_content_type: application/bin
+      # upload ttgo-t-beam-v0_7
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -57,6 +69,7 @@ jobs:
           asset_path: .pio/build/ttgo-t-beam-v0_7/firmware.bin
           asset_name: ttgo-t-beam-v0_7.bin
           asset_content_type: application/bin
+      # upload ttgo-t-beam-v1
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -64,4 +77,13 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: .pio/build/ttgo-t-beam-v1/firmware.bin
           asset_name: ttgo-t-beam-v1.bin
+          asset_content_type: application/bin
+      # upload TrackerD-OE1ACM
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/TrackerD-OE1ACM/firmware.bin
+          asset_name: TrackerD-OE1ACM.bin
           asset_content_type: application/bin
