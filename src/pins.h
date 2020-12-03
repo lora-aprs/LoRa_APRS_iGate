@@ -23,6 +23,20 @@
 	#define OLED_RST	25
 #endif
 
+#ifdef ETH_BOARD
+	#define OLED_SDA	33
+	#define OLED_SCL	32
+	#define OLED_RST	5
+//#define ETH_CLK			ETH_CLOCK_GPIO0_OUT		// TTGO PoE V1.2
+#define ETH_CLK			ETH_CLOCK_GPIO17_OUT	// TTGO PoE V1.0
+#define ETH_POWER_PIN	-1
+#define ETH_TYPE		ETH_PHY_LAN8720
+#define ETH_ADDR		0
+#define ETH_MDC_PIN		23
+#define ETH_MDIO_PIN	18
+#define NRST			5
+#endif
+
 
 
 #undef KEY_BUILTIN
