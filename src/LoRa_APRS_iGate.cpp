@@ -90,6 +90,7 @@ void setup()
 	setup_ota();
 	setup_ntp();
 	setup_ftp();
+	setup_aprs_is();
 #else
 	if(Config.wifi.active)
 	{
@@ -104,8 +105,8 @@ void setup()
 		WiFi.mode(WIFI_OFF);
 		btStop();
 	}
-#endif
 	if(Config.aprs_is.active) setup_aprs_is();
+#endif
 	setup_timer();
 
 	if(Config.display.overwritePin != 0)
@@ -178,7 +179,7 @@ void loop()
 		delay(1000);
 		return;
 	}
-	if(eth_connected || (Config.aprs_is.active && !aprs_is->connected()))
+	if((eth_connected && !aprs_is->connected()) || (Config.aprs_is.active && !aprs_is->connected()))
 	{
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		logPrintI("connecting to APRS-IS server: ");
@@ -364,32 +365,31 @@ void WiFiEvent(WiFiEvent_t event)
 {
 	switch (event) {
 	case SYSTEM_EVENT_ETH_START:
-		Serial.println("ETH Started");
-		//set eth hostname here
+		logPrintlnI("ETH Started");
 		ETH.setHostname("esp32-ethernet");
 		break;
 	case SYSTEM_EVENT_ETH_CONNECTED:
-		Serial.println("ETH Connected");
+		logPrintlnI("ETH Connected");
 		break;
 	case SYSTEM_EVENT_ETH_GOT_IP:
-		Serial.print("ETH MAC: ");
-		Serial.print(ETH.macAddress());
-		Serial.print(", IPv4: ");
-		Serial.print(ETH.localIP());
+		logPrintI("ETH MAC: ");
+		logPrintI(ETH.macAddress());
+		logPrintI(", IPv4: ");
+		logPrintI(ETH.localIP().toString());
 		if (ETH.fullDuplex()) {
-			Serial.print(", FULL_DUPLEX");
+			logPrintI(", FULL_DUPLEX");
 		}
-		Serial.print(", ");
-		Serial.print(ETH.linkSpeed());
-		Serial.println("Mbps");
+		logPrintI(", ");
+		logPrintI(String(ETH.linkSpeed()));
+		logPrintlnI("Mbps");
 		eth_connected = true;
 		break;
 	case SYSTEM_EVENT_ETH_DISCONNECTED:
-		Serial.println("ETH Disconnected");
+		logPrintlnW("ETH Disconnected");
 		eth_connected = false;
 		break;
 	case SYSTEM_EVENT_ETH_STOP:
-		Serial.println("ETH Stopped");
+		logPrintlnW("ETH Stopped");
 		eth_connected = false;
 		break;
 	default:
@@ -411,6 +411,10 @@ void setup_eth()
 	digitalWrite(NRST, 1);
 
 	ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
+	while(!eth_connected)
+	{
+		sleep(1);
+	}
 }
 
 void setup_ota()
