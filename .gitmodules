@@ -1,0 +1,3 @@
+[submodule "lib"]
+	path = lib
+	url = ../LoRa_APRS_Common
