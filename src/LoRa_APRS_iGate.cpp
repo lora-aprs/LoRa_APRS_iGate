@@ -45,9 +45,14 @@ volatile bool eth_connected = false;
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
+#ifdef ETH_BOARD
+void setup_eth();
+#else
+void setup_wifi();
+#endif
+
 void load_config();
 void setup_wifi();
-void setup_eth();
 void setup_ota();
 void setup_lora();
 void setup_ntp();
@@ -338,29 +343,7 @@ void load_config()
 	logPrintlnI("Configuration loaded!");
 }
 
-void setup_wifi()
-{
-	WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
-	WiFi.setHostname(Config.callsign.c_str());
-	for(Configuration::Wifi::AP ap : Config.wifi.APs)
-	{
-		logPrintD("Looking for AP: ");
-		logPrintlnD(ap.SSID);
-		WiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
-	}
-	logPrintlnI("Waiting for WiFi");
-	show_display("INFO", "Waiting for WiFi");
-	while(WiFiMulti.run() != WL_CONNECTED)
-	{
-		show_display("INFO", "Waiting for WiFi", "....");
-		delay(500);
-	}
-	logPrintlnI("WiFi connected");
-	logPrintD("IP address: ");
-	logPrintlnD(WiFi.localIP().toString());
-	show_display("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
-}
-
+#ifdef ETH_BOARD
 void WiFiEvent(WiFiEvent_t event)
 {
 	switch (event) {
@@ -416,6 +399,30 @@ void setup_eth()
 		sleep(1);
 	}
 }
+#else
+void setup_wifi()
+{
+	WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
+	WiFi.setHostname(Config.callsign.c_str());
+	for(Configuration::Wifi::AP ap : Config.wifi.APs)
+	{
+		logPrintD("Looking for AP: ");
+		logPrintlnD(ap.SSID);
+		WiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
+	}
+	logPrintlnI("Waiting for WiFi");
+	show_display("INFO", "Waiting for WiFi");
+	while(WiFiMulti.run() != WL_CONNECTED)
+	{
+		show_display("INFO", "Waiting for WiFi", "....");
+		delay(500);
+	}
+	logPrintlnI("WiFi connected");
+	logPrintD("IP address: ");
+	logPrintlnD(WiFi.localIP().toString());
+	show_display("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
+}
+#endif
 
 void setup_ota()
 {
