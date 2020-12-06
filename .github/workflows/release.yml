@@ -87,3 +87,21 @@ jobs:
           asset_path: .pio/build/TrackerD-OE1ACM/firmware.bin
           asset_name: TrackerD-OE1ACM.bin
           asset_content_type: application/bin
+      # upload ttgo-poe-v1_0
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-poe-v1_0/firmware.bin
+          asset_name: ttgo-poe-v1_0.bin
+          asset_content_type: application/bin
+      # upload ttgo-poe-v1_2
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: .pio/build/ttgo-poe-v1_2/firmware.bin
+          asset_name: ttgo-poe-v1_2.bin
+          asset_content_type: application/bin
