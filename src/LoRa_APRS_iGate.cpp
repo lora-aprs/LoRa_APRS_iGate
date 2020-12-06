@@ -1,6 +1,7 @@
 #include <map>
 
 #include <Arduino.h>
+#include <ETH.h>
 #include <WiFiMulti.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
@@ -39,8 +40,16 @@ APRS_IS * aprs_is = 0;
 LoRa_APRS lora_aprs;
 std::shared_ptr<APRSMessage> BeaconMsg;
 
+volatile bool eth_connected = false;
+
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
+
+#ifdef ETH_BOARD
+void setup_eth();
+#else
+void setup_wifi();
+#endif
 
 void load_config();
 void setup_wifi();
@@ -81,6 +90,13 @@ void setup()
 
 	load_config();
 	setup_lora();
+#ifdef ETH_BOARD
+	setup_eth();
+	setup_ota();
+	setup_ntp();
+	setup_ftp();
+	setup_aprs_is();
+#else
 	if(Config.wifi.active)
 	{
 		setup_wifi();
@@ -95,6 +111,7 @@ void setup()
 		btStop();
 	}
 	if(Config.aprs_is.active) setup_aprs_is();
+#endif
 	setup_timer();
 
 	if(Config.display.overwritePin != 0)
@@ -158,7 +175,7 @@ void loop()
 		}
 	}
 
-	if(Config.wifi.active) ArduinoOTA.handle();
+	if(Config.wifi.active || eth_connected) ArduinoOTA.handle();
 	if(Config.wifi.active && WiFiMulti.run() != WL_CONNECTED)
 	{
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
@@ -167,7 +184,7 @@ void loop()
 		delay(1000);
 		return;
 	}
-	if(Config.aprs_is.active && !aprs_is->connected())
+	if((eth_connected && !aprs_is->connected()) || (Config.aprs_is.active && !aprs_is->connected()))
 	{
 		setup_display(); secondsSinceDisplay = 0; display_is_on = true;
 		logPrintI("connecting to APRS-IS server: ");
@@ -309,6 +326,7 @@ void load_config()
 		{}
 	}
 
+#ifndef ETH_BOARD
 	if(Config.aprs_is.active && !Config.wifi.active)
 	{
 		logPrintlnE("You have to activate Wifi for APRS IS to work, please check your settings!");
@@ -316,6 +334,7 @@ void load_config()
 		while (true)
 		{}
 	}
+#endif
 
 	if(KEY_BUILTIN != 0 && Config.display.overwritePin == 0)
 	{
@@ -324,6 +343,63 @@ void load_config()
 	logPrintlnI("Configuration loaded!");
 }
 
+#ifdef ETH_BOARD
+void WiFiEvent(WiFiEvent_t event)
+{
+	switch (event) {
+	case SYSTEM_EVENT_ETH_START:
+		logPrintlnI("ETH Started");
+		ETH.setHostname("esp32-ethernet");
+		break;
+	case SYSTEM_EVENT_ETH_CONNECTED:
+		logPrintlnI("ETH Connected");
+		break;
+	case SYSTEM_EVENT_ETH_GOT_IP:
+		logPrintI("ETH MAC: ");
+		logPrintI(ETH.macAddress());
+		logPrintI(", IPv4: ");
+		logPrintI(ETH.localIP().toString());
+		if (ETH.fullDuplex()) {
+			logPrintI(", FULL_DUPLEX");
+		}
+		logPrintI(", ");
+		logPrintI(String(ETH.linkSpeed()));
+		logPrintlnI("Mbps");
+		eth_connected = true;
+		break;
+	case SYSTEM_EVENT_ETH_DISCONNECTED:
+		logPrintlnW("ETH Disconnected");
+		eth_connected = false;
+		break;
+	case SYSTEM_EVENT_ETH_STOP:
+		logPrintlnW("ETH Stopped");
+		eth_connected = false;
+		break;
+	default:
+		break;
+	}
+}
+
+void setup_eth()
+{
+	WiFi.onEvent(WiFiEvent);
+
+	pinMode(NRST, OUTPUT);
+	digitalWrite(NRST, 0);
+	delay(200);
+	digitalWrite(NRST, 1);
+	delay(200);
+	digitalWrite(NRST, 0);
+	delay(200);
+	digitalWrite(NRST, 1);
+
+	ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
+	while(!eth_connected)
+	{
+		sleep(1);
+	}
+}
+#else
 void setup_wifi()
 {
 	WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);
@@ -346,6 +422,7 @@ void setup_wifi()
 	logPrintlnD(WiFi.localIP().toString());
 	show_display("INFO", "WiFi connected", "IP: ", WiFi.localIP().toString(), 2000);
 }
+#endif
 
 void setup_ota()
 {
