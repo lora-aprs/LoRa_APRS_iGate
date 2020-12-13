@@ -114,8 +114,8 @@ public:
 	virtual ~ProjectConfigurationManagement() {}
 
 private:
-	virtual Configuration * readProjectConfiguration(DynamicJsonDocument & data);
-	virtual void writeProjectConfiguration(Configuration * conf, DynamicJsonDocument & data);
+	virtual Configuration * readProjectConfiguration(DynamicJsonDocument & data) override;
+	virtual void writeProjectConfiguration(Configuration * conf, DynamicJsonDocument & data) override;
 };
 
 #endif
