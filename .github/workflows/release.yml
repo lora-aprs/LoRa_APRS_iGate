@@ -14,6 +14,8 @@ jobs:
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - run: platformio run
       - id: create_release
         uses: actions/create-release@v1

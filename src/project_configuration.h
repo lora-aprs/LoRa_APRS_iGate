@@ -1,10 +1,7 @@
-#ifndef CONFIGURATION_H_
-#define CONFIGURATION_H_
+#ifndef PROJECT_CONFIGURATION_H_
+#define PROJECT_CONFIGURATION_H_
 
-#include <list>
-
-#include <Arduino.h>
-#include <ArduinoJson.h>
+#include "configuration.h"
 
 class Configuration
 {
@@ -110,16 +107,15 @@ public:
 	Ftp ftp;
 };
 
-class ConfigurationManagement
+class ProjectConfigurationManagement : public ConfigurationManagement
 {
 public:
-	explicit ConfigurationManagement(String FilePath);
-
-	Configuration readConfiguration();
-	void writeConfiguration(Configuration conf);
+	explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {}
+	virtual ~ProjectConfigurationManagement() {}
 
 private:
-	const String mFilePath;
+	virtual Configuration * readProjectConfiguration(DynamicJsonDocument & data) override;
+	virtual void writeProjectConfiguration(Configuration * conf, DynamicJsonDocument & data) override;
 };
 
 #endif

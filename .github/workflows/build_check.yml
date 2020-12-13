@@ -16,7 +16,9 @@ jobs:
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
-      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr" -v
+        with:
+          submodules: 'recursive'
+      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr lib/common/src" -v
 
   PlatformIO-Build:
     runs-on: ubuntu-latest
@@ -25,6 +27,8 @@ jobs:
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - run: platformio run
       - uses: actions/upload-artifact@v2
         with:
