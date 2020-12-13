@@ -84,9 +84,9 @@ void setup()
 
 	delay(500);
 	logPrintlnA("LoRa APRS iGate & Digi by OE5BPA (Peter Buchegger)");
-	logPrintlnA("Version: 20.49.0");
+	logPrintlnA("Version: 20.49.0-dev");
 	setup_display();
-	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", "20.49.0", 3000);
+	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", "20.49.0-dev", 3000);
 
 	load_config();
 	setup_lora();
