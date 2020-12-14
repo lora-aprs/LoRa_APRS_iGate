@@ -1,15 +1,22 @@
-name: Issue assignment
-
+name: Auto Assign
 on:
   issues:
     types: [opened]
+  pull_request:
+    types: [opened]
 
 jobs:
-  auto-assign:
+  test:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Auto-assign issue'
-        uses: pozil/auto-assign-issue@v1
+      - uses: actions/checkout@v2
+      - name: 🚧　Install
+        run: |
+          yarn
+      - name: 📦　Build
+        run: |
+          yarn build
+      - uses: ./
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          assignees: peterus
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CONFIG_FILE: .github/auto-assign.yml
