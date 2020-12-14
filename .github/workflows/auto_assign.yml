@@ -4,19 +4,11 @@ on:
     types: [opened]
   pull_request:
     types: [opened]
-
 jobs:
-  test:
+  run:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: 🚧　Install
-        run: |
-          yarn
-      - name: 📦　Build
-        run: |
-          yarn build
-      - uses: ./
+      - uses: bubkoo/auto-assign@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CONFIG_FILE: .github/auto-assign.yml
