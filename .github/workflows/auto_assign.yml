@@ -1,8 +1,15 @@
-name: 'Auto Assign'
-on: pull_request
+name: Issue assignment
+
+on:
+  issues:
+    types: [opened]
 
 jobs:
-  add-reviews:
+  auto-assign:
     runs-on: ubuntu-latest
     steps:
-      - uses: kentaro-m/auto-assign-action@v1.1.2
+      - name: 'Auto-assign issue'
+        uses: pozil/auto-assign-issue@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          assignees: peterus
