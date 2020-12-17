@@ -61,6 +61,11 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 		us.password					= "ftp";
 		conf->ftp.users.push_back(us);
 	}
+	if(data.containsKey("ntp_server"))
+		conf->ntpServer				= data["ntp_server"].as<String>();
+
+	if(data.containsKey("board"))
+		conf->board					= data["board"].as<String>();
 
 	return conf;
 }
@@ -106,4 +111,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration * c
 		v["name"]							= u.name;
 		v["password"]						= u.password;
 	}
+	data["ntp_server"]						= conf->ntpServer;
+
+	data["board"]							= conf->board;
 }

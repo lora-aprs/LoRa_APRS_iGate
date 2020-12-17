@@ -53,5 +53,6 @@
 		"user": [
 			{ "name":"ftp", "password":"ftp" }
 		]
-	}
+	},
+	"ntp_server": "pool.ntp.org"
 }

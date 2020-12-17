@@ -95,7 +95,7 @@ public:
 		std::list<User> users;
 	};
 
-	Configuration() : callsign("NOCALL-10") {};
+	Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org") {};
 
 	String callsign;
 	Wifi wifi;
@@ -105,6 +105,8 @@ public:
 	LoRa lora;
 	Display display;
 	Ftp ftp;
+	String board;
+	String ntpServer;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement
