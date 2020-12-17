@@ -26,7 +26,7 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      # upload heltec_wifi_lora_32_v1
+      # upload firmware bin
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,3 +35,12 @@ jobs:
           asset_path: .pio/build/lora_board/firmware.bin
           asset_name: lora_board.bin
           asset_content_type: application/bin
+      # upload json file
+      - uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: data/is-cfg.json
+          asset_name: is-cfg.json
+          asset_content_type: application/json
