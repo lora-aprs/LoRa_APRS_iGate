@@ -45,17 +45,6 @@ public:
 		int beaconTimeout;
 	};
 
-	class Digi
-	{
-	public:
-		Digi() : active(false), forwardTimeout(5), beacon(true), beaconTimeout(30) {}
-
-		bool active;
-		int forwardTimeout;
-		bool beacon;
-		int beaconTimeout;
-	};
-
 	class LoRa
 	{
 	public:
@@ -101,7 +90,6 @@ public:
 	Wifi wifi;
 	Beacon beacon;
 	APRS_IS aprs_is;
-	Digi digi;
 	LoRa lora;
 	Display display;
 	Ftp ftp;

@@ -30,10 +30,6 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 	conf->aprs_is.port				= data["aprs_is"]["port"]					| 14580;
 	conf->aprs_is.beacon				= data["aprs_is"]["beacon"]					| true;
 	conf->aprs_is.beaconTimeout		= data["aprs_is"]["beacon_timeout"]			| 15;
-	conf->digi.active				= data["digi"]["active"]					| false;
-	conf->digi.forwardTimeout		= data["digi"]["forward_timeout"]			| 5;
-	conf->digi.beacon				= data["digi"]["beacon"]					| true;
-	conf->digi.beaconTimeout			= data["digi"]["beacon_timeout"]			| 30;
 
 	conf->lora.frequencyRx			= data["lora"]["frequency_rx"]				| 433775000;
 	conf->lora.frequencyTx			= data["lora"]["frequency_tx"]				| 433775000;
@@ -90,10 +86,6 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration * c
 	data["aprs_is"]["port"]					= conf->aprs_is.port;
 	data["aprs_is"]["beacon"]				= conf->aprs_is.beacon;
 	data["aprs_is"]["beacon_timeout"]		= conf->aprs_is.beaconTimeout;
-	data["digi"]["active"]					= conf->digi.active;
-	data["digi"]["forward_timeout"]			= conf->digi.forwardTimeout;
-	data["digi"]["beacon"]					= conf->digi.beacon;
-	data["digi"]["beacon_timeout"]			= conf->digi.beaconTimeout;
 	data["lora"]["frequency_rx"]			= conf->lora.frequencyRx;
 	data["lora"]["frequency_tx"]			= conf->lora.frequencyTx;
 	data["lora"]["power"]					= conf->lora.power;

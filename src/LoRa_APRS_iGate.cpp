@@ -29,7 +29,6 @@ PowerManagement powerManagement;
 portMUX_TYPE timerMux = portMUX_INITIALIZER_UNLOCKED;
 hw_timer_t * timer = NULL;
 volatile uint secondsSinceLastAPRSISBeacon = 0;
-volatile uint secondsSinceLastDigiBeacon = 0;
 volatile uint secondsSinceStartup = 0;
 volatile uint secondsSinceDisplay = 0;
 
@@ -110,10 +109,10 @@ void setup()
 		powerManagement.deactivateGPS();
 	}
 
-	logPrintlnW("LoRa APRS iGate & Digi by OE5BPA (Peter Buchegger)");
+	logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
 	logPrintlnW("Version: 20.49.0-dev");
 	setup_display(boardConfig);
-	show_display("OE5BPA", "LoRa APRS iGate & Digi", "by Peter Buchegger", "20.49.0-dev", 3000);
+	show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", "20.49.0-dev", 3000);
 
 	load_config();
 	setup_lora();
@@ -173,7 +172,6 @@ void loop()
 	}
 
 	static bool beacon_aprs_is = Config->aprs_is.active && Config->aprs_is.beacon;
-	static bool beacon_digi = Config->digi.active && Config->digi.beacon;
 
 	if(Config->aprs_is.active && Config->aprs_is.beacon && secondsSinceLastAPRSISBeacon >= (Config->aprs_is.beaconTimeout*60))
 	{
@@ -181,13 +179,6 @@ void loop()
 		secondsSinceLastAPRSISBeacon -= (Config->aprs_is.beaconTimeout*60);
 		portEXIT_CRITICAL(&timerMux);
 		beacon_aprs_is = true;
-	}
-	if(Config->digi.active && Config->digi.beacon && secondsSinceLastDigiBeacon >= (Config->digi.beaconTimeout*60))
-	{
-		portENTER_CRITICAL(&timerMux);
-		secondsSinceLastDigiBeacon -= (Config->digi.beaconTimeout*60);
-		portEXIT_CRITICAL(&timerMux);
-		beacon_digi = true;
 	}
 
 	if(Config->ftp.active)
@@ -257,81 +248,6 @@ void loop()
 		{
 			aprs_is->sendMessage(msg->encode());
 		}
-		if(Config->digi.active)
-		{
-			if(msg->getSource().indexOf(Config->callsign) != -1)
-			{
-				logPrintD("Message already received as repeater: '");
-				logPrintD(msg->toString());
-				logPrintD("' with RSSI ");
-				logPrintD(String(lora_aprs->packetRssi()));
-				logPrintD(" and SNR ");
-				logPrintlnD(String(lora_aprs->packetSnr()));
-				return;
-			}
-
-			// lets try not to flood the LoRa frequency in limiting the same messages:
-			std::map<uint, std::shared_ptr<APRSMessage>>::iterator foundMsg = std::find_if(lastMessages.begin(), lastMessages.end(), [&](std::pair<const unsigned int, std::shared_ptr<APRSMessage> > & old_msg)
-				{
-					if(msg->getSource() == old_msg.second->getSource() &&
-						msg->getDestination() == old_msg.second->getDestination() &&
-						msg->getAPRSBody()->getData() == old_msg.second->getAPRSBody()->getData())
-					{
-						return true;
-					}
-					return false;
-				});
-
-			if(foundMsg == lastMessages.end())
-			{
-				setup_display(boardConfig); secondsSinceDisplay = 0; display_is_on = true;
-				show_display(Config->callsign, "RSSI: " + String(lora_aprs->packetRssi()) + ", SNR: " + String(lora_aprs->packetSnr()), msg->toString(), 0);
-				logPrintD("Received packet '");
-				logPrintD(msg->toString());
-				logPrintD("' with RSSI ");
-				logPrintD(String(lora_aprs->packetRssi()));
-				logPrintD(" and SNR ");
-				logPrintlnD(String(lora_aprs->packetSnr()));
-				msg->setPath(String(Config->callsign) + "*");
-				lora_aprs->sendMessage(msg);
-				lastMessages.insert({secondsSinceStartup, msg});
-			}
-			else
-			{
-				logPrintD("Message already received (timeout): '");
-				logPrintD(msg->toString());
-				logPrintD("' with RSSI ");
-				logPrintD(String(lora_aprs->packetRssi()));
-				logPrintD(" and SNR ");
-				logPrintlnD(String(lora_aprs->packetSnr()));
-			}
-			return;
-		}
-	}
-	if(Config->digi.active)
-	{
-		for(std::map<uint, std::shared_ptr<APRSMessage>>::iterator iter = lastMessages.begin(); iter != lastMessages.end(); )
-		{
-			if(secondsSinceStartup >= iter->first + Config->digi.forwardTimeout*60)
-			{
-				iter = lastMessages.erase(iter);
-			}
-			else
-			{
-				++iter;
-			}
-		}
-	}
-	if(beacon_digi)
-	{
-		beacon_digi = false;
-		setup_display(boardConfig); secondsSinceDisplay = 0; display_is_on = true;
-		show_display(Config->callsign, "Beacon to HF...");
-		logPrintD("[" + timeClient->getFormattedTime() + "] ");
-		logPrintlnD(BeaconMsg->encode());
-		lora_aprs->sendMessage(BeaconMsg);
-		logPrintlnD("finished TXing...");
-		show_display(Config->callsign, "Standby...");
 	}
 	if(beacon_aprs_is)
 	{
@@ -548,7 +464,6 @@ void IRAM_ATTR onTimer()
 {
 	portENTER_CRITICAL_ISR(&timerMux);
 	secondsSinceLastAPRSISBeacon++;
-	secondsSinceLastDigiBeacon++;
 	secondsSinceStartup++;
 	secondsSinceDisplay++;
 	portEXIT_CRITICAL_ISR(&timerMux);
