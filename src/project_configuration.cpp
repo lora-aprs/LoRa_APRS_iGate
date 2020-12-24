@@ -19,21 +19,21 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 		conf->wifi.APs.push_back(ap);
 	}
 	if(data.containsKey("beacon") && data["beacon"].containsKey("message"))
-		conf->beacon.message			= data["beacon"]["message"].as<String>();
+		conf->beacon.message		= data["beacon"]["message"].as<String>();
 	conf->beacon.positionLatitude	= data["beacon"]["position"]["latitude"]	| 0.0;
 	conf->beacon.positionLongitude	= data["beacon"]["position"]["longitude"]	| 0.0;
-	conf->aprs_is.active				= data["aprs_is"]["active"]					| false;
+	conf->aprs_is.active			= data["aprs_is"]["active"]					| false;
 	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("password"))
 		conf->aprs_is.password		= data["aprs_is"]["password"].as<String>();
 	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
-		conf->aprs_is.server			= data["aprs_is"]["server"].as<String>();
+		conf->aprs_is.server		= data["aprs_is"]["server"].as<String>();
 	conf->aprs_is.port				= data["aprs_is"]["port"]					| 14580;
-	conf->aprs_is.beacon				= data["aprs_is"]["beacon"]					| true;
+	conf->aprs_is.beacon			= data["aprs_is"]["beacon"]					| true;
 	conf->aprs_is.beaconTimeout		= data["aprs_is"]["beacon_timeout"]			| 15;
 
 	conf->lora.frequencyRx			= data["lora"]["frequency_rx"]				| 433775000;
 	conf->lora.frequencyTx			= data["lora"]["frequency_tx"]				| 433775000;
-	conf->lora.power					= data["lora"]["power"]						| 20;
+	conf->lora.power				= data["lora"]["power"]						| 20;
 	conf->lora.spreadingFactor		= data["lora"]["spreading_factor"]			| 12;
 	conf->lora.signalBandwidth		= data["lora"]["signal_bandwidth"]			| 125000;
 	conf->lora.codingRate4			= data["lora"]["coding_rate4"]				| 5;
@@ -41,7 +41,7 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 	conf->display.timeout			= data["display"]["timeout"]				| 10;
 	conf->display.overwritePin		= data["display"]["overwrite_pin"]			| 0;
 
-	conf->ftp.active					= data["ftp"]["active"]						| false;
+	conf->ftp.active				= data["ftp"]["active"]						| false;
 	JsonArray users					= data["ftp"]["user"].as<JsonArray>();
 	for(JsonVariant u : users)
 	{
