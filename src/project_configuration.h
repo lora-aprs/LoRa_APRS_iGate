@@ -2,6 +2,7 @@
 #define PROJECT_CONFIGURATION_H_
 
 #include "configuration.h"
+#include "BoardFinder.h"
 
 class Configuration
 {
@@ -16,9 +17,8 @@ public:
 			String password;
 		};
 
-		Wifi() : active(false) {}
+		Wifi() {}
 
-		bool active;
 		std::list<AP> APs;
 	};
 
@@ -35,9 +35,8 @@ public:
 	class APRS_IS
 	{
 	public:
-		APRS_IS() : active(false), server("euro.aprs2.net"), port(14580), beacon(true), beaconTimeout(15) {}
+		APRS_IS() : server("euro.aprs2.net"), port(14580), beacon(true), beaconTimeout(15) {}
 
-		bool active;
 		String password;
 		String server;
 		int port;
@@ -104,8 +103,10 @@ public:
 	virtual ~ProjectConfigurationManagement() {}
 
 private:
-	virtual Configuration * readProjectConfiguration(DynamicJsonDocument & data) override;
-	virtual void writeProjectConfiguration(Configuration * conf, DynamicJsonDocument & data) override;
+	virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument & data) override;
+	virtual void writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument & data) override;
 };
+
+std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig);
 
 #endif

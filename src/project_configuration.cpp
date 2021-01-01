@@ -3,13 +3,12 @@
 #include "project_configuration.h"
 #include "logger.h"
 
-Configuration * ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocument & data)
+std::shared_ptr<Configuration> ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocument & data)
 {
-	Configuration * conf = new Configuration;
+	std::shared_ptr<Configuration> conf = std::shared_ptr<Configuration>(new Configuration);
 	if(data.containsKey("callsign"))
 		conf->callsign				= data["callsign"].as<String>();
 
-	conf->wifi.active				= data["wifi"]["active"]					| false;
 	JsonArray aps					= data["wifi"]["AP"].as<JsonArray>();
 	for(JsonVariant v : aps)
 	{
@@ -22,7 +21,6 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 		conf->beacon.message		= data["beacon"]["message"].as<String>();
 	conf->beacon.positionLatitude	= data["beacon"]["position"]["latitude"]	| 0.0;
 	conf->beacon.positionLongitude	= data["beacon"]["position"]["longitude"]	| 0.0;
-	conf->aprs_is.active			= data["aprs_is"]["active"]					| false;
 	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("password"))
 		conf->aprs_is.password		= data["aprs_is"]["password"].as<String>();
 	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
@@ -66,10 +64,9 @@ Configuration * ProjectConfigurationManagement::readProjectConfiguration(Dynamic
 	return conf;
 }
 
-void ProjectConfigurationManagement::writeProjectConfiguration(Configuration * conf, DynamicJsonDocument & data)
+void ProjectConfigurationManagement::writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument & data)
 {
 	data["callsign"]						= conf->callsign;
-	data["wifi"]["active"]					= conf->wifi.active;
 	JsonArray aps = data["wifi"].createNestedArray("AP");
 	for(Configuration::Wifi::AP ap : conf->wifi.APs)
 	{
@@ -80,7 +77,6 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration * c
 	data["beacon"]["message"]				= conf->beacon.message;
 	data["beacon"]["position"]["latitude"] 	= conf->beacon.positionLatitude;
 	data["beacon"]["position"]["longitude"]	= conf->beacon.positionLongitude;
-	data["aprs_is"]["active"]				= conf->aprs_is.active;
 	data["aprs_is"]["password"]				= conf->aprs_is.password;
 	data["aprs_is"]["server"]				= conf->aprs_is.server;
 	data["aprs_is"]["port"]					= conf->aprs_is.port;
@@ -106,4 +102,24 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration * c
 	data["ntp_server"]						= conf->ntpServer;
 
 	data["board"]							= conf->board;
+}
+
+std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig)
+{
+	ProjectConfigurationManagement confmg;
+	std::shared_ptr<Configuration> config = confmg.readConfiguration();
+	if(config->callsign == "NOCALL-10")
+	{
+		logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+		//show_display("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+		while (true)
+		{}
+	}
+
+	/*if(KEY_BUILTIN != 0 && Config->display.overwritePin == 0)
+	{
+		Config->display.overwritePin = KEY_BUILTIN;
+	}*/
+	logPrintlnI("Configuration loaded!");
+	return config;
 }

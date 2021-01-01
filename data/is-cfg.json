@@ -2,7 +2,6 @@
 	"callsign":"NOCALL-10",
 	"wifi":
 	{
-		"active":false,
 		"AP": [
 			{ "SSID":"YOURSSID", "password":"YOURPASSWORD" }
 		]
@@ -18,7 +17,6 @@
 	},
 	"aprs_is":
 	{
-		"active":false,
 		"password":"",
 		"server":"euro.aprs2.net",
 		"port":14580,
