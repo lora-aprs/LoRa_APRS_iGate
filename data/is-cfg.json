@@ -13,15 +13,14 @@
 		{
 			"latitude":0.000000,
 			"longitude":0.000000
-		}
+		},
+		"timeout":15
 	},
 	"aprs_is":
 	{
-		"password":"",
+		"passcode":"",
 		"server":"euro.aprs2.net",
-		"port":14580,
-		"beacon":true,
-		"beacon_timeout":15
+		"port":14580
 	},
 	"lora":
 	{

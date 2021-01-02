@@ -25,23 +25,22 @@ public:
 	class Beacon
 	{
 	public:
-		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0) {}
+		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {}
 
 		String message;
 		double positionLatitude;
 		double positionLongitude;
+		int timeout;
 	};
 
 	class APRS_IS
 	{
 	public:
-		APRS_IS() : server("euro.aprs2.net"), port(14580), beacon(true), beaconTimeout(15) {}
+		APRS_IS() : server("euro.aprs2.net"), port(14580) {}
 
-		String password;
+		String passcode;
 		String server;
 		int port;
-		bool beacon;
-		int beaconTimeout;
 	};
 
 	class LoRa

@@ -4,6 +4,7 @@
 #include <SPIFFS.h>
 #include <logger.h>
 #include <TimeLib.h>
+#include <APRS-IS.h>
 
 #include "connection.h"
 
@@ -180,4 +181,23 @@ std::shared_ptr<FTPServer> setup_ftp(std::shared_ptr<Configuration> config)
 		logPrintlnI("FTP Server init done!");
 	}
 	return ftpServer;
+}
+
+std::shared_ptr<APRS_IS> setup_aprs_is(std::shared_ptr<Configuration> config)
+{
+	std::shared_ptr<APRS_IS> aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(config->callsign, config->aprs_is.passcode , "ESP32-APRS-IS", "0.1"));
+	logPrintI("connecting to APRS-IS server: ");
+	logPrintI(config->aprs_is.server);
+	logPrintI(" on port: ");
+	logPrintlnI(String(config->aprs_is.port));
+	//show_display("INFO", "Connecting to APRS-IS server");
+	while(!aprs_is->connect(config->aprs_is.server, config->aprs_is.port))
+	{
+		logPrintlnE("Connection failed.");
+		logPrintlnI("Waiting 1 seconds before retrying...");
+		//show_display("ERROR", "Server connection failed!", "waiting 5 sec");
+		delay(1000);
+	}
+	logPrintlnI("Connected to APRS-IS server!");
+	return aprs_is;
 }

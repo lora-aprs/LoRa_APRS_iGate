@@ -21,13 +21,12 @@ std::shared_ptr<Configuration> ProjectConfigurationManagement::readProjectConfig
 		conf->beacon.message		= data["beacon"]["message"].as<String>();
 	conf->beacon.positionLatitude	= data["beacon"]["position"]["latitude"]	| 0.0;
 	conf->beacon.positionLongitude	= data["beacon"]["position"]["longitude"]	| 0.0;
-	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("password"))
-		conf->aprs_is.password		= data["aprs_is"]["password"].as<String>();
+	conf->beacon.timeout			= data["beacon"]["timeout"]					| 15;
+	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("passcode"))
+		conf->aprs_is.passcode		= data["aprs_is"]["passcode"].as<String>();
 	if(data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
 		conf->aprs_is.server		= data["aprs_is"]["server"].as<String>();
 	conf->aprs_is.port				= data["aprs_is"]["port"]					| 14580;
-	conf->aprs_is.beacon			= data["aprs_is"]["beacon"]					| true;
-	conf->aprs_is.beaconTimeout		= data["aprs_is"]["beacon_timeout"]			| 15;
 
 	conf->lora.frequencyRx			= data["lora"]["frequency_rx"]				| 433775000;
 	conf->lora.frequencyTx			= data["lora"]["frequency_tx"]				| 433775000;
@@ -77,11 +76,10 @@ void ProjectConfigurationManagement::writeProjectConfiguration(std::shared_ptr<C
 	data["beacon"]["message"]				= conf->beacon.message;
 	data["beacon"]["position"]["latitude"] 	= conf->beacon.positionLatitude;
 	data["beacon"]["position"]["longitude"]	= conf->beacon.positionLongitude;
-	data["aprs_is"]["password"]				= conf->aprs_is.password;
+	data["beacon"]["timeout"]				= conf->beacon.timeout;
+	data["aprs_is"]["passcode"]				= conf->aprs_is.passcode;
 	data["aprs_is"]["server"]				= conf->aprs_is.server;
 	data["aprs_is"]["port"]					= conf->aprs_is.port;
-	data["aprs_is"]["beacon"]				= conf->aprs_is.beacon;
-	data["aprs_is"]["beacon_timeout"]		= conf->aprs_is.beaconTimeout;
 	data["lora"]["frequency_rx"]			= conf->lora.frequencyRx;
 	data["lora"]["frequency_tx"]			= conf->lora.frequencyTx;
 	data["lora"]["power"]					= conf->lora.power;

@@ -15,5 +15,6 @@ std::shared_ptr<WiFiMulti> setup_wifi(std::shared_ptr<Configuration> config);
 std::shared_ptr<ArduinoOTAClass> setup_ota(std::shared_ptr<Configuration> config);
 std::shared_ptr<NTPClient> setup_ntp(std::shared_ptr<Configuration> config);
 std::shared_ptr<FTPServer> setup_ftp(std::shared_ptr<Configuration> config);
+std::shared_ptr<APRS_IS> setup_aprs_is(std::shared_ptr<Configuration> config);
 
 #endif

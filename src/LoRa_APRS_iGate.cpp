@@ -107,7 +107,7 @@ void setup()
 	OTA = setup_ota(userConfig);
 	ntpClient = setup_ntp(userConfig);
 	ftpServer = setup_ftp(userConfig);
-	aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(userConfig->callsign, userConfig->aprs_is.password , "ESP32-APRS-IS", "0.1"));
+	aprs_is = setup_aprs_is(userConfig);
 
 	if(userConfig->display.overwritePin != 0)
 	{
@@ -126,7 +126,6 @@ void setup()
 // cppcheck-suppress unusedFunction
 void loop()
 {
-	static bool beacon_aprs_is = true;
 	if(userConfig->ftp.active)
 	{
 		ftpServer->handle();
@@ -160,10 +159,7 @@ void loop()
 
 	if(!aprs_is->connected())
 	{
-		logPrintI("connecting to APRS-IS server: ");
-		logPrintI(userConfig->aprs_is.server);
-		logPrintI(" on port: ");
-		logPrintlnI(String(userConfig->aprs_is.port));
+		logPrintI("connecting to APRS-IS server...");
 		show_display("INFO", "Connecting to APRS-IS server");
 		if(!aprs_is->connect(userConfig->aprs_is.server, userConfig->aprs_is.port))
 		{
@@ -179,14 +175,15 @@ void loop()
 	aprs_is->getAPRSMessage();
 	lora_aprs->checkMessage();
 	
-	if(false) //beacon_aprs_is
+	static time_t beacon_next_time = 0;
+	if(beacon_next_time < now())
 	{
-		beacon_aprs_is = false;
 		show_display(userConfig->callsign, "Beacon to APRS-IS Server...");
 		logPrintD("[" + ntpClient->getFormattedTime() + "] ");
 		logPrintlnD(BeaconMsg->encode());
 		aprs_is->sendMessage(BeaconMsg);
 		show_display(userConfig->callsign, "Standby...");
+		beacon_next_time = now() + userConfig->beacon.timeout * 60UL;
 	}
 }
 

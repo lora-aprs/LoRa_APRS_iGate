@@ -24,8 +24,21 @@ bool APRS_IS::connect_(const String & server, const int port, const String & log
 		return false;
 	}
 	sendMessage(login_line);
-	// TODO: implement check if auth was successfull!
-	//while(!available());
+	while(true)
+	{
+		String line = _client.readStringUntil('\n');
+		if(line.indexOf("logresp") != -1)
+		{
+			if(line.indexOf("unverified") == -1)
+			{
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+	}
 	return true;
 }
 
@@ -81,7 +94,12 @@ std::shared_ptr<APRSMessage> APRS_IS::getAPRSMessage()
 	{
 		line = _client.readStringUntil('\n');
 	}
-	if(line.length() == 0 || line.startsWith("#"))
+	if(line.startsWith("#"))
+	{
+		//logPrintlnD(line);
+		return 0;
+	}
+	if(line.length() == 0)
 	{
 		return 0;
 	}
