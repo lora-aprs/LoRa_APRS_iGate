@@ -28,11 +28,11 @@ class NTPClient {
 
   public:
     NTPClient();
-    NTPClient(long timeOffset);
-    NTPClient(const char* poolServerName);
+    explicit NTPClient(long timeOffset);
+    explicit NTPClient(const char* poolServerName);
     NTPClient(const char* poolServerName, long timeOffset);
     NTPClient(const char* poolServerName, long timeOffset, unsigned long updateInterval);
-    NTPClient(IPAddress poolServerIP);
+    explicit NTPClient(IPAddress poolServerIP);
     NTPClient(IPAddress poolServerIP, long timeOffset);
     NTPClient(IPAddress poolServerIP, long timeOffset, unsigned long updateInterval);
 

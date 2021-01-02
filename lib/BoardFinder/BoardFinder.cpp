@@ -15,9 +15,9 @@ BoardConfig::BoardConfig(
 {
 }
 
-BoardFinder::BoardFinder(std::list<std::shared_ptr<BoardConfig>> boardConfigs)
+BoardFinder::BoardFinder(std::list<std::shared_ptr<BoardConfig>> & boardConfigs)
+	: _boardConfigs(boardConfigs)
 {
-	_boardConfigs = boardConfigs;
 }
 
 std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig()

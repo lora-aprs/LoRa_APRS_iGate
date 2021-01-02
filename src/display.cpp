@@ -10,6 +10,7 @@
 Adafruit_SSD1306 * display = 0;
 TwoWire * wire = 0;
 
+// cppcheck-suppress unusedFunction
 void setup_display(std::shared_ptr<BoardConfig> boardConfig)
 {
 	if(display == 0)
@@ -35,12 +36,12 @@ void setup_display(std::shared_ptr<BoardConfig> boardConfig)
 	logPrintlnI("Display init done!");
 }
 
-void turn_off_display()
+/*void turn_off_display()
 {
 	display->ssd1306_command(SSD1306_DISPLAYOFF);
-}
+}*/
 
-void show_display(String header, int wait)
+/*void show_display(String header, int wait)
 {
 	display->clearDisplay();
 	display->setTextColor(WHITE);
@@ -49,8 +50,9 @@ void show_display(String header, int wait)
 	display->println(header);
 	display->display();
 	delay(wait);
-}
+}*/
 
+// cppcheck-suppress unusedFunction
 void show_display(String header, String line1, int wait)
 {
 	display->clearDisplay();
@@ -65,6 +67,7 @@ void show_display(String header, String line1, int wait)
 	delay(wait);
 }
 
+// cppcheck-suppress unusedFunction
 void show_display(String header, String line1, String line2, int wait)
 {
 	display->clearDisplay();
@@ -81,6 +84,7 @@ void show_display(String header, String line1, String line2, int wait)
 	delay(wait);
 }
 
+// cppcheck-suppress unusedFunction
 void show_display(String header, String line1, String line2, String line3, int wait)
 {
 	display->clearDisplay();
@@ -99,7 +103,7 @@ void show_display(String header, String line1, String line2, String line3, int w
 	delay(wait);
 }
 
-void show_display(String header, String line1, String line2, String line3, String line4, int wait)
+/*void show_display(String header, String line1, String line2, String line3, String line4, int wait)
 {
 	display->clearDisplay();
 	display->setTextColor(WHITE);
@@ -117,9 +121,9 @@ void show_display(String header, String line1, String line2, String line3, Strin
 	display->println(line4);
 	display->display();
 	delay(wait);
-}
+}*/
 
-void show_display(String header, String line1, String line2, String line3, String line4, String line5, int wait)
+/*void show_display(String header, String line1, String line2, String line3, String line4, String line5, int wait)
 {
 	display->clearDisplay();
 	display->setTextColor(WHITE);
@@ -139,4 +143,4 @@ void show_display(String header, String line1, String line2, String line3, Strin
 	display->println(line5);
 	display->display();
 	delay(wait);
-}
+}*/

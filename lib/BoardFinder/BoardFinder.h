@@ -23,7 +23,7 @@ enum BoardType
 class BoardConfig
 {
 public:
-	BoardConfig(
+	explicit BoardConfig(
 		String name, BoardType type,
 		uint8_t oledsda, uint8_t oledscl, uint8_t oledaddr, uint8_t oledreset,
 		uint8_t lorasck, uint8_t loramiso, uint8_t loramosi, uint8_t loracs, uint8_t lorareset, uint8_t lorairq,
@@ -51,7 +51,7 @@ public:
 class BoardFinder
 {
 public:
-	BoardFinder(std::list<std::shared_ptr<BoardConfig>> boardConfigs);
+	explicit BoardFinder(std::list<std::shared_ptr<BoardConfig>> & boardConfigs);
 
 	std::shared_ptr<BoardConfig> searchBoardConfig();
 
