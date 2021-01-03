@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr" -v
+      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high --skip-packages --flags "--suppress=*:*.pio\* --inline-suppr lib/APRS-IS lib/BoardFinder lib/ConfigurationManagement lib/PowerManagement lib/SignalSlot lib/TaskManager" -v
 
   PlatformIO-Build:
     runs-on: ubuntu-latest
