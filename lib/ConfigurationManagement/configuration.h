@@ -2,6 +2,7 @@
 #define CONFIGURATION_H_
 
 #include <list>
+#include <memory>
 
 #include <Arduino.h>
 #include <ArduinoJson.h>

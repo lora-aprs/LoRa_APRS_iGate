@@ -2,36 +2,30 @@
 
 #include <logger.h>
 #include <APRS-IS.h>
-
 #include <TimeLib.h>
-#include "SignalSlot.h"
+
+#include <TaskManager.h>
+
 #include "BoardFinder.h"
-#include "LoRa_APRS.h"
 #include "display.h"
 #include "power_management.h"
 #include "project_configuration.h"
-#include "connection.h"
 
-HardwareSerial Serial(0);
-
-std::shared_ptr<ArduinoOTAClass> OTA;
-std::shared_ptr<PowerManagement> powerManagement;
-std::shared_ptr<WiFiMulti> WiFiMulti;
-std::shared_ptr<NTPClient> ntpClient;
-std::shared_ptr<FTPServer> ftpServer;
-std::shared_ptr<Configuration> userConfig;
-std::shared_ptr<BoardConfig> boardConfig;
-std::shared_ptr<APRS_IS> aprs_is;
-std::shared_ptr<LoRa_APRS> lora_aprs;
-std::shared_ptr<APRSMessage> BeaconMsg;
+#include "TaskAprsIs.h"
+#include "TaskEth.h"
+#include "TaskFTP.h"
+#include "TaskLora.h"
+#include "TaskNTP.h"
+#include "TaskOTA.h"
+#include "TaskWifi.h"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-std::shared_ptr<LoRa_APRS> setup_lora();
-
-PrintMessageToConsole printMessageConsole;
-bool ethEnabled = false;
+std::shared_ptr<Configuration> userConfig;
+std::shared_ptr<BoardConfig> boardConfig;
+TaskManager taskManager;
+HardwareSerial Serial(0);
 
 // cppcheck-suppress unusedFunction
 void setup()
@@ -97,27 +91,27 @@ void setup()
 	show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", "20.49.0-dev", 3000);
 
 	load_config(boardConfig);
-	lora_aprs = setup_lora();
+
+	std::shared_ptr<LoraTask> lora_task = std::shared_ptr<LoraTask>(new LoraTask());
+	lora_task->setup(userConfig, boardConfig);
+	taskManager.addTask(lora_task);
 	if(boardConfig->Type == eETH_BOARD)
 	{
-		setup_eth();
-		ethEnabled = true;
+		taskManager.addTask(std::shared_ptr<Task>(new EthTask()));
 	}
-	WiFiMulti = setup_wifi(userConfig);
-	OTA = setup_ota(userConfig);
-	ntpClient = setup_ntp(userConfig);
-	ftpServer = setup_ftp(userConfig);
-	aprs_is = setup_aprs_is(userConfig);
+	taskManager.addTask(std::shared_ptr<Task>(new WifiTask()));
+	taskManager.addTask(std::shared_ptr<Task>(new OTATask()));
+	taskManager.addTask(std::shared_ptr<Task>(new NTPTask()));
+	taskManager.addTask(std::shared_ptr<Task>(new FTPTask()));
+	taskManager.addTask(std::shared_ptr<Task>(new AprsIsTask()));
+
+	taskManager.setup(userConfig);
 
 	if(userConfig->display.overwritePin != 0)
 	{
 		pinMode(userConfig->display.overwritePin, INPUT);
 		pinMode(userConfig->display.overwritePin, INPUT_PULLUP);
 	}
-
-	logPrintlnD("connect objects...");
-	lora_aprs->connectSlot(&printMessageConsole);
-	lora_aprs->connectSlot(aprs_is.get());
 
 	delay(500);
 	logPrintlnI("setup done...");
@@ -126,94 +120,7 @@ void setup()
 // cppcheck-suppress unusedFunction
 void loop()
 {
-	if(userConfig->ftp.active)
-	{
-		ftpServer->handle();
-		static bool configWasOpen = false;
-		if(configWasOpen && ftpServer->countConnections() == 0)
-		{
-			logPrintlnW("Maybe the config has been changed via FTP, lets restart now to get the new config...");
-			Serial.println();
-			ESP.restart();
-		}
-		if(ftpServer->countConnections() > 0)
-		{
-			configWasOpen = true;
-		}
-	}
-
-	const uint8_t wifi_status = WiFiMulti->run();
-	if(!ethEnabled && wifi_status != WL_CONNECTED)
-	{
-		logPrintlnE("WiFi not connected!");
-		show_display("ERROR", "WiFi not connected!");
-		delay(1000);
-		return;
-	}
-
-	OTA->handle();
-	if(ntpClient->update())
-	{
-		setTime(ntpClient->getEpochTime());
-	}
-
-	if(!aprs_is->connected())
-	{
-		logPrintI("connecting to APRS-IS server...");
-		show_display("INFO", "Connecting to APRS-IS server");
-		if(!aprs_is->connect(userConfig->aprs_is.server, userConfig->aprs_is.port))
-		{
-			logPrintlnE("Connection failed.");
-			logPrintlnI("Waiting 5 seconds before retrying...");
-			show_display("ERROR", "Server connection failed!", "waiting 5 sec");
-			delay(5000);
-			return;
-		}
-		logPrintlnI("Connected to APRS-IS server!");
-	}
-
-	aprs_is->getAPRSMessage();
-	lora_aprs->checkMessage();
-	
-	static time_t beacon_next_time = 0;
-	if(beacon_next_time < now())
-	{
-		show_display(userConfig->callsign, "Beacon to APRS-IS Server...");
-		logPrintD("[" + ntpClient->getFormattedTime() + "] ");
-		logPrintlnD(BeaconMsg->encode());
-		aprs_is->sendMessage(BeaconMsg);
-		show_display(userConfig->callsign, "Standby...");
-		beacon_next_time = now() + userConfig->beacon.timeout * 60UL;
-	}
-}
-
-std::shared_ptr<LoRa_APRS> setup_lora()
-{
-	std::shared_ptr<LoRa_APRS> lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(boardConfig));
-	if(!lora_aprs->begin(lora_aprs->getRxFrequency()))
-	{
-		logPrintlnE("Starting LoRa failed!");
-		show_display("ERROR", "Starting LoRa failed!");
-		while(true);
-	}
-	lora_aprs->setRxFrequency(userConfig->lora.frequencyRx);
-	lora_aprs->setTxFrequency(userConfig->lora.frequencyTx);
-	lora_aprs->setTxPower(userConfig->lora.power);
-	lora_aprs->setSpreadingFactor(userConfig->lora.spreadingFactor);
-	lora_aprs->setSignalBandwidth(userConfig->lora.signalBandwidth);
-	lora_aprs->setCodingRate4(userConfig->lora.codingRate4);
-	lora_aprs->enableCrc();
-	logPrintlnI("LoRa init done!");
-	show_display("INFO", "LoRa init done!", 2000);
-
-	BeaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
-	BeaconMsg->setSource(userConfig->callsign);
-	BeaconMsg->setDestination("APLG0");
-	String lat = create_lat_aprs(userConfig->beacon.positionLatitude);
-	String lng = create_long_aprs(userConfig->beacon.positionLongitude);
-	BeaconMsg->getAPRSBody()->setData(String("=") + lat + "I" + lng + "&" + userConfig->beacon.message);
-
-	return lora_aprs;
+	taskManager.loop(userConfig);
 }
 
 String create_lat_aprs(double lat)

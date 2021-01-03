@@ -1,3 +1,4 @@
+#include <logger.h>
 #include "APRS-IS.h"
 
 APRS_IS::APRS_IS(const String & user, const String & passcode, const String & tool_name, const String & version)
@@ -21,6 +22,7 @@ bool APRS_IS::connect_(const String & server, const int port, const String & log
 {
 	if(!_client.connect(server.c_str(), port))
 	{
+		logPrintlnE("Something went wrong on connecting! Is the server reachable?");
 		return false;
 	}
 	sendMessage(login_line);
@@ -35,6 +37,7 @@ bool APRS_IS::connect_(const String & server, const int port, const String & log
 			}
 			else
 			{
+				logPrintlnE("User can not be verified with passcode!");
 				return false;
 			}
 		}
