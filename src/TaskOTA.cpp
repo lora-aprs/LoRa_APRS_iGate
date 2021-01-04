@@ -1,9 +1,10 @@
 #include <logger.h>
 #include "project_configuration.h"
 #include "TaskOTA.h"
+#include "Task.h"
 
 OTATask::OTATask()
-	: Task("OTATask")
+	: Task(TASK_OTA)
 {
 }
 
@@ -11,7 +12,7 @@ OTATask::~OTATask()
 {
 }
 
-bool OTATask::setup(std::shared_ptr<Configuration> config)
+bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	_ota = std::shared_ptr<ArduinoOTAClass>(new ArduinoOTAClass());
 	_ota->onStart([&]()

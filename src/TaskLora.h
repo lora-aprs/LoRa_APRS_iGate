@@ -11,9 +11,8 @@ public:
 	LoraTask();
 	virtual ~LoraTask();
 
-	virtual bool setup(std::shared_ptr<Configuration> config) override;
+	virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) override;
 	virtual bool loop(std::shared_ptr<Configuration> config) override;
-	bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig);
 
 private:
 	std::shared_ptr<LoRa_APRS> _lora_aprs;

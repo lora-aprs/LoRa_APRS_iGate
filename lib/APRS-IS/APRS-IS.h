@@ -2,11 +2,10 @@
 #ifndef APRS_IS_Lib_h_
 #define APRS_IS_Lib_h_
 
-#include <SignalSlot.h>
 #include <WiFi.h>
 #include <APRS-Decoder.h>
 
-class APRS_IS : public Signal1<const std::shared_ptr<APRSMessage>>, public Slot3<std::shared_ptr<APRSMessage>, int, float>
+class APRS_IS
 {
 public:
 	APRS_IS(const String & user, const String & passcode, const String & tool_name, const String & version);
@@ -18,7 +17,6 @@ public:
 
 	bool sendMessage(const String & message);
 	bool sendMessage(const std::shared_ptr<APRSMessage> message);
-	void action(std::shared_ptr<APRSMessage> msg, int rssi, float snr) override;
 
 	int available();
 

@@ -34,7 +34,6 @@ bool LoRa_APRS::checkMessage()
 	}
 	_LastReceivedMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
 	_LastReceivedMsg->decode(str);
-	emit(_LastReceivedMsg, packetRssi(), packetSnr());
 	return true;
 }
 
@@ -79,9 +78,4 @@ void LoRa_APRS::setTxFrequency(long frequency)
 long LoRa_APRS::getTxFrequency() const
 {
 	return _TxFrequency;
-}
-
-void LoRa_APRS::action(const std::shared_ptr<APRSMessage> elem)
-{
-	sendMessage(elem);
 }

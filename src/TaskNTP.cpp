@@ -2,9 +2,10 @@
 #include <TimeLib.h>
 #include "project_configuration.h"
 #include "TaskNTP.h"
+#include "Task.h"
 
 NTPTask::NTPTask()
-	: Task("NTPTask")
+	: Task(TASK_NTP)
 {
 }
 
@@ -12,7 +13,7 @@ NTPTask::~NTPTask()
 {
 }
 
-bool NTPTask::setup(std::shared_ptr<Configuration> config)
+bool NTPTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	_ntpClient = std::shared_ptr<NTPClient>(new NTPClient(config->ntpServer.c_str()));
 	_ntpClient->begin();

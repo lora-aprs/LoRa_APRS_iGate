@@ -2,9 +2,10 @@
 #include <logger.h>
 #include "project_configuration.h"
 #include "TaskWifi.h"
+#include "Task.h"
 
 WifiTask::WifiTask()
-	: Task("WifiTask")
+	: Task(TASK_WIFI)
 {
 }
 
@@ -12,7 +13,7 @@ WifiTask::~WifiTask()
 {
 }
 
-bool WifiTask::setup(std::shared_ptr<Configuration> config)
+bool WifiTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	//WiFi.onEvent(WiFiEvent);
 	//WiFi.config(INADDR_NONE, INADDR_NONE, INADDR_NONE);

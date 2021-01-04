@@ -5,7 +5,6 @@
 #include <Arduino.h>
 #include <LoRa.h>
 #include <APRS-Decoder.h>
-#include <SignalSlot.h>
 
 #define LORA_RX_FREQUENCY (433775000)
 #define LORA_TX_FREQUENCY (433900000)
@@ -13,7 +12,7 @@
 #define LORA_SIGNAL_BANDWIDTH (125E3)
 #define LORA_CODING_RATE4 (5)
 
-class LoRa_APRS : public LoRaClass, public Slot1<const std::shared_ptr<APRSMessage>>, public Signal3<std::shared_ptr<APRSMessage>, int, float>
+class LoRa_APRS : public LoRaClass
 {
 public:
 	explicit LoRa_APRS(std::shared_ptr<BoardConfig> boardConfig);
@@ -28,8 +27,6 @@ public:
 
 	void setTxFrequency(long frequency);
 	long getTxFrequency() const;
-
-	void action(const std::shared_ptr<APRSMessage> elem) override;
 
 private:
 	std::shared_ptr<APRSMessage> _LastReceivedMsg;

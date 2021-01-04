@@ -2,6 +2,7 @@
 #include <ETH.h>
 #include <logger.h>
 #include "TaskEth.h"
+#include "Task.h"
 
 volatile bool eth_connected = false;
 
@@ -42,7 +43,7 @@ static void WiFiEvent(WiFiEvent_t event)
 }
 
 EthTask::EthTask()
-	: Task("EthTask")
+	: Task(TASK_ETH)
 {
 }
 
@@ -50,7 +51,7 @@ EthTask::~EthTask()
 {
 }
 
-bool EthTask::setup(std::shared_ptr<Configuration> config)
+bool EthTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	WiFi.onEvent(WiFiEvent);
 

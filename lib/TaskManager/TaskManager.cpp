@@ -10,7 +10,7 @@ void TaskManager::addTask(std::shared_ptr<Task> task)
 	_tasks.push_back(task);
 }
 
-std::shared_ptr<Task> TaskManager::getTask(String & name)
+std::shared_ptr<Task> TaskManager::getTask(const char * name)
 {
 	for(std::shared_ptr<Task> & elem : _tasks)
 	{
@@ -22,14 +22,14 @@ std::shared_ptr<Task> TaskManager::getTask(String & name)
 	return 0;
 }
 
-bool TaskManager::setup(std::shared_ptr<Configuration> config)
+bool TaskManager::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	logPrintlnV("will setup all tasks...");
 	for(std::shared_ptr<Task> & elem : _tasks)
 	{
 		logPrintW("call setup from ");
 		logPrintlnW(elem->getName());
-		if(!elem->setup(config))
+		if(!elem->setup(config, boardConfig))
 		{
 			return false;
 		}

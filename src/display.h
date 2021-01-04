@@ -13,11 +13,10 @@ void show_display(String header, String line1, String line2, String line3, int w
 //void show_display(String header, String line1, String line2, String line3, String line4, String line5, int wait = 0);
 
 #include <APRSMessage.h>
-#include "SignalSlot.h"
 #include "TimeLib.h"
 #include "logger.h"
 
-class PrintMessageToConsole : public Slot1<std::shared_ptr<APRSMessage>>, public Slot3<std::shared_ptr<APRSMessage>, int, float>
+/*class PrintMessageToConsole : public Slot1<std::shared_ptr<APRSMessage>>, public Slot3<std::shared_ptr<APRSMessage>, int, float>
 {
 public:
 	void action(std::shared_ptr<APRSMessage> msg, int rssi, float snr) override
@@ -42,6 +41,6 @@ public:
 		logPrintD(msg->toString());
 		logPrintD("'");
 	}
-};
+};*/
 
 #endif

@@ -24,7 +24,6 @@ String create_long_aprs(double lng);
 
 std::shared_ptr<Configuration> userConfig;
 std::shared_ptr<BoardConfig> boardConfig;
-TaskManager taskManager;
 HardwareSerial Serial(0);
 
 // cppcheck-suppress unusedFunction
@@ -92,20 +91,18 @@ void setup()
 
 	load_config(boardConfig);
 
-	std::shared_ptr<LoraTask> lora_task = std::shared_ptr<LoraTask>(new LoraTask());
-	lora_task->setup(userConfig, boardConfig);
-	taskManager.addTask(lora_task);
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new LoraTask()));
 	if(boardConfig->Type == eETH_BOARD)
 	{
-		taskManager.addTask(std::shared_ptr<Task>(new EthTask()));
+		TaskManager::instance().addTask(std::shared_ptr<Task>(new EthTask()));
 	}
-	taskManager.addTask(std::shared_ptr<Task>(new WifiTask()));
-	taskManager.addTask(std::shared_ptr<Task>(new OTATask()));
-	taskManager.addTask(std::shared_ptr<Task>(new NTPTask()));
-	taskManager.addTask(std::shared_ptr<Task>(new FTPTask()));
-	taskManager.addTask(std::shared_ptr<Task>(new AprsIsTask()));
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new WifiTask()));
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new OTATask()));
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new NTPTask()));
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new FTPTask()));
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new AprsIsTask()));
 
-	taskManager.setup(userConfig);
+	TaskManager::instance().setup(userConfig, boardConfig);
 
 	if(userConfig->display.overwritePin != 0)
 	{
@@ -120,7 +117,7 @@ void setup()
 // cppcheck-suppress unusedFunction
 void loop()
 {
-	taskManager.loop(userConfig);
+	TaskManager::instance().loop(userConfig);
 }
 
 String create_lat_aprs(double lat)

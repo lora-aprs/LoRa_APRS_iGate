@@ -1,19 +1,17 @@
 #include <logger.h>
+#include <TimeLib.h>
 #include "project_configuration.h"
 #include "TaskLora.h"
+#include "TaskAprsIs.h"
+#include "Task.h"
 
 LoraTask::LoraTask()
-	: Task("LoraTask")
+	: Task(TASK_LORA)
 {
 }
 
 LoraTask::~LoraTask()
 {
-}
-
-bool LoraTask::setup(std::shared_ptr<Configuration> config)
-{
-	return true;
 }
 
 bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
@@ -40,6 +38,19 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 
 bool LoraTask::loop(std::shared_ptr<Configuration> config)
 {
-	_lora_aprs->checkMessage();
+	if(_lora_aprs->checkMessage())
+	{
+		std::shared_ptr<APRSMessage> msg = _lora_aprs->getMessage();
+		//msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
+		logPrintD("[" + timeString() + "] ");
+		logPrintD("Received packet '");
+		logPrintD(msg->toString());
+		logPrintD("' with RSSI ");
+		logPrintD(String(_lora_aprs->packetRssi()));
+		logPrintD(" and SNR ");
+		logPrintlnD(String(_lora_aprs->packetSnr()));
+		std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(TaskManager::instance().getTask(TASK_APRS_IS));
+		is_thread->inputQueue.addElement(msg);
+	}
 	return true;
 }

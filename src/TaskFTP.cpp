@@ -3,9 +3,10 @@
 #include <logger.h>
 #include "project_configuration.h"
 #include "TaskFTP.h"
+#include "Task.h"
 
 FTPTask::FTPTask()
-	: Task("FTPTask")
+	: Task(TASK_FTP)
 {
 }
 
@@ -13,7 +14,7 @@ FTPTask::~FTPTask()
 {
 }
 
-bool FTPTask::setup(std::shared_ptr<Configuration> config)
+bool FTPTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	_ftpServer = std::shared_ptr<FTPServer>(new FTPServer());
 	if(config->ftp.active)

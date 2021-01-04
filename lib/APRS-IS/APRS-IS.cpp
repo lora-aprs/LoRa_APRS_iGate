@@ -66,13 +66,8 @@ bool APRS_IS::sendMessage(const std::shared_ptr<APRSMessage> message)
 	{
 		return false;
 	}
-	_client.println(message->encode());
+	_client.println(message->encode() + "\n");
 	return true;
-}
-
-void APRS_IS::action(std::shared_ptr<APRSMessage> elem, int rssi, float snr)
-{
-	sendMessage(elem);
 }
 
 int APRS_IS::available()
@@ -108,6 +103,5 @@ std::shared_ptr<APRSMessage> APRS_IS::getAPRSMessage()
 	}
     std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
 	msg->decode(line);
-	emit(msg);
 	return msg;
 }
