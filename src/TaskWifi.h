@@ -15,6 +15,7 @@ public:
 
 private:
 	std::shared_ptr<WiFiMulti> _wiFiMulti;
+	uint8_t _oldWifiStatus;
 };
 
 #endif

@@ -5,7 +5,7 @@
 #include "Task.h"
 
 WifiTask::WifiTask()
-	: Task(TASK_WIFI)
+	: Task(TASK_WIFI), _oldWifiStatus(WL_IDLE_STATUS)
 {
 }
 
@@ -33,9 +33,14 @@ bool WifiTask::loop(std::shared_ptr<Configuration> config)
 	if(wifi_status != WL_CONNECTED)
 	{
 		logPrintlnE("WiFi not connected!");
+		_oldWifiStatus = wifi_status;
 		return false;
 	}
-	//logPrintD("IP address: ");
-	//logPrintlnD(WiFi.localIP().toString());
+	else if(wifi_status != _oldWifiStatus)
+	{
+		logPrintD("IP address: ");
+		logPrintlnD(WiFi.localIP().toString());
+		_oldWifiStatus = wifi_status;
+	}
 	return true;
 }
