@@ -15,6 +15,7 @@ public:
 
 private:
 	std::shared_ptr<ArduinoOTAClass> _ota;
+	bool _beginCalled;
 };
 
 #endif

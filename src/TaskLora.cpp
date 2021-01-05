@@ -30,7 +30,6 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 	_lora_aprs->setSignalBandwidth(config->lora.signalBandwidth);
 	_lora_aprs->setCodingRate4(config->lora.codingRate4);
 	_lora_aprs->enableCrc();
-	logPrintlnI("LoRa init done!");
 	//show_display("INFO", "LoRa init done!", 2000);
 
 	return true;
@@ -52,5 +51,12 @@ bool LoraTask::loop(std::shared_ptr<Configuration> config)
 		std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(TaskManager::instance().getTask(TASK_APRS_IS));
 		is_thread->inputQueue.addElement(msg);
 	}
+
+	if(!inputQueue.empty())
+	{
+		std::shared_ptr<APRSMessage> msg = inputQueue.getElement();
+		_lora_aprs->sendMessage(msg);
+	}
+
 	return true;
 }

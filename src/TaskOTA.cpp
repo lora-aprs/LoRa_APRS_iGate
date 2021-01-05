@@ -4,7 +4,7 @@
 #include "Task.h"
 
 OTATask::OTATask()
-	: Task(TASK_OTA)
+	: Task(TASK_OTA), _beginCalled(false)
 {
 }
 
@@ -49,13 +49,16 @@ bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
 			else if (error == OTA_END_ERROR) logPrintlnE("End Failed");
 		});
 	_ota->setHostname(config->callsign.c_str());
-	_ota->begin();
-	logPrintlnI("OTA init done!");
 	return true;
 }
 
 bool OTATask::loop(std::shared_ptr<Configuration> config)
 {
+	if(!_beginCalled)
+	{
+		_ota->begin();
+		_beginCalled = true;
+	}
 	_ota->handle();
 	return true;
 }

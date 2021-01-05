@@ -19,7 +19,6 @@ AprsIsTask::~AprsIsTask()
 bool AprsIsTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
 	_aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(config->callsign, config->aprs_is.passcode , "ESP32-APRS-IS", "0.1"));
-	connect(config);
 
 	_beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
 	_beaconMsg->setSource(config->callsign);
@@ -35,8 +34,9 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 {
 	if(!_aprs_is->connected())
 	{
-		connect(config);
+		return connect(config);
 	}
+	
 	_aprs_is->getAPRSMessage();
 
 	if(!inputQueue.empty())
@@ -57,19 +57,18 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 	return true;
 }
 
-void AprsIsTask::connect(std::shared_ptr<Configuration> config)
+bool AprsIsTask::connect(std::shared_ptr<Configuration> config)
 {
 	logPrintI("connecting to APRS-IS server: ");
 	logPrintI(config->aprs_is.server);
 	logPrintI(" on port: ");
 	logPrintlnI(String(config->aprs_is.port));
 	//show_display("INFO", "Connecting to APRS-IS server");
-	while(!_aprs_is->connect(config->aprs_is.server, config->aprs_is.port))
+	if(!_aprs_is->connect(config->aprs_is.server, config->aprs_is.port))
 	{
 		logPrintlnE("Connection failed.");
-		logPrintlnI("Waiting 1 seconds before retrying...");
-		//show_display("ERROR", "Server connection failed!", "waiting 5 sec");
-		delay(1000);
+		return false;
 	}
 	logPrintlnI("Connected to APRS-IS server!");
+	return true;
 }

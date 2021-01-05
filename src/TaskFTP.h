@@ -15,6 +15,7 @@ public:
 
 private:
 	std::shared_ptr<FTPServer> _ftpServer;
+	bool _beginCalled;
 };
 
 #endif

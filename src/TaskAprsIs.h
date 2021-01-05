@@ -21,7 +21,7 @@ private:
 	std::shared_ptr<APRSMessage> _beaconMsg;
 	time_t _beacon_next_time;
 
-	void connect(std::shared_ptr<Configuration> config);
+	bool connect(std::shared_ptr<Configuration> config);
 };
 
 #endif

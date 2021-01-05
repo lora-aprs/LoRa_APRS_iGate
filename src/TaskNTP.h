@@ -15,6 +15,7 @@ public:
 
 private:
 	std::shared_ptr<NTPClient> _ntpClient;
+	bool _beginCalled;
 };
 
 #endif

@@ -6,7 +6,7 @@
 #include "Task.h"
 
 FTPTask::FTPTask()
-	: Task(TASK_FTP)
+	: Task(TASK_FTP), _beginCalled(false)
 {
 }
 
@@ -26,8 +26,6 @@ bool FTPTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
 			_ftpServer->addUser(user.name, user.password);
 		}
 		_ftpServer->addFilesystem("SPIFFS", &SPIFFS);
-		_ftpServer->begin();
-		logPrintlnI("FTP Server init done!");
 	}
 	return true;
 }
@@ -36,6 +34,11 @@ bool FTPTask::loop(std::shared_ptr<Configuration> config)
 {
 	if(config->ftp.active)
 	{
+		if(!_beginCalled)
+		{
+			_ftpServer->begin();
+			_beginCalled = true;
+		}
 		_ftpServer->handle();
 		static bool configWasOpen = false;
 		if(configWasOpen && _ftpServer->countConnections() == 0)
