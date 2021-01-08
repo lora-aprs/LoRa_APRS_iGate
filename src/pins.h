@@ -8,9 +8,16 @@
 #if defined(HELTEC_WIFI_LORA_32_V1) || defined(HELTEC_WIFI_LORA_32_V2) || defined(TTGO_LORA32_V1)
 	#define OLED_SDA		4
 	#define OLED_SCL		15
+	#define OLED_RESET		16
 #endif
 
-#if defined(TTGO_LORA32_V2) || defined(TTGO_T_Beam_V0_7) || defined(TTGO_T_Beam_V1_0)
+#if defined(TTGO_LORA32_V2)
+	#define OLED_SDA		21
+	#define OLED_SCL		22
+	#define OLED_RESET		16
+#endif
+
+#if defined(TTGO_T_Beam_V0_7) || defined(TTGO_T_Beam_V1_0)
 	#define OLED_SDA		21
 	#define OLED_SCL		22
 #endif
