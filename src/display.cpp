@@ -11,6 +11,13 @@ Adafruit_SSD1306 display(128, 64, &Wire);
 
 void setup_display()
 {
+#ifdef OLED_RESET
+	pinMode(OLED_RESET, OUTPUT);
+	digitalWrite(OLED_RESET, LOW);
+	delay(20);
+	digitalWrite(OLED_RESET, HIGH);
+#endif
+
 	Wire.begin(OLED_SDA, OLED_SCL);
 	if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3c, false, false))
 	{
