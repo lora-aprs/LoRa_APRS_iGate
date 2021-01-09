@@ -12,28 +12,29 @@
 class Task
 {
 public:
-	Task(String & name) : _name(name) {}
-	Task(const char * name) : _name(name) {}
+	Task(String & name, int taskId) : _name(name), _taskId(taskId) {}
+	Task(const char * name, int taskId) : _name(name), _taskId(taskId) {}
 	virtual ~Task() {}
 
 	String getName() const { return _name; }
+	int getTaskId() const { return _taskId; }
 
 	virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) = 0;
 	virtual bool loop(std::shared_ptr<Configuration> config) = 0;
 
 private:
 	String _name;
+	int _taskId;
 };
 
 class TaskManager
 {
 public:
-
 	static TaskManager & instance()
-    {
-       static TaskManager _instance;
-       return _instance;
-    }
+	{
+		static TaskManager _instance;
+		return _instance;
+	}
 
 	~TaskManager() {}
 

@@ -6,7 +6,7 @@
 #include "Task.h"
 
 LoraTask::LoraTask()
-	: Task(TASK_LORA)
+	: Task(TASK_LORA, TaskLora)
 {
 }
 
@@ -20,7 +20,6 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 	if(!_lora_aprs->begin(_lora_aprs->getRxFrequency()))
 	{
 		logPrintlnE("Starting LoRa failed!");
-		//show_display("ERROR", "Starting LoRa failed!");
 		while(true);
 	}
 	_lora_aprs->setRxFrequency(config->lora.frequencyRx);
@@ -30,7 +29,6 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 	_lora_aprs->setSignalBandwidth(config->lora.signalBandwidth);
 	_lora_aprs->setCodingRate4(config->lora.codingRate4);
 	_lora_aprs->enableCrc();
-	//show_display("INFO", "LoRa init done!", 2000);
 
 	return true;
 }

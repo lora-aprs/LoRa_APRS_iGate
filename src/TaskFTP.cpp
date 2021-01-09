@@ -6,7 +6,7 @@
 #include "Task.h"
 
 FTPTask::FTPTask()
-	: Task(TASK_FTP), _beginCalled(false)
+	: Task(TASK_FTP, TaskFtp), _beginCalled(false)
 {
 }
 

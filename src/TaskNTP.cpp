@@ -5,7 +5,7 @@
 #include "Task.h"
 
 NTPTask::NTPTask()
-	: Task(TASK_NTP), _beginCalled(false)
+	: Task(TASK_NTP, TaskNtp), _beginCalled(false)
 {
 }
 

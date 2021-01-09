@@ -43,7 +43,7 @@ static void WiFiEvent(WiFiEvent_t event)
 }
 
 EthTask::EthTask()
-	: Task(TASK_ETH)
+	: Task(TASK_ETH, TaskEth)
 {
 }
 

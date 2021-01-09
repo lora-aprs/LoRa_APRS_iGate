@@ -4,7 +4,7 @@
 #include "Task.h"
 
 OTATask::OTATask()
-	: Task(TASK_OTA), _beginCalled(false)
+	: Task(TASK_OTA, TaskOta), _beginCalled(false)
 {
 }
 
@@ -23,7 +23,6 @@ bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
 			else // U_SPIFFS
 				type = "filesystem";
 			logPrintlnI("Start updating " + type);
-			//show_display("OTA UPDATE", "Start update", type);
 		})
 		.onEnd([]()
 		{
@@ -35,7 +34,6 @@ bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
 			logPrintI("Progress: ");
 			logPrintI(String(progress / (total / 100)));
 			logPrintlnI("%");
-			//show_display("OTA UPDATE", "Progress: ", String(progress / (total / 100)) + "%");
 		})
 		.onError([](ota_error_t error)
 		{

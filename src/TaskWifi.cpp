@@ -5,7 +5,7 @@
 #include "Task.h"
 
 WifiTask::WifiTask()
-	: Task(TASK_WIFI), _oldWifiStatus(WL_IDLE_STATUS)
+	: Task(TASK_WIFI, TaskWifi), _oldWifiStatus(WL_IDLE_STATUS)
 {
 }
 

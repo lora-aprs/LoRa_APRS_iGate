@@ -1,6 +1,22 @@
 #ifndef TASK_H_
 #define TASK_H_
 
+enum TaskNames
+{
+	TaskDisplay,
+	TaskAprsIs,
+	TaskEth,
+	TaskFtp,
+	TaskLora,
+	TaskNtp,
+	TaskOta,
+	TaskWifi,
+	TaskSize,
+};
+
+char const * const getTaskName(TaskNames task);
+
+#define TASK_DISPLAY	"DisplayTask"
 #define TASK_APRS_IS	"AprsIsTask"
 #define TASK_ETH		"EthTask"
 #define TASK_FTP		"FTPTask"

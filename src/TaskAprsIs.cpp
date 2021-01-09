@@ -8,7 +8,7 @@ String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
 AprsIsTask::AprsIsTask()
-	: Task(TASK_APRS_IS), _beacon_next_time(0)
+	: Task(TASK_APRS_IS, TaskAprsIs), _beacon_next_time(0)
 {
 }
 
@@ -47,11 +47,9 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 
 	if(_beacon_next_time < now())
 	{
-		//show_display(userConfig->callsign, "Beacon to APRS-IS Server...");
 		logPrintD("[" + timeString() + "] ");
 		logPrintlnD(_beaconMsg->encode());
 		_aprs_is->sendMessage(_beaconMsg);
-		//show_display(userConfig->callsign, "Standby...");
 		_beacon_next_time = now() + config->beacon.timeout * 60UL;
 	}
 	return true;
@@ -63,7 +61,6 @@ bool AprsIsTask::connect(std::shared_ptr<Configuration> config)
 	logPrintI(config->aprs_is.server);
 	logPrintI(" on port: ");
 	logPrintlnI(String(config->aprs_is.port));
-	//show_display("INFO", "Connecting to APRS-IS server");
 	if(!_aprs_is->connect(config->aprs_is.server, config->aprs_is.port))
 	{
 		logPrintlnE("Connection failed.");
