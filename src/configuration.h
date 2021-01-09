@@ -4,7 +4,9 @@
 #include <list>
 
 #include <Arduino.h>
+#ifndef CPPCHECK
 #include <ArduinoJson.h>
+#endif
 
 class Configuration
 {
