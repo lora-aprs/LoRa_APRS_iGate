@@ -49,6 +49,14 @@ public:
 		bool beacon;
 		int beaconTimeout;
 	};
+	
+	class APRS_OVER_SERIAL
+	{
+	public:
+		APRS_OVER_SERIAL() : active(false) {}
+
+		bool active;
+	};
 
 	class Digi
 	{
