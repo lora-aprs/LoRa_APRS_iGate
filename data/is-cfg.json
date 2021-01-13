@@ -25,6 +25,10 @@
 		"beacon":true,
 		"beacon_timeout":15
 	},
+	"aprs_over_serial":
+	{
+		"active":false
+	},
 	"digi":
 	{
 		"active":false,
