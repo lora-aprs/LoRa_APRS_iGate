@@ -229,9 +229,9 @@ void loop()
 		
 		if(Config.aprs_over_serial.active)
 		{
-			logPrintI("###RAW:");
-			logPrintI(msg->encode());
-			logPrintI(":RAWEND###");
+			logPrintD("RAW-APRS: ");
+			logPrintD(msg->encode());
+
 		}
 		
 		if(Config.digi.active)
