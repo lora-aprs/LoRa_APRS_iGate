@@ -226,6 +226,14 @@ void loop()
 		{
 			aprs_is->sendMessage(msg->encode());
 		}
+		
+		if(Config.aprs_over_serial.active)
+		{
+			logPrintI("###RAW:");
+			logPrintI(msg->encode());
+			logPrintI(":RAWEND###");
+		}
+		
 		if(Config.digi.active)
 		{
 			if(msg->getSource().indexOf(Config.callsign) != -1)
