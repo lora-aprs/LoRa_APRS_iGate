@@ -60,6 +60,7 @@ Configuration ConfigurationManagement::readConfiguration()
 	conf.aprs_is.port				= data["aprs_is"]["port"]					| 14580;
 	conf.aprs_is.beacon				= data["aprs_is"]["beacon"]					| true;
 	conf.aprs_is.beaconTimeout		= data["aprs_is"]["beacon_timeout"]			| 15;
+	conf.aprs_over_serial.active	= data["aprs_over_serial"]["active"]		| false;
 	conf.digi.active				= data["digi"]["active"]					| false;
 	conf.digi.forwardTimeout		= data["digi"]["forward_timeout"]			| 5;
 	conf.digi.beacon				= data["digi"]["beacon"]					| true;
@@ -126,6 +127,7 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 	data["aprs_is"]["port"]					= conf.aprs_is.port;
 	data["aprs_is"]["beacon"]				= conf.aprs_is.beacon;
 	data["aprs_is"]["beacon_timeout"]		= conf.aprs_is.beaconTimeout;
+	data["aprs_over_serial"]["active"]		= conf.aprs_over_serial.active;
 	data["digi"]["active"]					= conf.digi.active;
 	data["digi"]["forward_timeout"]			= conf.digi.forwardTimeout;
 	data["digi"]["beacon"]					= conf.digi.beacon;

@@ -49,7 +49,7 @@ public:
 		bool beacon;
 		int beaconTimeout;
 	};
-	
+
 	class APRS_OVER_SERIAL
 	{
 	public:
@@ -114,6 +114,7 @@ public:
 	Wifi wifi;
 	Beacon beacon;
 	APRS_IS aprs_is;
+	APRS_OVER_SERIAL aprs_over_serial;
 	Digi digi;
 	LoRa lora;
 	Display display;
