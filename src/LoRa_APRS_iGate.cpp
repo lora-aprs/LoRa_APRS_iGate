@@ -7,11 +7,12 @@
 #include <TaskManager.h>
 
 #include "BoardFinder.h"
-#include "display.h"
+//#include "display.h"
 #include "power_management.h"
 #include "project_configuration.h"
 
 #include "TaskAprsIs.h"
+#include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
 #include "TaskLora.h"
@@ -86,11 +87,12 @@ void setup()
 
 	logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
 	logPrintlnW("Version: 20.49.0-dev");
-	setup_display(boardConfig);
-	show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", "20.49.0-dev", 3000);
+	//setup_display(boardConfig);
+	//show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", "20.49.0-dev", 3000);
 
 	load_config(boardConfig);
 
+	TaskManager::instance().addTask(std::shared_ptr<Task>(new DisplayTask()));
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new LoraTask()));
 	if(boardConfig->Type == eETH_BOARD)
 	{
