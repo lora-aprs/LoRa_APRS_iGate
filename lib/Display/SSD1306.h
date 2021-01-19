@@ -176,7 +176,7 @@ class SSD1306Wire : public OLEDDisplay {
 	int getBufferOffset(void) override {
 		return 0;
 	}
-    inline void sendCommand(uint8_t command) __attribute__((always_inline)) override {
+    inline void sendCommand(uint8_t command) override __attribute__((always_inline)) {
       initI2cIfNeccesary();
       _wire->beginTransmission(_address);
       _wire->write(0x80);
