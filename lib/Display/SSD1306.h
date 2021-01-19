@@ -63,7 +63,7 @@ class SSD1306Wire : public OLEDDisplay {
      * @param _i2cBus on ESP32 with 2 I2C HW buses, I2C_ONE for 1st Bus, I2C_TWO fot 2nd bus, default I2C_ONE
      * @param _frequency for Frequency by default Let's use ~700khz if ESP8266 is in 160Mhz mode, this will be limited to ~400khz if the ESP8266 in 80Mhz mode
      */
-    SSD1306Wire(uint8_t _address, int _sda = -1, int _scl = -1, OLEDDISPLAY_GEOMETRY g = GEOMETRY_128_64, HW_I2C _i2cBus = I2C_ONE, int _frequency = 700000) {
+    explicit SSD1306Wire(uint8_t _address, int _sda = -1, int _scl = -1, OLEDDISPLAY_GEOMETRY g = GEOMETRY_128_64, HW_I2C _i2cBus = I2C_ONE, int _frequency = 700000) {
       setGeometry(g);
 
       this->_address = _address;
@@ -73,7 +73,7 @@ class SSD1306Wire : public OLEDDisplay {
       this->_frequency = _frequency;
     }
 
-    bool connect() {
+    bool connect() override {
       // On ESP32 arduino, -1 means 'don't change pins', someone else has called begin for us.
       if(this->_sda != -1)
         _wire->begin(this->_sda, this->_scl);
@@ -84,7 +84,7 @@ class SSD1306Wire : public OLEDDisplay {
       return true;
     }
 
-    void display(void) {
+    void display(void) override {
       initI2cIfNeccesary();
       const int x_offset = (128 - this->width()) / 2;
       #ifdef OLEDDISPLAY_DOUBLE_BUFFER
@@ -173,10 +173,10 @@ class SSD1306Wire : public OLEDDisplay {
     }
 
   private:
-	int getBufferOffset(void) {
+	int getBufferOffset(void) override {
 		return 0;
 	}
-    inline void sendCommand(uint8_t command) __attribute__((always_inline)){
+    inline void sendCommand(uint8_t command) __attribute__((always_inline)) override {
       initI2cIfNeccesary();
       _wire->beginTransmission(_address);
       _wire->write(0x80);

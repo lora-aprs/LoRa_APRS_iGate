@@ -14,7 +14,7 @@ enum TaskNames
 	TaskSize,
 };
 
-char const * const getTaskName(TaskNames task);
+//char const * const getTaskName(TaskNames task);
 
 #define TASK_DISPLAY	"DisplayTask"
 #define TASK_APRS_IS	"AprsIsTask"

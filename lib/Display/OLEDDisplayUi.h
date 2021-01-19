@@ -164,7 +164,7 @@ class OLEDDisplayUi {
 
   public:
 
-    OLEDDisplayUi(OLEDDisplay *display);
+    explicit OLEDDisplayUi(OLEDDisplay *display);
 
     /**
      * Initialise the display

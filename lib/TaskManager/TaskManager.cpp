@@ -12,14 +12,15 @@ void TaskManager::addTask(std::shared_ptr<Task> task)
 
 std::shared_ptr<Task> TaskManager::getTask(const char * name)
 {
-	for(std::shared_ptr<Task> & elem : _tasks)
+	std::_List_iterator<std::shared_ptr<Task>> elem = std::find_if(_tasks.begin(), _tasks.end(), [&](std::shared_ptr<Task> task)
 	{
-		if(elem->getName() == name)
-		{
-			return elem;
-		}
+		return task->getName() == name;
+	});
+	if(elem == _tasks.end())
+	{
+		return 0;
 	}
-	return 0;
+	return *elem;
 }
 
 bool TaskManager::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)

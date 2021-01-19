@@ -1,6 +1,6 @@
 #include "Task.h"
 
-char const * const getTaskName(TaskNames task)
+/*char const * const getTaskName(TaskNames task)
 {
 	switch (task)
 	{
@@ -23,4 +23,4 @@ char const * const getTaskName(TaskNames task)
 	default:
 		return "error";
 	}
-}
+}*/
