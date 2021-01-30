@@ -46,7 +46,6 @@ private:
 	TwoWire * _wire = NULL;
 	uint8_t _address;
 	bool _doI2cAutoInit = false;
-	int _frequency;
 
 	virtual void sendCommand(uint8_t command) override;
 };

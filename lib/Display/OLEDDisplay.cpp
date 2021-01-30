@@ -40,26 +40,31 @@ OLEDDisplay::~OLEDDisplay()
 {
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::displayOn()
 {
 	sendCommand(DISPLAYON);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::displayOff()
 {
 	sendCommand(DISPLAYOFF);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::invertDisplay()
 {
 	sendCommand(INVERTDISPLAY);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::normalDisplay()
 {
 	sendCommand(NORMALDISPLAY);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::setContrast(uint8_t contrast, uint8_t precharge, uint8_t comdetect)
 {
 	sendCommand(SETPRECHARGE);	//0xD9
@@ -73,17 +78,14 @@ void OLEDDisplay::setContrast(uint8_t contrast, uint8_t precharge, uint8_t comde
 	sendCommand(DISPLAYON);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::setBrightness(uint8_t brightness)
 {
-	uint8_t contrast = brightness;
+	uint8_t contrast = brightness * 1.171 - 43;
 	if (brightness < 128)
 	{
 		// Magic values to get a smooth/ step-free transition
 		contrast = brightness * 1.171;
-	}
-	else
-	{
-		contrast = brightness * 1.171 - 43;
 	}
 
 	uint8_t precharge = 241;
@@ -95,28 +97,33 @@ void OLEDDisplay::setBrightness(uint8_t brightness)
 	setContrast(contrast, precharge, comdetect);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::resetOrientation()
 {
 	sendCommand(SEGREMAP);
 	sendCommand(COMSCANINC);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::flipScreenVertically()
 {
 	sendCommand(SEGREMAP | 0x01);
 	sendCommand(COMSCANDEC);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::mirrorScreen()
 {
 	sendCommand(SEGREMAP);
 	sendCommand(COMSCANDEC);
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::clear()
 {
 }
 
+// cppcheck-suppress unusedFunction
 uint OLEDDisplay::getWidth()
 {
 	switch(_geometry)
@@ -131,6 +138,7 @@ uint OLEDDisplay::getWidth()
 	return 0;
 }
 
+// cppcheck-suppress unusedFunction
 uint OLEDDisplay::getHeight()
 {
 	switch(_geometry)
@@ -146,6 +154,7 @@ uint OLEDDisplay::getHeight()
 	return 0;
 }
 
+// cppcheck-suppress unusedFunction
 void OLEDDisplay::sendInitCommands()
 {
 	sendCommand(DISPLAYOFF);
