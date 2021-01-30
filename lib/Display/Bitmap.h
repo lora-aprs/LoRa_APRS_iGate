@@ -9,8 +9,8 @@ class OLEDDisplay;
 class Bitmap
 {
 public:
-	Bitmap(uint width, uint height);
-	Bitmap(OLEDDisplay * display);
+	explicit Bitmap(uint width, uint height);
+	explicit Bitmap(OLEDDisplay * display);
 	virtual ~Bitmap();
 
 	uint getWidth() const;

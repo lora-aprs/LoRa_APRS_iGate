@@ -71,7 +71,7 @@ private:
 class StatusFrame : public DisplayFrame
 {
 public:
-	StatusFrame(std::list<std::shared_ptr<Task>> tasks) : _tasks(tasks) {}
+	explicit StatusFrame(const std::list<std::shared_ptr<Task>> & tasks) : _tasks(tasks) {}
 	virtual ~StatusFrame() {}
 	void drawStatusPage(Bitmap & bitmap) override;
 
