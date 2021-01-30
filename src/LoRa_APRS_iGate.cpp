@@ -20,6 +20,8 @@
 #include "TaskOTA.h"
 #include "TaskWifi.h"
 
+#define VERSION "20.49.0-dev"
+
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
@@ -33,6 +35,8 @@ void setup()
 	Serial.begin(115200);
 	Logger::instance().setSerial(&Serial);
 	delay(500);
+	logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
+	logPrintlnW("Version: " VERSION);
 
 	ProjectConfigurationManagement confmg;
 	userConfig = confmg.readConfiguration();
@@ -69,10 +73,9 @@ void setup()
 
 	if(boardConfig->Type == eTTGO_T_Beam_V1_0)
 	{
-		TwoWire wire(0);
-		wire.begin(boardConfig->OledSda, boardConfig->OledScl);
+		Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
 		std::shared_ptr<PowerManagement> powerManagement = std::shared_ptr<PowerManagement>(new PowerManagement);
-		if (!powerManagement->begin(wire))
+		if (!powerManagement->begin(Wire))
 		{
 			logPrintlnI("AXP192 init done!");
 		}
@@ -85,11 +88,6 @@ void setup()
 		powerManagement->deactivateGPS();
 	}
 
-	logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
-	logPrintlnW("Version: 20.49.0-dev");
-	//setup_display(boardConfig);
-	//show_display("OE5BPA", "LoRa APRS iGate", "by Peter Buchegger", "20.49.0-dev", 3000);
-
 	load_config(boardConfig);
 
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new DisplayTask()));
@@ -101,10 +99,15 @@ void setup()
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new WifiTask()));
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new OTATask()));
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new NTPTask()));
-	TaskManager::instance().addTask(std::shared_ptr<Task>(new FTPTask()));
+	if(userConfig->ftp.active)
+	{
+		TaskManager::instance().addTask(std::shared_ptr<Task>(new FTPTask()));
+	}
 	TaskManager::instance().addTask(std::shared_ptr<Task>(new AprsIsTask()));
 
 	TaskManager::instance().setup(userConfig, boardConfig);
+
+	Display::instance().showSpashScreen("LoRa APRS iGate", VERSION);
 
 	if(userConfig->display.overwritePin != 0)
 	{
@@ -112,7 +115,7 @@ void setup()
 		pinMode(userConfig->display.overwritePin, INPUT_PULLUP);
 	}
 
-	delay(500);
+	delay(5000);
 	logPrintlnI("setup done...");
 }
 

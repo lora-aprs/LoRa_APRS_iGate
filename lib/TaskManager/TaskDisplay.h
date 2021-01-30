@@ -12,9 +12,6 @@ public:
 
 	virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) override;
 	virtual bool loop(std::shared_ptr<Configuration> config) override;
-
-private:
-	bool _beginCalled;
 };
 
 #endif

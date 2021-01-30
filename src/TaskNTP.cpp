@@ -32,5 +32,7 @@ bool NTPTask::loop(std::shared_ptr<Configuration> config)
 		logPrintI("Current time: ");
 		logPrintlnI(_ntpClient->getFormattedTime());
 	}
+	_stateInfo = _ntpClient->getFormattedTime();
+	_state = Okay;
 	return true;
 }

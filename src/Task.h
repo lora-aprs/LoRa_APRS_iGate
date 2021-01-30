@@ -3,8 +3,7 @@
 
 enum TaskNames
 {
-	TaskDisplay,
-	TaskAprsIs,
+	TaskAprsIs = 1,
 	TaskEth,
 	TaskFtp,
 	TaskLora,
@@ -16,7 +15,6 @@ enum TaskNames
 
 //char const * const getTaskName(TaskNames task);
 
-#define TASK_DISPLAY	"DisplayTask"
 #define TASK_APRS_IS	"AprsIsTask"
 #define TASK_ETH		"EthTask"
 #define TASK_FTP		"FTPTask"

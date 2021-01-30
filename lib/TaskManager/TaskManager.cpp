@@ -1,5 +1,6 @@
 #include <logger.h>
 #include "TaskManager.h"
+#include <FontConfig.h>
 
 TaskManager::TaskManager()
 {
@@ -21,6 +22,11 @@ std::shared_ptr<Task> TaskManager::getTask(const char * name)
 		return 0;
 	}
 	return *elem;
+}
+
+std::list<std::shared_ptr<Task>> TaskManager::getTasks()
+{
+	return _tasks;
 }
 
 bool TaskManager::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
@@ -51,4 +57,45 @@ bool TaskManager::loop(std::shared_ptr<Configuration> config)
 		}
 	}
 	return true;
+}
+
+void StatusFrame::drawStatusPage(Bitmap & bitmap)
+{
+	int y = 0;
+	for(std::shared_ptr<Task> task : _tasks)
+	{
+		int x = bitmap.drawString(0, y, (task->getName()).substring(0, task->getName().indexOf("Task")));
+		x = bitmap.drawString(x, y, ": ");
+		if(task->getStateInfo() == "")
+		{
+			switch (task->getState())
+			{
+			case Error:
+				bitmap.drawString(x, y, "Error");
+				break;
+			case Warning:
+				bitmap.drawString(x, y, "Warning");
+			default:
+				break;
+			}
+			bitmap.drawString(x, y, "Okay");
+		}
+		else
+		{
+			bitmap.drawString(x, y, task->getStateInfo());
+		}
+		y += getSystemFont()->heightInPixel;
+	}
+}
+
+bool StatusFrame::isPrio() const
+{
+	for(std::shared_ptr<Task> task : _tasks)
+	{
+		if(task->getState() != Okay)
+		{
+			return true;
+		}
+	}
+	return false;
 }

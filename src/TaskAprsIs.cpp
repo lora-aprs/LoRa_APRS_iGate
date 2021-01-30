@@ -34,7 +34,15 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 {
 	if(!_aprs_is->connected())
 	{
-		return connect(config);
+		if(!connect(config))
+		{
+			_stateInfo = "not connected";
+			_state = Error;
+			return false;
+		}
+		_stateInfo = "connected";
+		_state = Okay;
+		return false;
 	}
 	
 	_aprs_is->getAPRSMessage();
@@ -50,8 +58,12 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 		logPrintD("[" + timeString() + "] ");
 		logPrintlnD(_beaconMsg->encode());
 		_aprs_is->sendMessage(_beaconMsg);
+		Display::instance().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
 		_beacon_next_time = now() + config->beacon.timeout * 60UL;
 	}
+	time_t diff = _beacon_next_time - now();
+	_stateInfo = "beacon " + String(minute(diff)) + ":" + String(second(diff));
+	_state = Okay;
 	return true;
 }
 

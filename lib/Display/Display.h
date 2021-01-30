@@ -1,14 +1,24 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include <array>
+#include <list>
 #include <memory>
 #include <map>
 #include <Arduino.h>
 #include <Wire.h>
+#include <TimeLib.h>
 #include <SSD1306.h>
-#include <OLEDDisplayUi.h>
 #include <BoardFinder.h>
+
+class StatusFrame;
+
+class DisplayFrame
+{
+public:
+	DisplayFrame() {}
+	virtual ~DisplayFrame() {}
+	virtual void drawStatusPage(Bitmap & bitmap) = 0;
+};
 
 class Display
 {
@@ -22,22 +32,37 @@ public:
 	~Display() {}
 
 	void setup(std::shared_ptr<BoardConfig> boardConfig);
-
-	void setTaskStatus(const String & task, const String & status);
-
 	void update();
+
+	void addFrame(std::shared_ptr<DisplayFrame> frame);
+
+	void setStatusFrame(std::shared_ptr<StatusFrame> frame);
+
+	void showSpashScreen(String firmwareTitle, String version);
 
 private:
 	std::shared_ptr<OLEDDisplay> _disp;
-	std::shared_ptr<OLEDDisplayUi> _ui;
 
-	static void drawStatusPage(OLEDDisplay * display, OLEDDisplayUiState * state, int16_t x, int16_t y);
+	std::list<std::shared_ptr<DisplayFrame>> _frames;
+	std::shared_ptr<StatusFrame> _statusFrame;
 
-	std::map<String, String> _taskStatus;
+	time_t _nextFrameTime;
 
 	Display();
 	Display(const Display &);
 	Display & operator = (const Display &);
+};
+
+class TextFrame : public DisplayFrame
+{
+public:
+	TextFrame(String header, String text) : _header(header), _text(text) {}
+	virtual ~TextFrame() {}
+	void drawStatusPage(Bitmap & bitmap) override;
+
+private:
+	String _header;
+	String _text;
 };
 
 #endif

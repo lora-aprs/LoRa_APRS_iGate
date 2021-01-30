@@ -34,6 +34,8 @@ bool WifiTask::loop(std::shared_ptr<Configuration> config)
 	{
 		logPrintlnE("WiFi not connected!");
 		_oldWifiStatus = wifi_status;
+		_stateInfo = "WiFi not connected";
+		_state = Error;
 		return false;
 	}
 	else if(wifi_status != _oldWifiStatus)
@@ -41,6 +43,9 @@ bool WifiTask::loop(std::shared_ptr<Configuration> config)
 		logPrintD("IP address: ");
 		logPrintlnD(WiFi.localIP().toString());
 		_oldWifiStatus = wifi_status;
+		return false;
 	}
+	_stateInfo = WiFi.localIP().toString();
+	_state = Okay;
 	return true;
 }

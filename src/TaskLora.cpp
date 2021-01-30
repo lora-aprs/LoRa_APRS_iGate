@@ -20,6 +20,8 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 	if(!_lora_aprs->begin(_lora_aprs->getRxFrequency()))
 	{
 		logPrintlnE("Starting LoRa failed!");
+		_stateInfo = "LoRa-Modem failed";
+		_state = Error;
 		while(true);
 	}
 	_lora_aprs->setRxFrequency(config->lora.frequencyRx);
@@ -30,6 +32,7 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
 	_lora_aprs->setCodingRate4(config->lora.codingRate4);
 	_lora_aprs->enableCrc();
 
+	_stateInfo = "";
 	return true;
 }
 
@@ -48,6 +51,7 @@ bool LoraTask::loop(std::shared_ptr<Configuration> config)
 		logPrintlnD(String(_lora_aprs->packetSnr()));
 		std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(TaskManager::instance().getTask(TASK_APRS_IS));
 		is_thread->inputQueue.addElement(msg);
+		Display::instance().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
 	}
 
 	if(!inputQueue.empty())

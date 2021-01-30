@@ -47,6 +47,7 @@ bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
 			else if (error == OTA_END_ERROR) logPrintlnE("End Failed");
 		});
 	_ota->setHostname(config->callsign.c_str());
+	_stateInfo = "";
 	return true;
 }
 

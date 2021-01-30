@@ -1,46 +1,85 @@
 #include <logger.h>
 #include "Display.h"
+#include <TaskManager.h>
 
 Display::Display()
+	: _disp(0), _statusFrame(0), _nextFrameTime(0)
 {
 }
 
 void Display::setup(std::shared_ptr<BoardConfig> boardConfig)
 {
-	_disp = std::shared_ptr<OLEDDisplay>(new SSD1306Wire(boardConfig->OledAddr, boardConfig->OledSda, boardConfig->OledScl));
-	_ui = std::shared_ptr<OLEDDisplayUi>(new OLEDDisplayUi(_disp.get()));
-
-	static std::array<FrameCallback, 2> frames;
-	frames[0] = drawStatusPage;
-	frames[1] = drawStatusPage;
-	_ui->setFrames(frames.data(), frames.size());
-
-	_ui->setTargetFPS(15);
-	_ui->setFrameAnimation(SLIDE_LEFT);
-	_ui->init();
-	_disp->flipScreenVertically();
-}
-
-void Display::setTaskStatus(const String & task, const String & status)
-{
-	_taskStatus.insert(std::pair<String, String>(task, status));
+	if(boardConfig->OledReset != 0)
+	{
+		pinMode(boardConfig->OledReset, OUTPUT);
+		digitalWrite(boardConfig->OledReset, HIGH);
+		delay(1);
+		digitalWrite(boardConfig->OledReset, LOW);
+		delay(10);
+		digitalWrite(boardConfig->OledReset, HIGH);
+	}
+	Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
+	_disp = std::shared_ptr<OLEDDisplay>(new SSD1306(&Wire, boardConfig->OledAddr));
+	
+	Bitmap bitmap(_disp->getWidth(), _disp->getHeight());
+	_disp->display(&bitmap);
 }
 
 void Display::update()
 {
-	_ui->update();
+	if(_statusFrame->isPrio())
+	{
+		Bitmap bitmap(_disp.get());
+		_statusFrame->drawStatusPage(bitmap);
+		_disp->display(&bitmap);
+		return;
+	}
+
+	if(_nextFrameTime > now())
+	{
+		return;
+	}
+
+	if(_frames.size() > 0)
+	{
+		std::shared_ptr<DisplayFrame> frame = *_frames.begin();
+		Bitmap bitmap(_disp.get());
+		frame->drawStatusPage(bitmap);
+		_disp->display(&bitmap);
+		_frames.pop_front();
+		_nextFrameTime = now() + 15;
+	}
+	else
+	{
+		Bitmap bitmap(_disp.get());
+		_statusFrame->drawStatusPage(bitmap);
+		_disp->display(&bitmap);
+	}
 }
 
-void Display::drawStatusPage(OLEDDisplay * display, OLEDDisplayUiState * state, int16_t x, int16_t y)
+void Display::addFrame(std::shared_ptr<DisplayFrame> frame)
 {
-	//logPrintlnD("blib");
-	display->setTextAlignment(TEXT_ALIGN_LEFT);
-	display->setFont(ArialMT_Plain_10);
-	display->drawString(0 + x, 10 + y, "Arial 10");
+	_frames.push_back(frame);
+}
 
-	display->setFont(ArialMT_Plain_16);
-	display->drawString(0 + x, 20 + y, "Arial 16");
+void Display::setStatusFrame(std::shared_ptr<StatusFrame> frame)
+{
+	_statusFrame = frame;
+}
 
-	display->setFont(ArialMT_Plain_24);
-	display->drawString(0 + x, 34 + y, "Arial 24");
+void Display::showSpashScreen(String firmwareTitle, String version)
+{
+	Bitmap bitmap(_disp.get());
+	bitmap.drawString( 0, 10, firmwareTitle);
+	bitmap.drawString( 0, 20, version);
+	bitmap.drawString( 0, 35, "by Peter Buchegger");
+	bitmap.drawString(30, 45, "OE5BPA");
+	_disp->display(&bitmap);
+}
+
+
+void TextFrame::drawStatusPage(Bitmap & bitmap)
+{
+	bitmap.drawString(0, 0, _header);
+	bitmap.drawStringLF(0, 10, _text);
 }
