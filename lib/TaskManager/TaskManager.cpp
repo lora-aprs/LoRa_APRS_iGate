@@ -90,12 +90,8 @@ void StatusFrame::drawStatusPage(Bitmap & bitmap)
 
 bool StatusFrame::isPrio() const
 {
-	for(std::shared_ptr<Task> task : _tasks)
+	return std::any_of(_tasks.begin(), _tasks.end(), [](std::shared_ptr<Task> task)
 	{
-		if(task->getState() != Okay)
-		{
-			return true;
-		}
-	}
-	return false;
+		return task->getState() != Okay;
+	});
 }
