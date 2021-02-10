@@ -35,7 +35,8 @@
 	{
 		"always_on": true,
 		"timeout":10,
-		"overwrite_pin":0
+		"overwrite_pin":0,
+		"turn180": true
 	},
 	"ftp":
 	{

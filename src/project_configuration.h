@@ -59,11 +59,12 @@ public:
 	class Display
 	{
 	public:
-		Display() : alwaysOn(true), timeout(10), overwritePin(0) {}
+		Display() : alwaysOn(true), timeout(10), overwritePin(0), turn180(true) {}
 
 		bool alwaysOn;
 		int timeout;
 		int overwritePin;
+		bool turn180;
 	};
 
 	class Ftp

@@ -32,6 +32,7 @@ public:
 	~Display() {}
 
 	void setup(std::shared_ptr<BoardConfig> boardConfig);
+	void turn180();
 	void update();
 
 	void addFrame(std::shared_ptr<DisplayFrame> frame);

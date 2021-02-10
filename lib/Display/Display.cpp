@@ -25,6 +25,11 @@ void Display::setup(std::shared_ptr<BoardConfig> boardConfig)
 	_disp->display(&bitmap);
 }
 
+void Display::turn180()
+{
+	_disp->flipScreenVertically();
+}
+
 void Display::update()
 {
 	if(_statusFrame->isPrio())

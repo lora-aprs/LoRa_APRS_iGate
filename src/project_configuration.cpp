@@ -37,6 +37,7 @@ std::shared_ptr<Configuration> ProjectConfigurationManagement::readProjectConfig
 	conf->display.alwaysOn			= data["display"]["always_on"]				| true;
 	conf->display.timeout			= data["display"]["timeout"]				| 10;
 	conf->display.overwritePin		= data["display"]["overwrite_pin"]			| 0;
+	conf->display.turn180           = data["display"]["turn180"]                | true;
 
 	conf->ftp.active				= data["ftp"]["active"]						| false;
 	JsonArray users					= data["ftp"]["user"].as<JsonArray>();
@@ -89,6 +90,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(std::shared_ptr<C
 	data["display"]["always_on"]			= conf->display.alwaysOn;
 	data["display"]["timeout"]				= conf->display.timeout;
 	data["display"]["overwrite_pin"]		= conf->display.overwritePin;
+	data["display"]["turn180"]              = conf->display.turn180;
 	data["ftp"]["active"]					= conf->ftp.active;
 	JsonArray users = data["ftp"].createNestedArray("user");
 	for(Configuration::Ftp::User u : conf->ftp.users)
