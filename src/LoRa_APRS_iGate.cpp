@@ -20,7 +20,7 @@
 #include "TaskOTA.h"
 #include "TaskWifi.h"
 
-#define VERSION "21.04.0-dev"
+#define VERSION "21.06.0-dev"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
