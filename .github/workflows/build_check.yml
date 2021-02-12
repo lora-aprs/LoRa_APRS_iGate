@@ -1,35 +1,55 @@
 name: Build check and build
 
-on:
-  push:
-    paths-ignore:
-      - '*.md'
-  pull_request:
-    paths-ignore:
-      - '*.md'
+on: [push, pull_request]
 
 jobs:
   PlatformIO-Check:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install python3-setuptools python3-wheel
-      - run: pip3 install platformio
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
+      - name: Cache pip
+        uses: actions/cache@v2
         with:
-          submodules: 'recursive'
-      - run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+      - name: Cache PlatformIO
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+      - name: Run PlatformIO Check
+        run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
 
   PlatformIO-Build:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get install python3-setuptools python3-wheel
-      - run: pip3 install platformio
-      - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
+      - name: Cache pip
+        uses: actions/cache@v2
         with:
-          submodules: 'recursive'
-      - run: platformio run
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+      - name: Cache PlatformIO
+        uses: actions/cache@v2
+        with:
+          path: ~/.platformio
+          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: Install PlatformIO
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+      - name: Run PlatformIO CI
+        run: platformio run
       - uses: actions/upload-artifact@v2
         with:
           name: firmware
