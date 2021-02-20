@@ -103,6 +103,7 @@ public:
 	Configuration() : callsign("NOCALL-10") {};
 
 	String callsign;
+	String path;
 	Wifi wifi;
 	Beacon beacon;
 	APRS_IS aprs_is;
