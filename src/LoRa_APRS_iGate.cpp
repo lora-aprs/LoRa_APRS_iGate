@@ -483,7 +483,7 @@ void setup_lora()
 
 	BeaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
 	BeaconMsg->setSource(Config.callsign);
-	BeaconMsg->setDestination("APLG0");
+	BeaconMsg->setDestination(Config.path);
 	String lat = create_lat_aprs(Config.beacon.positionLatitude);
 	String lng = create_long_aprs(Config.beacon.positionLongitude);
 	BeaconMsg->getAPRSBody()->setData(String("=") + lat + "I" + lng + "&" + Config.beacon.message);
