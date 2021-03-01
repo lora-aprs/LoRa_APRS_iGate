@@ -31,8 +31,8 @@ Configuration ConfigurationManagement::readConfiguration()
 	{
 		logPrintlnW("Failed to read file, using default configuration.");
 	}
-	//serializeJson(data, Serial);
-	//Serial.println();
+	serializeJson(data, Serial);
+	Serial.println();
 	file.close();
 
 	Configuration conf;
