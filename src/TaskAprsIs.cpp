@@ -18,11 +18,11 @@ AprsIsTask::~AprsIsTask()
 
 bool AprsIsTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
-	_aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(config->callsign, config->aprs_is.passcode , "ESP32-APRS-IS", "0.1"));
+	_aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(config->callsign, config->aprs_is.passcode , "ESP32-APRS-IS", "0.2"));
 
 	_beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
 	_beaconMsg->setSource(config->callsign);
-	_beaconMsg->setDestination("APLG0");
+	_beaconMsg->setDestination("APLG1");
 	String lat = create_lat_aprs(config->beacon.positionLatitude);
 	String lng = create_long_aprs(config->beacon.positionLongitude);
 	_beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "a" + config->beacon.message);
