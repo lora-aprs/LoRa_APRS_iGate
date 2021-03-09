@@ -10,6 +10,8 @@
 	"beacon":
 	{
 		"message":"LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate",
+		"symbol":"&",
+		"overlay": "I",
 		"position":
 		{
 			"latitude":0.000000,

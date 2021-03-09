@@ -31,8 +31,8 @@ Configuration ConfigurationManagement::readConfiguration()
 	{
 		logPrintlnW("Failed to read file, using default configuration.");
 	}
-	serializeJson(data, Serial);
-	Serial.println();
+	//serializeJson(data, Serial);
+	//Serial.println();
 	file.close();
 
 	Configuration conf;
@@ -50,6 +50,9 @@ Configuration ConfigurationManagement::readConfiguration()
 	}
 	if(data.containsKey("beacon") && data["beacon"].containsKey("message"))
 		conf.beacon.message			= data["beacon"]["message"].as<String>();
+		conf.beacon.symbol			= data["beacon"]["symbol"].as<String>();
+		conf.beacon.overlay			= data["beacon"]["overlay"].as<String>();
+		
 	conf.beacon.positionLatitude	= data["beacon"]["position"]["latitude"]	| 0.0;
 	conf.beacon.positionLongitude	= data["beacon"]["position"]["longitude"]	| 0.0;
 	conf.aprs_is.active				= data["aprs_is"]["active"]					| false;
@@ -118,6 +121,8 @@ void ConfigurationManagement::writeConfiguration(Configuration conf)
 		v["password"]						= ap.password;
 	}
 	data["beacon"]["message"]				= conf.beacon.message;
+	data["beacon"]["symbol"]				= conf.beacon.symbol;
+	data["beacon"]["overlay"]				= conf.beacon.overlay;
 	data["beacon"]["position"]["latitude"] 	= conf.beacon.positionLatitude;
 	data["beacon"]["position"]["longitude"]	= conf.beacon.positionLongitude;
 	data["aprs_is"]["active"]				= conf.aprs_is.active;

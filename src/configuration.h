@@ -30,9 +30,11 @@ public:
 	class Beacon
 	{
 	public:
-		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0) {}
+		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), symbol("&"), overlay("I"), positionLatitude(0.0), positionLongitude(0.0) {}
 
 		String message;
+		String symbol;
+		String overlay;
 		double positionLatitude;
 		double positionLongitude;
 	};

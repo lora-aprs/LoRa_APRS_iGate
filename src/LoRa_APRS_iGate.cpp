@@ -221,15 +221,9 @@ void loop()
 		logPrintD(String(lora_aprs.packetRssi()));
 		logPrintD(" and SNR ");
 		logPrintlnD(String(lora_aprs.packetSnr()));
-		
+
 		if(Config.aprs_is.active)
 		{
-			APRSBody * body = msg->getAPRSBody();
-			String bodyStr = body->getData();
-			bodyStr = bodyStr + " - Signal at " + Config.callsign + ": RSSI=" + String(lora_aprs.packetRssi()) +"dBm SNR=" + String(lora_aprs.packetSnr()) + "dB\n";	
-			body->setData(bodyStr);
-			logPrintD(" Changed packet: ");
-			logPrintD(msg->toString());
 			aprs_is->sendMessage(msg->encode());
 		}
 		if(Config.digi.active)
@@ -492,7 +486,7 @@ void setup_lora()
 	BeaconMsg->setDestination("APLG0");
 	String lat = create_lat_aprs(Config.beacon.positionLatitude);
 	String lng = create_long_aprs(Config.beacon.positionLongitude);
-	BeaconMsg->getAPRSBody()->setData(String("=") + lat + "I" + lng + "&" + Config.beacon.message);
+	BeaconMsg->getAPRSBody()->setData(String("=") + lat + Config.beacon.symbol + lng + Config.beacon.overlay + Config.beacon.message);
 }
 
 void setup_ntp()
