@@ -3,7 +3,7 @@
 #include <TaskManager.h>
 
 Display::Display()
-	: _disp(0), _statusFrame(0), _nextFrameTime(0)
+	: _disp(0), _statusFrame(0), _displayOff(false)
 {
 }
 
@@ -23,6 +23,8 @@ void Display::setup(std::shared_ptr<BoardConfig> boardConfig)
 	
 	Bitmap bitmap(_disp->getWidth(), _disp->getHeight());
 	_disp->display(&bitmap);
+	_displayTimeout.setTimeout(10);
+	_frameTimeout.setTimeout(15);
 }
 
 void Display::turn180()
@@ -32,33 +34,42 @@ void Display::turn180()
 
 void Display::update()
 {
-	if(_statusFrame->isPrio())
+	if(_frameTimeout.check())
 	{
-		Bitmap bitmap(_disp.get());
-		_statusFrame->drawStatusPage(bitmap);
-		_disp->display(&bitmap);
-		return;
-	}
+		if(_statusFrame->isPrio())
+		{
+			Bitmap bitmap(_disp.get());
+			_statusFrame->drawStatusPage(bitmap);
+			activateDisplay();
+			_disp->display(&bitmap);
+			return;
+		}
 
-	if(_nextFrameTime > now())
-	{
-		return;
-	}
+		if(_frames.size() > 0)
+		{
+			std::shared_ptr<DisplayFrame> frame = *_frames.begin();
+			Bitmap bitmap(_disp.get());
+			frame->drawStatusPage(bitmap);
+			activateDisplay();
+			_disp->display(&bitmap);
+			_frames.pop_front();
+			_frameTimeout.start();
+			return;
+		}
 
-	if(_frames.size() > 0)
-	{
-		std::shared_ptr<DisplayFrame> frame = *_frames.begin();
-		Bitmap bitmap(_disp.get());
-		frame->drawStatusPage(bitmap);
-		_disp->display(&bitmap);
-		_frames.pop_front();
-		_nextFrameTime = now() + 15;
-	}
-	else
-	{
-		Bitmap bitmap(_disp.get());
-		_statusFrame->drawStatusPage(bitmap);
-		_disp->display(&bitmap);
+		if(!_displayOff && !_displayTimeout.isActive())
+		{
+			Bitmap bitmap(_disp.get());
+			_statusFrame->drawStatusPage(bitmap);
+			activateDisplay();
+			_disp->display(&bitmap);
+			_displayTimeout.start();
+		}
+		if(_displayTimeout.check())
+		{
+			deactivateDisplay();
+			_displayTimeout.reset();
+		}
 	}
 }
 
@@ -80,6 +91,21 @@ void Display::showSpashScreen(String firmwareTitle, String version)
 	bitmap.drawString( 0, 35, "by Peter Buchegger");
 	bitmap.drawString(30, 45, "OE5BPA");
 	_disp->display(&bitmap);
+}
+
+void Display::activateDisplay()
+{
+	if(_displayOff)
+	{
+		_disp->displayOn();
+		_displayOff = false;
+	}
+}
+
+void Display::deactivateDisplay()
+{
+	_disp->displayOff();
+	_displayOff = true;
 }
 
 

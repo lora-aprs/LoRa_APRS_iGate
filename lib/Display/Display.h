@@ -9,7 +9,9 @@
 #include <TimeLib.h>
 #include <SSD1306.h>
 #include <BoardFinder.h>
+#include <Timer.h>
 
+class Timer;
 class StatusFrame;
 
 class DisplayFrame
@@ -46,12 +48,17 @@ private:
 
 	std::list<std::shared_ptr<DisplayFrame>> _frames;
 	std::shared_ptr<StatusFrame> _statusFrame;
+	Timer _frameTimeout;
 
-	time_t _nextFrameTime;
+	Timer _displayTimeout;
+	bool _displayOff;
 
 	Display();
 	Display(const Display &);
 	Display & operator = (const Display &);
+
+	void activateDisplay();
+	void deactivateDisplay();
 };
 
 class TextFrame : public DisplayFrame
