@@ -4,6 +4,7 @@
 #include <TaskManager.h>
 #include <APRS-IS.h>
 #include <APRSMessage.h>
+#include <Timer.h>
 
 class AprsIsTask : public Task
 {
@@ -19,7 +20,7 @@ public:
 private:
 	std::shared_ptr<APRS_IS> _aprs_is;
 	std::shared_ptr<APRSMessage> _beaconMsg;
-	time_t _beacon_next_time;
+	Timer _beacon_timer;
 
 	bool connect(std::shared_ptr<Configuration> config);
 };

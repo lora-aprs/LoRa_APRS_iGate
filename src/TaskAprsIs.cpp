@@ -8,7 +8,7 @@ String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
 AprsIsTask::AprsIsTask()
-	: Task(TASK_APRS_IS, TaskAprsIs), _beacon_next_time(0)
+	: Task(TASK_APRS_IS, TaskAprsIs)
 {
 }
 
@@ -18,6 +18,7 @@ AprsIsTask::~AprsIsTask()
 
 bool AprsIsTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig)
 {
+	_beacon_timer.setTimeout(minutesToTime_t(config->beacon.timeout));
 	_aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(config->callsign, config->aprs_is.passcode , "ESP32-APRS-IS", "0.2"));
 
 	_beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
@@ -53,15 +54,15 @@ bool AprsIsTask::loop(std::shared_ptr<Configuration> config)
 		_aprs_is->sendMessage(msg);
 	}
 
-	if(_beacon_next_time < now())
+	if(_beacon_timer.check())
 	{
 		logPrintD("[" + timeString() + "] ");
 		logPrintlnD(_beaconMsg->encode());
 		_aprs_is->sendMessage(_beaconMsg);
 		Display::instance().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
-		_beacon_next_time = now() + config->beacon.timeout * 60UL;
+		_beacon_timer.start();
 	}
-	time_t diff = _beacon_next_time - now();
+	time_t diff = _beacon_timer.getTriggerTime() - now();
 	_stateInfo = "beacon " + String(minute(diff)) + ":" + String(second(diff));
 	_state = Okay;
 	return true;
