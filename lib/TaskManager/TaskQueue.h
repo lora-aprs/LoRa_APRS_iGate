@@ -3,31 +3,27 @@
 
 #include <list>
 
-template <typename T>
-class TaskQueue
-{
+template <typename T> class TaskQueue {
 public:
-	TaskQueue() {}
+  TaskQueue() {
+  }
 
-	void addElement(T elem)
-	{
-		_elements.push_back(elem);
-	}
+  void addElement(T elem) {
+    _elements.push_back(elem);
+  }
 
-	T getElement()
-	{
-		T elem = _elements.front();
-		_elements.pop_front();
-		return elem;
-	}
+  T getElement() {
+    T elem = _elements.front();
+    _elements.pop_front();
+    return elem;
+  }
 
-	bool empty() const
-	{
-		return _elements.empty();
-	}
+  bool empty() const {
+    return _elements.empty();
+  }
 
 private:
-	std::list<T> _elements;
+  std::list<T> _elements;
 };
 
 #endif

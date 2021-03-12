@@ -3,24 +3,24 @@
 
 enum TaskNames
 {
-	TaskAprsIs = 1,
-	TaskEth,
-	TaskFtp,
-	TaskLora,
-	TaskNtp,
-	TaskOta,
-	TaskWifi,
-	TaskSize,
+  TaskAprsIs = 1,
+  TaskEth,
+  TaskFtp,
+  TaskLora,
+  TaskNtp,
+  TaskOta,
+  TaskWifi,
+  TaskSize,
 };
 
-//char const * const getTaskName(TaskNames task);
+// char const * const getTaskName(TaskNames task);
 
-#define TASK_APRS_IS	"AprsIsTask"
-#define TASK_ETH		"EthTask"
-#define TASK_FTP		"FTPTask"
-#define TASK_LORA		"LoraTask"
-#define TASK_NTP		"NTPTask"
-#define TASK_OTA		"OTATask"
-#define TASK_WIFI		"WifiTask"
+#define TASK_APRS_IS "AprsIsTask"
+#define TASK_ETH     "EthTask"
+#define TASK_FTP     "FTPTask"
+#define TASK_LORA    "LoraTask"
+#define TASK_NTP     "NTPTask"
+#define TASK_OTA     "OTATask"
+#define TASK_WIFI    "WifiTask"
 
 #endif

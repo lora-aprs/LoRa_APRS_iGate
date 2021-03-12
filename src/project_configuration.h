@@ -1,110 +1,108 @@
 #ifndef PROJECT_CONFIGURATION_H_
 #define PROJECT_CONFIGURATION_H_
 
-#include "configuration.h"
-#include "BoardFinder.h"
+#include <BoardFinder.h>
+#include <configuration.h>
 
-class Configuration
-{
+class Configuration {
 public:
-	class Wifi
-	{
-	public:
-		class AP
-		{
-		public:
-			String SSID;
-			String password;
-		};
+  class Wifi {
+  public:
+    class AP {
+    public:
+      String SSID;
+      String password;
+    };
 
-		Wifi() {}
+    Wifi() {
+    }
 
-		std::list<AP> APs;
-	};
+    std::list<AP> APs;
+  };
 
-	class Beacon
-	{
-	public:
-		Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {}
+  class Beacon {
+  public:
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {
+    }
 
-		String message;
-		double positionLatitude;
-		double positionLongitude;
-		int timeout;
-	};
+    String message;
+    double positionLatitude;
+    double positionLongitude;
+    int    timeout;
+  };
 
-	class APRS_IS
-	{
-	public:
-		APRS_IS() : server("euro.aprs2.net"), port(14580) {}
+  class APRS_IS {
+  public:
+    APRS_IS() : server("euro.aprs2.net"), port(14580) {
+    }
 
-		String passcode;
-		String server;
-		int port;
-	};
+    String passcode;
+    String server;
+    int    port;
+  };
 
-	class LoRa
-	{
-	public:
-		LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {}
+  class LoRa {
+  public:
+    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {
+    }
 
-		long frequencyRx;
-		long frequencyTx;
-		int power;
-		int spreadingFactor;
-		long signalBandwidth;
-		int codingRate4;
-	};
+    long frequencyRx;
+    long frequencyTx;
+    int  power;
+    int  spreadingFactor;
+    long signalBandwidth;
+    int  codingRate4;
+  };
 
-	class Display
-	{
-	public:
-		Display() : alwaysOn(true), timeout(10), overwritePin(0), turn180(true) {}
+  class Display {
+  public:
+    Display() : alwaysOn(true), timeout(10), overwritePin(0), turn180(true) {
+    }
 
-		bool alwaysOn;
-		int timeout;
-		int overwritePin;
-		bool turn180;
-	};
+    bool alwaysOn;
+    int  timeout;
+    int  overwritePin;
+    bool turn180;
+  };
 
-	class Ftp
-	{
-	public:
-		class User
-		{
-		public:
-			String name;
-			String password;
-		};
+  class Ftp {
+  public:
+    class User {
+    public:
+      String name;
+      String password;
+    };
 
-		Ftp() : active(false) {}
+    Ftp() : active(false) {
+    }
 
-		bool active;
-		std::list<User> users;
-	};
+    bool            active;
+    std::list<User> users;
+  };
 
-	Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org") {};
+  Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
-	String callsign;
-	Wifi wifi;
-	Beacon beacon;
-	APRS_IS aprs_is;
-	LoRa lora;
-	Display display;
-	Ftp ftp;
-	String board;
-	String ntpServer;
+  String  callsign;
+  Wifi    wifi;
+  Beacon  beacon;
+  APRS_IS aprs_is;
+  LoRa    lora;
+  Display display;
+  Ftp     ftp;
+  String  board;
+  String  ntpServer;
 };
 
-class ProjectConfigurationManagement : public ConfigurationManagement
-{
+class ProjectConfigurationManagement : public ConfigurationManagement {
 public:
-	explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {}
-	virtual ~ProjectConfigurationManagement() {}
+  explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {
+  }
+  virtual ~ProjectConfigurationManagement() {
+  }
 
 private:
-	virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument & data) override;
-	virtual void writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument & data) override;
+  virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument &data) override;
+  virtual void                           writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument &data) override;
 };
 
 std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig);

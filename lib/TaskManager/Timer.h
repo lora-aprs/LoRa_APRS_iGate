@@ -3,24 +3,23 @@
 
 #include <TimeLib.h>
 
-class Timer
-{
+class Timer {
 public:
-	Timer();
+  Timer();
 
-	void setTimeout(const time_t timeout_sec);
-	time_t getTriggerTime() const;
+  void   setTimeout(const time_t timeout_sec);
+  time_t getTriggerTime() const;
 
-	bool isActive() const;
+  bool isActive() const;
 
-	void reset();
+  void reset();
 
-	bool check();
-	void start();
+  bool check();
+  void start();
 
 private:
-	time_t _timeout_sec;
-	time_t _timeout;
+  time_t _timeout_sec;
+  time_t _timeout;
 };
 
 #endif

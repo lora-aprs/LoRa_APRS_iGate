@@ -11,20 +11,19 @@
 
 class Configuration;
 
-class ConfigurationManagement
-{
+class ConfigurationManagement {
 public:
-	explicit ConfigurationManagement(String FilePath);
-	virtual ~ConfigurationManagement();
+  explicit ConfigurationManagement(String FilePath);
+  virtual ~ConfigurationManagement();
 
-	std::shared_ptr<Configuration> readConfiguration();
-	void writeConfiguration(std::shared_ptr<Configuration> conf);
+  std::shared_ptr<Configuration> readConfiguration();
+  void                           writeConfiguration(std::shared_ptr<Configuration> conf);
 
 private:
-	virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument & data) = 0;
-	virtual void writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument & data) = 0;
+  virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument &data)                                       = 0;
+  virtual void                           writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument &data) = 0;
 
-	const String mFilePath;
+  const String mFilePath;
 };
 
 #endif
