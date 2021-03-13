@@ -51,14 +51,14 @@ EthTask::~EthTask() {
 bool EthTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
   WiFi.onEvent(WiFiEvent);
 
-#define ETH_POWER_PIN -1
-#define ETH_TYPE      ETH_PHY_LAN8720
-#define ETH_ADDR      0
-#define ETH_MDC_PIN   23
-#define ETH_MDIO_PIN  18
-#define ETH_NRST      5
-#define ETH_CLK       ETH_CLOCK_GPIO17_OUT // TTGO PoE V1.0
-  //#define ETH_CLK			ETH_CLOCK_GPIO0_OUT		// TTGO PoE V1.2
+  constexpr uint8_t          ETH_NRST      = 5;
+  constexpr uint8_t          ETH_ADDR      = 0;
+  constexpr int              ETH_POWER_PIN = -1;
+  constexpr int              ETH_MDC_PIN   = 23;
+  constexpr int              ETH_MDIO_PIN  = 18;
+  constexpr eth_phy_type_t   ETH_TYPE      = ETH_PHY_LAN8720;
+  constexpr eth_clock_mode_t ETH_CLK       = ETH_CLOCK_GPIO17_OUT; // TTGO PoE V1.0
+  // constexpr eth_clock_mode_t ETH_CLK       = ETH_CLOCK_GPIO0_OUT;  // TTGO PoE V1.2
 
   pinMode(ETH_NRST, OUTPUT);
   digitalWrite(ETH_NRST, 0);

@@ -86,8 +86,9 @@ void setup() {
   TaskManager::instance().addTask(std::shared_ptr<Task>(new LoraTask()));
   if (boardConfig->Type == eETH_BOARD) {
     TaskManager::instance().addTask(std::shared_ptr<Task>(new EthTask()));
+  } else {
+    TaskManager::instance().addTask(std::shared_ptr<Task>(new WifiTask()));
   }
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new WifiTask()));
   TaskManager::instance().addTask(std::shared_ptr<Task>(new OTATask()));
   TaskManager::instance().addTask(std::shared_ptr<Task>(new NTPTask()));
   if (userConfig->ftp.active) {
