@@ -58,11 +58,24 @@ jobs:
   formatting-check:
     name: Formatting Check
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        path:
+          - 'src'
+          - 'lib/BoardFinder'
+          - 'lib/ConfigurationManagement'
+          - 'lib/Display'
+          - 'lib/LoRa'
+          - 'lib/LoRa_APRS'
+          - 'lib/NTPClient'
+          - 'lib/PowerManagement'
+          - 'lib/TaskManager'
+          - 'lib/TimeLib'
     steps:
       - uses: actions/checkout@v2
       - name: Run clang-format style check for C/C++ programs.
         uses: jidicula/clang-format-action@v3.2.0
         with:
           clang-format-version: '11'
-          check-path: 'src'
+          check-path: ${{ matrix.path }}
 
