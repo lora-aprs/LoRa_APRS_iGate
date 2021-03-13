@@ -2,7 +2,7 @@
 #include <TaskManager.h>
 #include <logger.h>
 
-Display::Display() : _disp(0), _statusFrame(0), _displayOff(false) {
+Display::Display() : _disp(0), _statusFrame(0), _displayOff(false), _displaySaveMode(false) {
 }
 
 void Display::setup(std::shared_ptr<BoardConfig> boardConfig) {
@@ -25,6 +25,14 @@ void Display::setup(std::shared_ptr<BoardConfig> boardConfig) {
 
 void Display::turn180() {
   _disp->flipScreenVertically();
+}
+
+void Display::activateDisplaySaveMode() {
+  _displaySaveMode = true;
+}
+
+void Display::setDisplayTimeout(time_t timeout) {
+  _displayTimeout.setTimeout(timeout);
 }
 
 void Display::update() {
@@ -53,7 +61,9 @@ void Display::update() {
       _statusFrame->drawStatusPage(bitmap);
       activateDisplay();
       _disp->display(&bitmap);
-      _displayTimeout.start();
+      if (_displaySaveMode) {
+        _displayTimeout.start();
+      }
     }
     if (_displayTimeout.check()) {
       deactivateDisplay();

@@ -17,6 +17,10 @@ bool DisplayTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<B
   }
   std::shared_ptr<StatusFrame> statusFrame = std::shared_ptr<StatusFrame>(new StatusFrame(TaskManager::instance().getTasks()));
   Display::instance().setStatusFrame(statusFrame);
+  if (!config->display.alwaysOn) {
+    Display::instance().activateDisplaySaveMode();
+    Display::instance().setDisplayTimeout(config->display.timeout);
+  }
   _stateInfo = config->callsign;
   return true;
 }

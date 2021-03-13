@@ -35,6 +35,8 @@ public:
 
   void setup(std::shared_ptr<BoardConfig> boardConfig);
   void turn180();
+  void activateDisplaySaveMode();
+  void setDisplayTimeout(time_t timeout);
   void update();
 
   void addFrame(std::shared_ptr<DisplayFrame> frame);
@@ -52,6 +54,7 @@ private:
 
   Timer _displayTimeout;
   bool  _displayOff;
+  bool  _displaySaveMode;
 
   Display();
   Display(const Display &);
