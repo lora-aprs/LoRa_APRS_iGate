@@ -64,6 +64,7 @@ void Display::update() {
       if (_displaySaveMode) {
         _displayTimeout.start();
       }
+      return;
     }
     if (_displayTimeout.check()) {
       deactivateDisplay();

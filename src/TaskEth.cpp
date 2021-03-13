@@ -70,12 +70,16 @@ bool EthTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
   digitalWrite(ETH_NRST, 1);
 
   ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
-  while (!eth_connected) {
-    sleep(1);
-  }
   return true;
 }
 
 bool EthTask::loop(std::shared_ptr<Configuration> config) {
+  if (!eth_connected) {
+    _stateInfo = "Ethernet not connected";
+    _state     = Error;
+    return false;
+  }
+  _stateInfo = ETH.localIP().toString();
+  _state     = Okay;
   return true;
 }
