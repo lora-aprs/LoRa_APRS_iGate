@@ -1,9 +1,9 @@
-name: Build check and build
+name: push pull checks
 
 on: [push, pull_request]
 
 jobs:
-  PlatformIO-Check:
+  check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,7 +27,7 @@ jobs:
       - name: Run PlatformIO Check
         run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
 
-  PlatformIO-Build:
+  build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
