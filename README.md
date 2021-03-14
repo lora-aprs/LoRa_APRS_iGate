@@ -46,6 +46,8 @@ Keep in minde: you need a 433MHz version!
 
 **There is a german [quick start](https://www.lora-aprs.info/docs/LoRa_APRS_iGate/quick-start-guide/) page! Take a look ;)**
 
+**There is a french [quick start](http://www.f5kmy.fr/spip.php?article509) page! Take a look ;)**
+
 ### How to compile
 
 The best success is to use PlatformIO (and it is the only platform where I can support you). 

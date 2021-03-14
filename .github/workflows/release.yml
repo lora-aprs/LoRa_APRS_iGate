@@ -14,6 +14,8 @@ jobs:
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - uses: actions/checkout@v2
+        with:
+          submodules: 'recursive'
       - run: platformio run
       - id: create_release
         uses: actions/create-release@v1
@@ -24,84 +26,21 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
-      # upload heltec_wifi_lora_32_v1
+      # upload firmware bin
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/heltec_wifi_lora_32_v1/firmware.bin
-          asset_name: heltec_wifi_lora_32_v1.bin
+          asset_path: .pio/build/lora_board/firmware.bin
+          asset_name: lora_board.bin
           asset_content_type: application/bin
-      # upload heltec_wifi_lora_32_v2
+      # upload json file
       - uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/heltec_wifi_lora_32_v2/firmware.bin
-          asset_name: heltec_wifi_lora_32_v2.bin
-          asset_content_type: application/bin
-      # upload ttgo-lora32-v1
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-lora32-v1/firmware.bin
-          asset_name: ttgo-lora32-v1.bin
-          asset_content_type: application/bin
-      # upload ttgo-lora32-v2
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-lora32-v2/firmware.bin
-          asset_name: ttgo-lora32-v2.bin
-          asset_content_type: application/bin
-      # upload ttgo-t-beam-v0_7
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-t-beam-v0_7/firmware.bin
-          asset_name: ttgo-t-beam-v0_7.bin
-          asset_content_type: application/bin
-      # upload ttgo-t-beam-v1
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-t-beam-v1/firmware.bin
-          asset_name: ttgo-t-beam-v1.bin
-          asset_content_type: application/bin
-      # upload TrackerD-OE1ACM
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/TrackerD-OE1ACM/firmware.bin
-          asset_name: TrackerD-OE1ACM.bin
-          asset_content_type: application/bin
-      # upload ttgo-poe-v1_0
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-poe-v1_0/firmware.bin
-          asset_name: ttgo-poe-v1_0.bin
-          asset_content_type: application/bin
-      # upload ttgo-poe-v1_2
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/ttgo-poe-v1_2/firmware.bin
-          asset_name: ttgo-poe-v1_2.bin
-          asset_content_type: application/bin
+          asset_path: data/is-cfg.json
+          asset_name: is-cfg.json
+          asset_content_type: application/json
