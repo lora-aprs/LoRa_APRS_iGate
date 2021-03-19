@@ -20,7 +20,7 @@ bool AprsIsTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Bo
 
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
   _beaconMsg->setSource(config->callsign);
-  _beaconMsg->setDestination("APLG1");
+  _beaconMsg->setDestination("APLG01");
   String lat = create_lat_aprs(config->beacon.positionLatitude);
   String lng = create_long_aprs(config->beacon.positionLongitude);
   _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + config->beacon.message);
