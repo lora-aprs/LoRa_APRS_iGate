@@ -25,13 +25,8 @@ public:
 
 class Display {
 public:
-  static Display &instance() {
-    static Display _instance;
-    return _instance;
-  }
-
-  ~Display() {
-  }
+  Display();
+  ~Display();
 
   void setup(std::shared_ptr<BoardConfig> boardConfig);
   void turn180();
@@ -55,10 +50,6 @@ private:
   Timer _displayTimeout;
   bool  _displayOff;
   bool  _displaySaveMode;
-
-  Display();
-  Display(const Display &);
-  Display &operator=(const Display &);
 
   void activateDisplay();
   void deactivateDisplay();

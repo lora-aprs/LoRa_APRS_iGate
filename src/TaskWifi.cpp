@@ -11,12 +11,12 @@ WifiTask::WifiTask() : Task(TASK_WIFI, TaskWifi), _oldWifiStatus(WL_IDLE_STATUS)
 WifiTask::~WifiTask() {
 }
 
-bool WifiTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
+bool WifiTask::setup(std::shared_ptr<System> system) {
   // WiFi.onEvent(WiFiEvent);
-  WiFi.setHostname(config->callsign.c_str());
+  WiFi.setHostname(system->getUserConfig()->callsign.c_str());
   _wiFiMulti = std::shared_ptr<WiFiMulti>(new WiFiMulti());
   ;
-  for (Configuration::Wifi::AP ap : config->wifi.APs) {
+  for (Configuration::Wifi::AP ap : system->getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");
     logPrintlnD(ap.SSID);
     _wiFiMulti->addAP(ap.SSID.c_str(), ap.password.c_str());
@@ -24,7 +24,7 @@ bool WifiTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
   return true;
 }
 
-bool WifiTask::loop(std::shared_ptr<Configuration> config) {
+bool WifiTask::loop(std::shared_ptr<System> system) {
   const uint8_t wifi_status = _wiFiMulti->run();
   if (wifi_status != WL_CONNECTED) {
     logPrintlnE("WiFi not connected!");

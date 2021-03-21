@@ -2,6 +2,7 @@
 
 #include <APRS-IS.h>
 #include <BoardFinder.h>
+#include <System.h>
 #include <TaskManager.h>
 #include <TimeLib.h>
 #include <logger.h>
@@ -22,9 +23,8 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-std::shared_ptr<Configuration> userConfig;
-std::shared_ptr<BoardConfig>   boardConfig;
-HardwareSerial                 Serial(0);
+std::shared_ptr<System> LoRaSystem;
+HardwareSerial          Serial(0);
 
 // cppcheck-suppress unusedFunction
 void setup() {
@@ -35,7 +35,7 @@ void setup() {
   logPrintlnW("Version: " VERSION);
 
   ProjectConfigurationManagement confmg;
-  userConfig = confmg.readConfiguration();
+  std::shared_ptr<Configuration> userConfig = confmg.readConfiguration();
 
   std::list<std::shared_ptr<BoardConfig>> boardConfigs;
   // clang-format off
@@ -49,8 +49,8 @@ void setup() {
   boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26)));
   // clang-format on
 
-  BoardFinder finder(boardConfigs);
-  boardConfig = finder.getBoardConfig(userConfig->board);
+  BoardFinder                  finder(boardConfigs);
+  std::shared_ptr<BoardConfig> boardConfig = finder.getBoardConfig(userConfig->board);
   if (boardConfig == 0) {
     boardConfig = finder.searchBoardConfig();
     if (boardConfig == 0) {
@@ -81,24 +81,25 @@ void setup() {
   }
 
   load_config(boardConfig);
+  LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
 
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new LoraTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new LoraTask()));
   if (boardConfig->Type == eETH_BOARD) {
-    TaskManager::instance().addTask(std::shared_ptr<Task>(new EthTask()));
+    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new EthTask()));
   } else {
-    TaskManager::instance().addTask(std::shared_ptr<Task>(new WifiTask()));
+    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new WifiTask()));
   }
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new OTATask()));
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new NTPTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new OTATask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new NTPTask()));
   if (userConfig->ftp.active) {
-    TaskManager::instance().addTask(std::shared_ptr<Task>(new FTPTask()));
+    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
   }
-  TaskManager::instance().addTask(std::shared_ptr<Task>(new AprsIsTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask()));
 
-  TaskManager::instance().setup(userConfig, boardConfig);
+  LoRaSystem->getTaskManager().setup(LoRaSystem);
 
-  Display::instance().showSpashScreen("LoRa APRS iGate", VERSION);
+  LoRaSystem->getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
 
   if (userConfig->display.overwritePin != 0) {
     pinMode(userConfig->display.overwritePin, INPUT);
@@ -111,7 +112,7 @@ void setup() {
 
 // cppcheck-suppress unusedFunction
 void loop() {
-  TaskManager::instance().loop(userConfig);
+  LoRaSystem->getTaskManager().loop(LoRaSystem);
 }
 
 String create_lat_aprs(double lat) {

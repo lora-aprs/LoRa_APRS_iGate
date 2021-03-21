@@ -5,6 +5,9 @@
 Display::Display() : _disp(0), _statusFrame(0), _displayOff(false), _displaySaveMode(false) {
 }
 
+Display::~Display() {
+}
+
 void Display::setup(std::shared_ptr<BoardConfig> boardConfig) {
   if (boardConfig->OledReset != 0) {
     pinMode(boardConfig->OledReset, OUTPUT);

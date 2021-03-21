@@ -23,24 +23,30 @@ std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
   return _tasks;
 }
 
-bool TaskManager::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
+bool TaskManager::setup(std::shared_ptr<System> system) {
   logPrintlnV("will setup all tasks...");
   for (std::shared_ptr<Task> &elem : _tasks) {
     logPrintW("call setup from ");
     logPrintlnW(elem->getName());
-    if (!elem->setup(config, boardConfig)) {
-      return false;
-    }
+    elem->setup(system);
   }
+  _nextTask = _tasks.begin();
   return true;
 }
 
-bool TaskManager::loop(std::shared_ptr<Configuration> config) {
+bool TaskManager::loop(std::shared_ptr<System> system) {
   // logPrintlnD("will loop all tasks...");
+  if (_nextTask == _tasks.end()) {
+    _nextTask = _tasks.begin();
+  }
+  bool ret = (*_nextTask)->loop(system);
+  _nextTask++;
+  return ret;
+
   for (std::shared_ptr<Task> &elem : _tasks) {
     // logPrintD("call loop from ");
     // logPrintlnD(elem->getName());
-    if (!elem->loop(config)) {
+    if (!elem->loop(system)) {
       return false;
     }
   }

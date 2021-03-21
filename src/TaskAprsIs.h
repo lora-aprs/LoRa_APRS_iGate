@@ -11,8 +11,8 @@ public:
   AprsIsTask();
   virtual ~AprsIsTask();
 
-  virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) override;
-  virtual bool loop(std::shared_ptr<Configuration> config) override;
+  virtual bool setup(std::shared_ptr<System> system) override;
+  virtual bool loop(std::shared_ptr<System> system) override;
 
   TaskQueue<std::shared_ptr<APRSMessage>> inputQueue;
 
@@ -21,7 +21,7 @@ private:
   std::shared_ptr<APRSMessage> _beaconMsg;
   Timer                        _beacon_timer;
 
-  bool connect(std::shared_ptr<Configuration> config);
+  bool connect(std::shared_ptr<System> system);
 };
 
 #endif
