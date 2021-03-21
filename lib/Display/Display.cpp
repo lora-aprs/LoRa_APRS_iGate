@@ -24,6 +24,8 @@ void Display::setup(std::shared_ptr<BoardConfig> boardConfig) {
   _disp->display(&bitmap);
   _displayTimeout.setTimeout(10);
   _frameTimeout.setTimeout(15);
+  _displayUpdateRate.setTimeout(1);
+  _displayUpdateRate.start();
 }
 
 void Display::turn180() {
@@ -39,41 +41,44 @@ void Display::setDisplayTimeout(time_t timeout) {
 }
 
 void Display::update() {
-  if (_frameTimeout.check()) {
-    if (_statusFrame->isPrio()) {
-      Bitmap bitmap(_disp.get());
-      _statusFrame->drawStatusPage(bitmap);
-      activateDisplay();
-      _disp->display(&bitmap);
-      return;
-    }
-
-    if (_frames.size() > 0) {
-      std::shared_ptr<DisplayFrame> frame = *_frames.begin();
-      Bitmap                        bitmap(_disp.get());
-      frame->drawStatusPage(bitmap);
-      activateDisplay();
-      _disp->display(&bitmap);
-      _frames.pop_front();
-      _frameTimeout.start();
-      return;
-    }
-
-    if (!_displayOff && !_displayTimeout.isActive()) {
-      Bitmap bitmap(_disp.get());
-      _statusFrame->drawStatusPage(bitmap);
-      activateDisplay();
-      _disp->display(&bitmap);
-      if (_displaySaveMode) {
-        _displayTimeout.start();
+  if (_displayUpdateRate.check()) {
+    if (_frameTimeout.check()) {
+      if (_statusFrame->isPrio()) {
+        Bitmap bitmap(_disp.get());
+        _statusFrame->drawStatusPage(bitmap);
+        activateDisplay();
+        _disp->display(&bitmap);
+        return;
       }
-      return;
+
+      if (_frames.size() > 0) {
+        std::shared_ptr<DisplayFrame> frame = *_frames.begin();
+        Bitmap                        bitmap(_disp.get());
+        frame->drawStatusPage(bitmap);
+        activateDisplay();
+        _disp->display(&bitmap);
+        _frames.pop_front();
+        _frameTimeout.start();
+        return;
+      }
+
+      if (!_displayOff && !_displayTimeout.isActive()) {
+        Bitmap bitmap(_disp.get());
+        _statusFrame->drawStatusPage(bitmap);
+        activateDisplay();
+        _disp->display(&bitmap);
+        if (_displaySaveMode) {
+          _displayTimeout.start();
+        }
+        return;
+      }
+      if (_displayTimeout.check()) {
+        deactivateDisplay();
+        _displayTimeout.reset();
+      }
     }
-    if (_displayTimeout.check()) {
-      deactivateDisplay();
-      _displayTimeout.reset();
-    }
-  }
+    _displayUpdateRate.start();
+  };
 }
 
 void Display::addFrame(std::shared_ptr<DisplayFrame> frame) {

@@ -51,6 +51,8 @@ private:
   bool  _displayOff;
   bool  _displaySaveMode;
 
+  Timer _displayUpdateRate;
+
   void activateDisplay();
   void deactivateDisplay();
 };
