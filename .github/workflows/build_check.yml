@@ -69,7 +69,7 @@ jobs:
           - 'lib/LoRa_APRS'
           #- 'lib/NTPClient'
           - 'lib/PowerManagement'
-          - 'lib/TaskManager'
+          - 'lib/System'
           #- 'lib/TimeLib'
     steps:
       - uses: actions/checkout@v2
