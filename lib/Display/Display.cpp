@@ -2,7 +2,7 @@
 #include <TaskManager.h>
 #include <logger.h>
 
-Display::Display() : _disp(0), _statusFrame(0), _displayOff(false), _displaySaveMode(false) {
+Display::Display() : _disp(0), _statusFrame(0), _displaySaveMode(false) {
 }
 
 Display::~Display() {
@@ -22,10 +22,12 @@ void Display::setup(std::shared_ptr<BoardConfig> boardConfig) {
 
   Bitmap bitmap(_disp->getWidth(), _disp->getHeight());
   _disp->display(&bitmap);
-  _displayTimeout.setTimeout(10);
-  _frameTimeout.setTimeout(15);
-  _displayUpdateRate.setTimeout(1);
-  _displayUpdateRate.start();
+
+  _displayFrameRate.setTimeout(500);
+  _displayFrameRate.start();
+
+  _frameTimeout.setTimeout(15 * 1000);
+  _displaySaveModeTimer.setTimeout(10 * 1000);
 }
 
 void Display::turn180() {
@@ -36,49 +38,45 @@ void Display::activateDisplaySaveMode() {
   _displaySaveMode = true;
 }
 
-void Display::setDisplayTimeout(time_t timeout) {
-  _displayTimeout.setTimeout(timeout);
+void Display::setDisplaySaveTimeout(uint32_t timeout) {
+  _displaySaveModeTimer.setTimeout(timeout * 1000);
 }
 
 void Display::update() {
-  if (_displayUpdateRate.check()) {
-    if (_frameTimeout.check()) {
-      if (_statusFrame->isPrio()) {
-        Bitmap bitmap(_disp.get());
-        _statusFrame->drawStatusPage(bitmap);
-        activateDisplay();
-        _disp->display(&bitmap);
-        return;
-      }
+  if (_displayFrameRate.check()) {
 
-      if (_frames.size() > 0) {
-        std::shared_ptr<DisplayFrame> frame = *_frames.begin();
-        Bitmap                        bitmap(_disp.get());
-        frame->drawStatusPage(bitmap);
-        activateDisplay();
-        _disp->display(&bitmap);
-        _frames.pop_front();
+    if (_frames.size() > 0) {
+      std::shared_ptr<DisplayFrame> frame = *_frames.begin();
+      Bitmap                        bitmap(_disp.get());
+      frame->drawStatusPage(bitmap);
+      _disp->display(&bitmap);
+
+      if (!_frameTimeout.isActive()) {
         _frameTimeout.start();
-        return;
+        _displaySaveModeTimer.reset();
+      } else if (_frameTimeout.check()) {
+        _frames.pop_front();
+        _frameTimeout.reset();
       }
-
-      if (!_displayOff && !_displayTimeout.isActive()) {
+    } else {
+      if (_disp->isDisplayOn()) {
         Bitmap bitmap(_disp.get());
         _statusFrame->drawStatusPage(bitmap);
-        activateDisplay();
         _disp->display(&bitmap);
+
         if (_displaySaveMode) {
-          _displayTimeout.start();
+          if (_displaySaveModeTimer.isActive() && _displaySaveModeTimer.check()) {
+            _disp->displayOff();
+            _displaySaveModeTimer.reset();
+          } else if (!_displaySaveModeTimer.isActive()) {
+            _displaySaveModeTimer.start();
+          }
         }
-        return;
-      }
-      if (_displayTimeout.check()) {
-        deactivateDisplay();
-        _displayTimeout.reset();
       }
     }
-    _displayUpdateRate.start();
-  };
+
+    _displayFrameRate.start();
+  }
 }
 
 void Display::addFrame(std::shared_ptr<DisplayFrame> frame) {
@@ -98,16 +96,11 @@ void Display::showSpashScreen(String firmwareTitle, String version) {
   _disp->display(&bitmap);
 }
 
-void Display::activateDisplay() {
-  if (_displayOff) {
-    _disp->displayOn();
-    _displayOff = false;
-  }
-}
-
-void Display::deactivateDisplay() {
-  _disp->displayOff();
-  _displayOff = true;
+void Display::showStatusScreen(String header, String text) {
+  Bitmap bitmap(_disp.get());
+  bitmap.drawString(0, 0, header);
+  bitmap.drawStringLF(0, 10, text);
+  _disp->display(&bitmap);
 }
 
 void TextFrame::drawStatusPage(Bitmap &bitmap) {

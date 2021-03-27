@@ -27,6 +27,7 @@ bool WifiTask::setup(std::shared_ptr<System> system) {
 bool WifiTask::loop(std::shared_ptr<System> system) {
   const uint8_t wifi_status = _wiFiMulti->run();
   if (wifi_status != WL_CONNECTED) {
+    system->connectedViaWifiEth(false);
     logPrintlnE("WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
@@ -38,6 +39,7 @@ bool WifiTask::loop(std::shared_ptr<System> system) {
     _oldWifiStatus = wifi_status;
     return false;
   }
+  system->connectedViaWifiEth(true);
   _stateInfo = WiFi.localIP().toString();
   _state     = Okay;
   return true;

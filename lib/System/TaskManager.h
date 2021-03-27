@@ -81,8 +81,6 @@ public:
   }
   void drawStatusPage(Bitmap &bitmap) override;
 
-  bool isPrio() const;
-
 private:
   std::list<std::shared_ptr<Task>> _tasks;
 };

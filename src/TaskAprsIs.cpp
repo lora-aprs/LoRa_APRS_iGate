@@ -15,7 +15,7 @@ AprsIsTask::~AprsIsTask() {
 }
 
 bool AprsIsTask::setup(std::shared_ptr<System> system) {
-  _beacon_timer.setTimeout(minutesToTime_t(system->getUserConfig()->beacon.timeout));
+  _beacon_timer.setTimeout(system->getUserConfig()->beacon.timeout * 60 * 1000);
   _aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(system->getUserConfig()->callsign, system->getUserConfig()->aprs_is.passcode, "ESP32-APRS-IS", "0.2"));
 
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
@@ -29,6 +29,9 @@ bool AprsIsTask::setup(std::shared_ptr<System> system) {
 }
 
 bool AprsIsTask::loop(std::shared_ptr<System> system) {
+  if (!system->isWifiEthConnected()) {
+    return false;
+  }
   if (!_aprs_is->connected()) {
     if (!connect(system)) {
       _stateInfo = "not connected";
@@ -54,8 +57,8 @@ bool AprsIsTask::loop(std::shared_ptr<System> system) {
     system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
     _beacon_timer.start();
   }
-  time_t diff = _beacon_timer.getTriggerTime() - now();
-  _stateInfo  = "beacon " + String(minute(diff)) + ":" + String(second(diff));
+  time_t diff = _beacon_timer.getTriggerTimeInSec();
+  _stateInfo  = "beacon " + String(diff / 60) + ":" + String(diff % 60);
   _state      = Okay;
   return true;
 }

@@ -19,7 +19,7 @@ bool DisplayTask::setup(std::shared_ptr<System> system) {
   system->getDisplay().setStatusFrame(statusFrame);
   if (!system->getUserConfig()->display.alwaysOn) {
     system->getDisplay().activateDisplaySaveMode();
-    system->getDisplay().setDisplayTimeout(system->getUserConfig()->display.timeout);
+    system->getDisplay().setDisplaySaveTimeout(system->getUserConfig()->display.timeout);
   }
   _stateInfo = system->getUserConfig()->callsign;
   return true;

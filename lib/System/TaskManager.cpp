@@ -75,9 +75,3 @@ void StatusFrame::drawStatusPage(Bitmap &bitmap) {
     y += getSystemFont()->heightInPixel;
   }
 }
-
-bool StatusFrame::isPrio() const {
-  return std::any_of(_tasks.begin(), _tasks.end(), [](std::shared_ptr<Task> task) {
-    return task->getState() != Okay;
-  });
-}

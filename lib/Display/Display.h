@@ -29,32 +29,30 @@ public:
   ~Display();
 
   void setup(std::shared_ptr<BoardConfig> boardConfig);
+  // setup functions
+  void showSpashScreen(String firmwareTitle, String version);
+  void setStatusFrame(std::shared_ptr<StatusFrame> frame);
+  void showStatusScreen(String header, String text);
+
   void turn180();
   void activateDisplaySaveMode();
-  void setDisplayTimeout(time_t timeout);
+  void setDisplaySaveTimeout(uint32_t timeout);
+
+  // functions for update loop
   void update();
-
   void addFrame(std::shared_ptr<DisplayFrame> frame);
-
-  void setStatusFrame(std::shared_ptr<StatusFrame> frame);
-
-  void showSpashScreen(String firmwareTitle, String version);
 
 private:
   std::shared_ptr<OLEDDisplay> _disp;
 
+  Timer                        _displayFrameRate;
+  std::shared_ptr<StatusFrame> _statusFrame;
+
   std::list<std::shared_ptr<DisplayFrame>> _frames;
-  std::shared_ptr<StatusFrame>             _statusFrame;
   Timer                                    _frameTimeout;
 
-  Timer _displayTimeout;
-  bool  _displayOff;
   bool  _displaySaveMode;
-
-  Timer _displayUpdateRate;
-
-  void activateDisplay();
-  void deactivateDisplay();
+  Timer _displaySaveModeTimer;
 };
 
 class TextFrame : public DisplayFrame {

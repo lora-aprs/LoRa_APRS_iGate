@@ -17,12 +17,15 @@ public:
   std::shared_ptr<Configuration> getUserConfig() const;
   TaskManager &                  getTaskManager();
   Display &                      getDisplay();
+  bool                           isWifiEthConnected() const;
+  void                           connectedViaWifiEth(bool status);
 
 private:
   std::shared_ptr<BoardConfig>   _boardConfig;
   std::shared_ptr<Configuration> _userConfig;
   TaskManager                    _taskManager;
   Display                        _display;
+  bool                           _isWifiEthConnected;
 };
 
 #endif

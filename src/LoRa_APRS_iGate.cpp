@@ -34,9 +34,6 @@ void setup() {
   logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
   logPrintlnW("Version: " VERSION);
 
-  ProjectConfigurationManagement confmg;
-  std::shared_ptr<Configuration> userConfig = confmg.readConfiguration();
-
   std::list<std::shared_ptr<BoardConfig>> boardConfigs;
   // clang-format off
   boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TTGO_LORA32_V1",         eTTGO_LORA32_V1,          4, 15, 0x3C,  0,  5, 19, 27, 18, 14, 26)));
@@ -49,8 +46,10 @@ void setup() {
   boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26)));
   // clang-format on
 
-  BoardFinder                  finder(boardConfigs);
-  std::shared_ptr<BoardConfig> boardConfig = finder.getBoardConfig(userConfig->board);
+  ProjectConfigurationManagement confmg;
+  std::shared_ptr<Configuration> userConfig = confmg.readConfiguration();
+  BoardFinder                    finder(boardConfigs);
+  std::shared_ptr<BoardConfig>   boardConfig = finder.getBoardConfig(userConfig->board);
   if (boardConfig == 0) {
     boardConfig = finder.searchBoardConfig();
     if (boardConfig == 0) {
@@ -80,9 +79,7 @@ void setup() {
     powerManagement->deactivateGPS();
   }
 
-  load_config(boardConfig);
   LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
-
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new LoraTask()));
   if (boardConfig->Type == eETH_BOARD) {
@@ -100,6 +97,13 @@ void setup() {
   LoRaSystem->getTaskManager().setup(LoRaSystem);
 
   LoRaSystem->getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
+
+  if (userConfig->callsign == "NOCALL-10") {
+    logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+    LoRaSystem->getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+    while (true)
+      ;
+  }
 
   if (userConfig->display.overwritePin != 0) {
     pinMode(userConfig->display.overwritePin, INPUT);

@@ -22,3 +22,11 @@ TaskManager &System::getTaskManager() {
 Display &System::getDisplay() {
   return _display;
 }
+
+bool System::isWifiEthConnected() const {
+  return _isWifiEthConnected;
+}
+
+void System::connectedViaWifiEth(bool status) {
+  _isWifiEthConnected = status;
+}

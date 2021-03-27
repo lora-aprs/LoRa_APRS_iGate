@@ -17,6 +17,9 @@ bool NTPTask::setup(std::shared_ptr<System> system) {
 }
 
 bool NTPTask::loop(std::shared_ptr<System> system) {
+  if (!system->isWifiEthConnected()) {
+    return false;
+  }
   if (!_beginCalled) {
     _ntpClient->begin();
     _beginCalled = true;

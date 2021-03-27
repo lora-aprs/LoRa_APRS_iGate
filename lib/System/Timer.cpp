@@ -1,28 +1,28 @@
 #include "Timer.h"
 
-Timer::Timer() : _timeout_sec(0), _timeout(0) {
+Timer::Timer() : _timeout_ms(0), _nextTimeout(0) {
 }
 
-void Timer::setTimeout(const time_t timeout_sec) {
-  _timeout_sec = timeout_sec;
+void Timer::setTimeout(const uint32_t timeout_ms) {
+  _timeout_ms = timeout_ms;
 }
 
-time_t Timer::getTriggerTime() const {
-  return _timeout;
+time_t Timer::getTriggerTimeInSec() const {
+  return (_nextTimeout - millis()) / 1000;
 }
 
 bool Timer::isActive() const {
-  return _timeout != 0;
+  return _nextTimeout != 0;
 }
 
 void Timer::reset() {
-  _timeout = 0;
+  _nextTimeout = 0;
 }
 
 bool Timer::check() {
-  return now() > _timeout;
+  return millis() > _nextTimeout;
 }
 
 void Timer::start() {
-  _timeout = now() + _timeout_sec;
+  _nextTimeout = millis() + _timeout_ms;
 }

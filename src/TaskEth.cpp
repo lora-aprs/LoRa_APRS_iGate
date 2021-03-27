@@ -75,10 +75,12 @@ bool EthTask::setup(std::shared_ptr<System> system) {
 
 bool EthTask::loop(std::shared_ptr<System> system) {
   if (!eth_connected) {
+    system->connectedViaWifiEth(false);
     _stateInfo = "Ethernet not connected";
     _state     = Error;
     return false;
   }
+  system->connectedViaWifiEth(true);
   _stateInfo = ETH.localIP().toString();
   _state     = Okay;
   return true;
