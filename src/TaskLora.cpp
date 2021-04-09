@@ -47,7 +47,7 @@ bool LoraTask::loop(std::shared_ptr<System> system) {
 
     String path = msg->getPath();
     if (path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1) {
-      return;
+      return true;
     }
 
     if (!path.isEmpty()) {
