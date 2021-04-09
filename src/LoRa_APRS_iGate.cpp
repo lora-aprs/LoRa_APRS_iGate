@@ -83,9 +83,9 @@ void setup() {
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new LoraTask()));
   if (boardConfig->Type == eETH_BOARD) {
-    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new EthTask()));
+    LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
   } else {
-    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new WifiTask()));
+    LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new WifiTask()));
   }
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new OTATask()));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new NTPTask()));

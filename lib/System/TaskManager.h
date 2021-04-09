@@ -62,6 +62,7 @@ public:
   }
 
   void                             addTask(std::shared_ptr<Task> task);
+  void                             addAlwaysRunTask(std::shared_ptr<Task> task);
   std::shared_ptr<Task>            getTask(const char *name);
   std::list<std::shared_ptr<Task>> getTasks();
 
@@ -71,6 +72,7 @@ public:
 private:
   std::list<std::shared_ptr<Task>>           _tasks;
   std::list<std::shared_ptr<Task>>::iterator _nextTask;
+  std::list<std::shared_ptr<Task>>           _alwaysRunTasks;
 };
 
 class StatusFrame : public DisplayFrame {

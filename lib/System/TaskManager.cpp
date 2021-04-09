@@ -9,6 +9,10 @@ void TaskManager::addTask(std::shared_ptr<Task> task) {
   _tasks.push_back(task);
 }
 
+void TaskManager::addAlwaysRunTask(std::shared_ptr<Task> task) {
+  _alwaysRunTasks.push_back(task);
+}
+
 std::shared_ptr<Task> TaskManager::getTask(const char *name) {
   std::_List_iterator<std::shared_ptr<Task>> elem = std::find_if(_tasks.begin(), _tasks.end(), [&](std::shared_ptr<Task> task) {
     return task->getName() == name;
@@ -25,6 +29,11 @@ std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
 
 bool TaskManager::setup(std::shared_ptr<System> system) {
   logPrintlnV("will setup all tasks...");
+  for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
+    logPrintW("call setup from ");
+    logPrintlnW(elem->getName());
+    elem->setup(system);
+  }
   for (std::shared_ptr<Task> &elem : _tasks) {
     logPrintW("call setup from ");
     logPrintlnW(elem->getName());
@@ -36,6 +45,12 @@ bool TaskManager::setup(std::shared_ptr<System> system) {
 
 bool TaskManager::loop(std::shared_ptr<System> system) {
   // logPrintlnD("will loop all tasks...");
+  for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
+    // logPrintD("call loop from ");
+    // logPrintlnD(elem->getName());
+    elem->loop(system);
+  }
+
   if (_nextTask == _tasks.end()) {
     _nextTask = _tasks.begin();
   }
