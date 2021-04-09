@@ -50,6 +50,11 @@ bool LoraTask::loop(std::shared_ptr<System> system) {
       return;
     }
 
+    if (!path.isEmpty()) {
+      path += ",";
+    }
+    msg->setPath(path + "qAR," + system->getUserConfig()->callsign);
+
     std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(system->getTaskManager().getTask(TASK_APRS_IS));
     is_thread->inputQueue.addElement(msg);
     system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
