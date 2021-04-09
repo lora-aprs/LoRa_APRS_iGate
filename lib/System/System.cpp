@@ -1,7 +1,7 @@
 
 #include "System.h"
 
-System::System(std::shared_ptr<BoardConfig> boardConfig, std::shared_ptr<Configuration> userConfig) : _boardConfig(boardConfig), _userConfig(userConfig) {
+System::System(std::shared_ptr<BoardConfig> boardConfig, std::shared_ptr<Configuration> userConfig) : _boardConfig(boardConfig), _userConfig(userConfig), _isWifiEthConnected(false) {
 }
 
 System::~System() {

@@ -55,17 +55,8 @@ bool TaskManager::loop(std::shared_ptr<System> system) {
     _nextTask = _tasks.begin();
   }
   bool ret = (*_nextTask)->loop(system);
-  _nextTask++;
+  ++_nextTask;
   return ret;
-
-  for (std::shared_ptr<Task> &elem : _tasks) {
-    // logPrintD("call loop from ");
-    // logPrintlnD(elem->getName());
-    if (!elem->loop(system)) {
-      return false;
-    }
-  }
-  return true;
 }
 
 void StatusFrame::drawStatusPage(Bitmap &bitmap) {
