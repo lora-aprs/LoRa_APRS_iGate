@@ -97,21 +97,3 @@ void ProjectConfigurationManagement::writeProjectConfiguration(std::shared_ptr<C
 
   data["board"] = conf->board;
 }
-
-std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig) {
-  ProjectConfigurationManagement confmg;
-  std::shared_ptr<Configuration> config = confmg.readConfiguration();
-  if (config->callsign == "NOCALL-10") {
-    logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
-    // show_display("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
-    while (true) {
-    }
-  }
-
-  /*if(KEY_BUILTIN != 0 && Config->display.overwritePin == 0)
-  {
-          Config->display.overwritePin = KEY_BUILTIN;
-  }*/
-  logPrintlnI("Configuration loaded!");
-  return config;
-}

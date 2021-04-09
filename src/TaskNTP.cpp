@@ -11,12 +11,15 @@ NTPTask::NTPTask() : Task(TASK_NTP, TaskNtp), _beginCalled(false) {
 NTPTask::~NTPTask() {
 }
 
-bool NTPTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
-  _ntpClient = std::shared_ptr<NTPClient>(new NTPClient(config->ntpServer.c_str()));
+bool NTPTask::setup(std::shared_ptr<System> system) {
+  _ntpClient = std::shared_ptr<NTPClient>(new NTPClient(system->getUserConfig()->ntpServer.c_str()));
   return true;
 }
 
-bool NTPTask::loop(std::shared_ptr<Configuration> config) {
+bool NTPTask::loop(std::shared_ptr<System> system) {
+  if (!system->isWifiEthConnected()) {
+    return false;
+  }
   if (!_beginCalled) {
     _ntpClient->begin();
     _beginCalled = true;

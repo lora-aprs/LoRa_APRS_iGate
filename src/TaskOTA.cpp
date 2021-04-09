@@ -10,7 +10,7 @@ OTATask::OTATask() : Task(TASK_OTA, TaskOta), _beginCalled(false) {
 OTATask::~OTATask() {
 }
 
-bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
+bool OTATask::setup(std::shared_ptr<System> system) {
   _ota = std::shared_ptr<ArduinoOTAClass>(new ArduinoOTAClass());
   _ota->onStart([&]() {
         String type;
@@ -44,12 +44,12 @@ bool OTATask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Board
         else if (error == OTA_END_ERROR)
           logPrintlnE("End Failed");
       });
-  _ota->setHostname(config->callsign.c_str());
+  _ota->setHostname(system->getUserConfig()->callsign.c_str());
   _stateInfo = "";
   return true;
 }
 
-bool OTATask::loop(std::shared_ptr<Configuration> config) {
+bool OTATask::loop(std::shared_ptr<System> system) {
   if (!_beginCalled) {
     _ota->begin();
     _beginCalled = true;

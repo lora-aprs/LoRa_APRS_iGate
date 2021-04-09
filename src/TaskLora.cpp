@@ -12,8 +12,8 @@ LoraTask::LoraTask() : Task(TASK_LORA, TaskLora) {
 LoraTask::~LoraTask() {
 }
 
-bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
-  _lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(boardConfig));
+bool LoraTask::setup(std::shared_ptr<System> system) {
+  _lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(system->getBoardConfig()));
   if (!_lora_aprs->begin(_lora_aprs->getRxFrequency())) {
     logPrintlnE("Starting LoRa failed!");
     _stateInfo = "LoRa-Modem failed";
@@ -21,19 +21,19 @@ bool LoraTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<Boar
     while (true)
       ;
   }
-  _lora_aprs->setRxFrequency(config->lora.frequencyRx);
-  _lora_aprs->setTxFrequency(config->lora.frequencyTx);
-  _lora_aprs->setTxPower(config->lora.power);
-  _lora_aprs->setSpreadingFactor(config->lora.spreadingFactor);
-  _lora_aprs->setSignalBandwidth(config->lora.signalBandwidth);
-  _lora_aprs->setCodingRate4(config->lora.codingRate4);
+  _lora_aprs->setRxFrequency(system->getUserConfig()->lora.frequencyRx);
+  _lora_aprs->setTxFrequency(system->getUserConfig()->lora.frequencyTx);
+  _lora_aprs->setTxPower(system->getUserConfig()->lora.power);
+  _lora_aprs->setSpreadingFactor(system->getUserConfig()->lora.spreadingFactor);
+  _lora_aprs->setSignalBandwidth(system->getUserConfig()->lora.signalBandwidth);
+  _lora_aprs->setCodingRate4(system->getUserConfig()->lora.codingRate4);
   _lora_aprs->enableCrc();
 
   _stateInfo = "";
   return true;
 }
 
-bool LoraTask::loop(std::shared_ptr<Configuration> config) {
+bool LoraTask::loop(std::shared_ptr<System> system) {
   if (_lora_aprs->checkMessage()) {
     std::shared_ptr<APRSMessage> msg = _lora_aprs->getMessage();
     // msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
@@ -44,9 +44,20 @@ bool LoraTask::loop(std::shared_ptr<Configuration> config) {
     logPrintD(String(_lora_aprs->packetRssi()));
     logPrintD(" and SNR ");
     logPrintlnD(String(_lora_aprs->packetSnr()));
-    std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(TaskManager::instance().getTask(TASK_APRS_IS));
+
+    String path = msg->getPath();
+    if (path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1) {
+      return true;
+    }
+
+    if (!path.isEmpty()) {
+      path += ",";
+    }
+    msg->setPath(path + "qAR," + system->getUserConfig()->callsign);
+
+    std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(system->getTaskManager().getTask(TASK_APRS_IS));
     is_thread->inputQueue.addElement(msg);
-    Display::instance().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
+    system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
   }
 
   if (!inputQueue.empty()) {

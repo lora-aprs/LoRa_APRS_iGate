@@ -10,22 +10,22 @@ DisplayTask::DisplayTask() : Task("DisplayTask", 0) {
 DisplayTask::~DisplayTask() {
 }
 
-bool DisplayTask::setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) {
-  Display::instance().setup(boardConfig);
-  if (config->display.turn180) {
-    Display::instance().turn180();
+bool DisplayTask::setup(std::shared_ptr<System> system) {
+  system->getDisplay().setup(system->getBoardConfig());
+  if (system->getUserConfig()->display.turn180) {
+    system->getDisplay().turn180();
   }
-  std::shared_ptr<StatusFrame> statusFrame = std::shared_ptr<StatusFrame>(new StatusFrame(TaskManager::instance().getTasks()));
-  Display::instance().setStatusFrame(statusFrame);
-  if (!config->display.alwaysOn) {
-    Display::instance().activateDisplaySaveMode();
-    Display::instance().setDisplayTimeout(config->display.timeout);
+  std::shared_ptr<StatusFrame> statusFrame = std::shared_ptr<StatusFrame>(new StatusFrame(system->getTaskManager().getTasks()));
+  system->getDisplay().setStatusFrame(statusFrame);
+  if (!system->getUserConfig()->display.alwaysOn) {
+    system->getDisplay().activateDisplaySaveMode();
+    system->getDisplay().setDisplaySaveTimeout(system->getUserConfig()->display.timeout);
   }
-  _stateInfo = config->callsign;
+  _stateInfo = system->getUserConfig()->callsign;
   return true;
 }
 
-bool DisplayTask::loop(std::shared_ptr<Configuration> config) {
-  Display::instance().update();
+bool DisplayTask::loop(std::shared_ptr<System> system) {
+  system->getDisplay().update();
   return true;
 }

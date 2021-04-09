@@ -9,8 +9,8 @@ public:
   DisplayTask();
   virtual ~DisplayTask();
 
-  virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) override;
-  virtual bool loop(std::shared_ptr<Configuration> config) override;
+  virtual bool setup(std::shared_ptr<System> system) override;
+  virtual bool loop(std::shared_ptr<System> system) override;
 };
 
 #endif

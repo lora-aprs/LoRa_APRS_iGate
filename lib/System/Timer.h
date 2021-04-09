@@ -7,8 +7,8 @@ class Timer {
 public:
   Timer();
 
-  void   setTimeout(const time_t timeout_sec);
-  time_t getTriggerTime() const;
+  void   setTimeout(const uint32_t timeout_ms);
+  time_t getTriggerTimeInSec() const;
 
   bool isActive() const;
 
@@ -18,8 +18,8 @@ public:
   void start();
 
 private:
-  time_t _timeout_sec;
-  time_t _timeout;
+  uint32_t _timeout_ms;
+  uint32_t _nextTimeout;
 };
 
 #endif

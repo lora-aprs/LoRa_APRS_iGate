@@ -2,13 +2,16 @@
 #define TASK_MANAGER_H_
 
 #include <Arduino.h>
-#include <BoardFinder.h>
-#include <Display.h>
-#include <configuration.h>
 #include <list>
 #include <memory>
 
+#include <BoardFinder.h>
+#include <Display.h>
+#include <configuration.h>
+
 #include "TaskQueue.h"
+
+class System;
 
 enum TaskDisplayState
 {
@@ -40,8 +43,8 @@ public:
     return _stateInfo;
   }
 
-  virtual bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig) = 0;
-  virtual bool loop(std::shared_ptr<Configuration> config)                                            = 0;
+  virtual bool setup(std::shared_ptr<System> system) = 0;
+  virtual bool loop(std::shared_ptr<System> system)  = 0;
 
 protected:
   TaskDisplayState _state;
@@ -54,27 +57,22 @@ private:
 
 class TaskManager {
 public:
-  static TaskManager &instance() {
-    static TaskManager _instance;
-    return _instance;
-  }
-
+  TaskManager();
   ~TaskManager() {
   }
 
   void                             addTask(std::shared_ptr<Task> task);
+  void                             addAlwaysRunTask(std::shared_ptr<Task> task);
   std::shared_ptr<Task>            getTask(const char *name);
   std::list<std::shared_ptr<Task>> getTasks();
 
-  bool setup(std::shared_ptr<Configuration> config, std::shared_ptr<BoardConfig> boardConfig);
-  bool loop(std::shared_ptr<Configuration> config);
+  bool setup(std::shared_ptr<System> system);
+  bool loop(std::shared_ptr<System> system);
 
 private:
-  std::list<std::shared_ptr<Task>> _tasks;
-
-  TaskManager();
-  TaskManager(const TaskManager &);
-  TaskManager &operator=(const TaskManager &);
+  std::list<std::shared_ptr<Task>>           _tasks;
+  std::list<std::shared_ptr<Task>>::iterator _nextTask;
+  std::list<std::shared_ptr<Task>>           _alwaysRunTasks;
 };
 
 class StatusFrame : public DisplayFrame {
@@ -85,10 +83,10 @@ public:
   }
   void drawStatusPage(Bitmap &bitmap) override;
 
-  bool isPrio() const;
-
 private:
   std::list<std::shared_ptr<Task>> _tasks;
 };
+
+#include "System.h"
 
 #endif
