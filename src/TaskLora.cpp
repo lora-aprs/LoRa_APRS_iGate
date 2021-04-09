@@ -44,6 +44,12 @@ bool LoraTask::loop(std::shared_ptr<System> system) {
     logPrintD(String(_lora_aprs->packetRssi()));
     logPrintD(" and SNR ");
     logPrintlnD(String(_lora_aprs->packetSnr()));
+
+    String path = msg->getPath();
+    if (path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1) {
+      return;
+    }
+
     std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(system->getTaskManager().getTask(TASK_APRS_IS));
     is_thread->inputQueue.addElement(msg);
     system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
