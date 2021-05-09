@@ -12,7 +12,7 @@
 #include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
-#include "TaskLora.h"
+#include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
 #include "TaskWifi.h"
@@ -81,7 +81,7 @@ void setup() {
 
   LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new LoraTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask()));
   if (boardConfig->Type == eETH_BOARD) {
     LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
   } else {

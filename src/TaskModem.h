@@ -5,10 +5,10 @@
 #include <LoRa_APRS.h>
 #include <TaskManager.h>
 
-class LoraTask : public Task {
+class ModemTask : public Task {
 public:
-  LoraTask();
-  virtual ~LoraTask();
+  ModemTask();
+  virtual ~ModemTask();
 
   virtual bool setup(std::shared_ptr<System> system) override;
   virtual bool loop(std::shared_ptr<System> system) override;

@@ -3,16 +3,16 @@
 
 #include "Task.h"
 #include "TaskAprsIs.h"
-#include "TaskLora.h"
+#include "TaskModem.h"
 #include "project_configuration.h"
 
-LoraTask::LoraTask() : Task(TASK_LORA, TaskLora) {
+ModemTask::ModemTask() : Task(TASK_LORA, TaskLora) {
 }
 
-LoraTask::~LoraTask() {
+ModemTask::~ModemTask() {
 }
 
-bool LoraTask::setup(std::shared_ptr<System> system) {
+bool ModemTask::setup(std::shared_ptr<System> system) {
   _lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(system->getBoardConfig()));
   if (!_lora_aprs->begin(_lora_aprs->getRxFrequency())) {
     logPrintlnE("Starting LoRa failed!");
@@ -33,7 +33,7 @@ bool LoraTask::setup(std::shared_ptr<System> system) {
   return true;
 }
 
-bool LoraTask::loop(std::shared_ptr<System> system) {
+bool ModemTask::loop(std::shared_ptr<System> system) {
   if (_lora_aprs->checkMessage()) {
     std::shared_ptr<APRSMessage> msg = _lora_aprs->getMessage();
     // msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
