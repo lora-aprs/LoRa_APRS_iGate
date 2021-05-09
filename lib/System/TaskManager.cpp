@@ -30,13 +30,13 @@ std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
 bool TaskManager::setup(std::shared_ptr<System> system) {
   logPrintlnV("will setup all tasks...");
   for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
-    logPrintW("call setup from ");
-    logPrintlnW(elem->getName());
+    logPrintD("call setup from ");
+    logPrintlnD(elem->getName());
     elem->setup(system);
   }
   for (std::shared_ptr<Task> &elem : _tasks) {
-    logPrintW("call setup from ");
-    logPrintlnW(elem->getName());
+    logPrintD("call setup from ");
+    logPrintlnD(elem->getName());
     elem->setup(system);
   }
   _nextTask = _tasks.begin();

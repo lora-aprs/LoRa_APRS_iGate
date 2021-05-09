@@ -29,7 +29,7 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
     }
   }
 
-  logPrintlnW("could not find OLED, will search for the modem now...");
+  logPrintlnI("could not find OLED, will search for the modem now...");
 
   for (std::shared_ptr<BoardConfig> boardconf : _boardConfigs) {
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf) == boardconf->powerCheckStatus) {
@@ -45,7 +45,7 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
     }
   }
 
-  logPrintlnW("could not find a board config!");
+  logPrintlnE("could not find a board config!");
 
   return 0;
 }

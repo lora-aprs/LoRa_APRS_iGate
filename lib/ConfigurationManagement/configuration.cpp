@@ -4,7 +4,7 @@
 
 ConfigurationManagement::ConfigurationManagement(String FilePath) : mFilePath(FilePath) {
   if (!SPIFFS.begin(true)) {
-    logPrintlnE("Mounting SPIFFS was not possible. Trying to format SPIFFS...");
+    logPrintlnI("Mounting SPIFFS was not possible. Trying to format SPIFFS...");
     SPIFFS.format();
     if (!SPIFFS.begin()) {
       logPrintlnE("Formating SPIFFS was not okay!");

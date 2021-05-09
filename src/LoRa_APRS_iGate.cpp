@@ -30,8 +30,8 @@ void setup() {
   Serial.begin(115200);
   Logger::instance().setSerial(&Serial);
   delay(500);
-  logPrintlnW("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
-  logPrintlnW("Version: " VERSION);
+  logPrintlnI("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
+  logPrintlnI("Version: " VERSION);
 
   std::list<std::shared_ptr<BoardConfig>> boardConfigs;
   // clang-format off
