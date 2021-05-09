@@ -24,7 +24,6 @@ String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
 std::shared_ptr<System> LoRaSystem;
-HardwareSerial          Serial(0);
 
 // cppcheck-suppress unusedFunction
 void setup() {

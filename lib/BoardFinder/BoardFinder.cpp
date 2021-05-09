@@ -16,9 +16,8 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
   for (std::shared_ptr<BoardConfig> boardconf : _boardConfigs) {
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
-      TwoWire         wire(0);
-      wire.begin(boardconf->OledSda, boardconf->OledScl);
-      powerManagement.begin(wire);
+      Wire.begin(boardconf->OledSda, boardconf->OledScl);
+      powerManagement.begin(Wire);
       powerManagement.activateOLED();
     } else if (boardconf->needCheckPowerChip) {
       continue;
@@ -35,9 +34,8 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
   for (std::shared_ptr<BoardConfig> boardconf : _boardConfigs) {
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
-      TwoWire         wire(0);
-      wire.begin(boardconf->OledSda, boardconf->OledScl);
-      powerManagement.begin(wire);
+      Wire.begin(boardconf->OledSda, boardconf->OledScl);
+      powerManagement.begin(Wire);
       powerManagement.activateLoRa();
     }
     if (checkModemConfig(boardconf)) {
@@ -71,13 +69,12 @@ bool BoardFinder::checkOledConfig(std::shared_ptr<BoardConfig> boardConfig) {
     delay(10);
     digitalWrite(boardConfig->OledReset, HIGH);
   }
-  TwoWire wire(0);
-  if (!wire.begin(boardConfig->OledSda, boardConfig->OledScl)) {
+  if (!Wire.begin(boardConfig->OledSda, boardConfig->OledScl)) {
     logPrintlnW("issue with wire");
     return false;
   }
-  wire.beginTransmission(boardConfig->OledAddr);
-  if (!wire.endTransmission()) {
+  Wire.beginTransmission(boardConfig->OledAddr);
+  if (!Wire.endTransmission()) {
     return true;
   }
   return false;
@@ -93,15 +90,14 @@ bool BoardFinder::checkModemConfig(std::shared_ptr<BoardConfig> boardConfig) {
   pinMode(boardConfig->LoraCS, OUTPUT);
   digitalWrite(boardConfig->LoraCS, HIGH);
 
-  SPIClass spi;
-  spi.begin(boardConfig->LoraSck, boardConfig->LoraMiso, boardConfig->LoraMosi, boardConfig->LoraCS);
+  SPI.begin(boardConfig->LoraSck, boardConfig->LoraMiso, boardConfig->LoraMosi, boardConfig->LoraCS);
 
   digitalWrite(boardConfig->LoraCS, LOW);
 
-  spi.beginTransaction(SPISettings(8E6, MSBFIRST, SPI_MODE0));
-  spi.transfer(0x42);
-  uint8_t response = spi.transfer(0x00);
-  spi.endTransaction();
+  SPI.beginTransaction(SPISettings(8E6, MSBFIRST, SPI_MODE0));
+  SPI.transfer(0x42);
+  uint8_t response = SPI.transfer(0x00);
+  SPI.endTransaction();
 
   digitalWrite(boardConfig->LoraCS, HIGH);
 
@@ -112,18 +108,17 @@ bool BoardFinder::checkModemConfig(std::shared_ptr<BoardConfig> boardConfig) {
 }
 
 bool BoardFinder::checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig) {
-  TwoWire wire(0);
-  if (!wire.begin(boardConfig->OledSda, boardConfig->OledScl)) {
+  if (!Wire.begin(boardConfig->OledSda, boardConfig->OledScl)) {
     logPrintlnW("issue with wire");
     return false;
   }
-  wire.beginTransmission(0x34);
-  wire.write(0x03);
-  wire.endTransmission();
+  Wire.beginTransmission(0x34);
+  Wire.write(0x03);
+  Wire.endTransmission();
 
-  wire.requestFrom(0x34, 1);
-  int response = wire.read();
-  wire.endTransmission();
+  Wire.requestFrom(0x34, 1);
+  int response = Wire.read();
+  Wire.endTransmission();
 
   logPrintlnD(String(response));
   if (response == 0x03) {
