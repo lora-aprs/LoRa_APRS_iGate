@@ -26,6 +26,9 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.aprs_is.server = data["aprs_is"]["server"].as<String>();
   conf.aprs_is.port = data["aprs_is"]["port"] | 14580;
 
+  conf.digi.active          = data["digi"]["active"] | false;
+  conf.digi.forwardTimeout  = data["digi"]["forward_timeout"] | 5;
+  conf.digi.beacon          = data["digi"]["beacon"] | true;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
@@ -73,6 +76,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["aprs_is"]["passcode"]             = conf.aprs_is.passcode;
   data["aprs_is"]["server"]               = conf.aprs_is.server;
   data["aprs_is"]["port"]                 = conf.aprs_is.port;
+  data["digi"]["active"]                  = conf.digi.active;
+  data["digi"]["forward_timeout"]         = conf.digi.forwardTimeout;
+  data["digi"]["beacon"]                  = conf.digi.beacon;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
   data["lora"]["power"]                   = conf.lora.power;

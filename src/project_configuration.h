@@ -41,6 +41,16 @@ public:
     int    port;
   };
 
+  class Digi {
+  public:
+    Digi() : active(false), forwardTimeout(5), beacon(true) {
+    }
+
+    bool active;
+    int forwardTimeout;
+    bool beacon;
+  };
+
   class LoRa {
   public:
     LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {
@@ -86,6 +96,7 @@ public:
   Wifi    wifi;
   Beacon  beacon;
   APRS_IS aprs_is;
+  Digi    digi;
   LoRa    lora;
   Display display;
   Ftp     ftp;

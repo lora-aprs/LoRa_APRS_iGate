@@ -21,6 +21,11 @@
 		"server": "euro.aprs2.net",
 		"port": 14580
 	},
+	"digi": {
+		"active": false,
+		"forward_timeout": 5,
+		"beacon": true,
+	},
 	"lora": {
 		"frequency_rx": 433775000,
 		"frequency_tx": 433775000,
