@@ -6,7 +6,7 @@
 #include "TaskModem.h"
 #include "project_configuration.h"
 
-ModemTask::ModemTask() : Task(TASK_LORA, TaskLora) {
+ModemTask::ModemTask() : Task(TASK_MODEM, TaskModem) {
 }
 
 ModemTask::~ModemTask() {
