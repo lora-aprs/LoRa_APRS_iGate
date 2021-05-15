@@ -1,0 +1,287 @@
+lib/BoardFinder/BoardFinder.h:57:8: performance:inconclusive: Technically the member function 'BoardFinder::checkOledConfig' can be static (but you may consider moving to unnamed namespace). [functionStatic]
+  bool checkOledConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/BoardFinder/BoardFinder.cpp:63:19: note: Technically the member function 'BoardFinder::checkOledConfig' can be static (but you may consider moving to unnamed namespace).
+bool BoardFinder::checkOledConfig(std::shared_ptr<BoardConfig> boardConfig) {
+                  ^
+lib/BoardFinder/BoardFinder.h:57:8: note: Technically the member function 'BoardFinder::checkOledConfig' can be static (but you may consider moving to unnamed namespace).
+  bool checkOledConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/BoardFinder/BoardFinder.h:58:8: performance:inconclusive: Technically the member function 'BoardFinder::checkModemConfig' can be static (but you may consider moving to unnamed namespace). [functionStatic]
+  bool checkModemConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/BoardFinder/BoardFinder.cpp:83:19: note: Technically the member function 'BoardFinder::checkModemConfig' can be static (but you may consider moving to unnamed namespace).
+bool BoardFinder::checkModemConfig(std::shared_ptr<BoardConfig> boardConfig) {
+                  ^
+lib/BoardFinder/BoardFinder.h:58:8: note: Technically the member function 'BoardFinder::checkModemConfig' can be static (but you may consider moving to unnamed namespace).
+  bool checkModemConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/BoardFinder/BoardFinder.h:59:8: performance:inconclusive: Technically the member function 'BoardFinder::checkPowerConfig' can be static (but you may consider moving to unnamed namespace). [functionStatic]
+  bool checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/BoardFinder/BoardFinder.cpp:110:19: note: Technically the member function 'BoardFinder::checkPowerConfig' can be static (but you may consider moving to unnamed namespace).
+bool BoardFinder::checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig) {
+                  ^
+lib/BoardFinder/BoardFinder.h:59:8: note: Technically the member function 'BoardFinder::checkPowerConfig' can be static (but you may consider moving to unnamed namespace).
+  bool checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig);
+       ^
+lib/Display/OLEDDisplay.h:119:8: performance:inconclusive: Technically the member function 'OLEDDisplay::clear' can be static (but you may consider moving to unnamed namespace). [functionStatic]
+  void clear();
+       ^
+lib/Display/OLEDDisplay.cpp:127:19: note: Technically the member function 'OLEDDisplay::clear' can be static (but you may consider moving to unnamed namespace).
+void OLEDDisplay::clear() {
+                  ^
+lib/Display/OLEDDisplay.h:119:8: note: Technically the member function 'OLEDDisplay::clear' can be static (but you may consider moving to unnamed namespace).
+  void clear();
+       ^
+lib/Display/OLEDDisplay.h:122:8: style:inconclusive: Technically the member function 'OLEDDisplay::getWidth' can be const. [functionConst]
+  uint getWidth();
+       ^
+lib/Display/OLEDDisplay.cpp:131:19: note: Technically the member function 'OLEDDisplay::getWidth' can be const.
+uint OLEDDisplay::getWidth() {
+                  ^
+lib/Display/OLEDDisplay.h:122:8: note: Technically the member function 'OLEDDisplay::getWidth' can be const.
+  uint getWidth();
+       ^
+lib/Display/OLEDDisplay.h:123:8: style:inconclusive: Technically the member function 'OLEDDisplay::getHeight' can be const. [functionConst]
+  uint getHeight();
+       ^
+lib/Display/OLEDDisplay.cpp:144:19: note: Technically the member function 'OLEDDisplay::getHeight' can be const.
+uint OLEDDisplay::getHeight() {
+                  ^
+lib/Display/OLEDDisplay.h:123:8: note: Technically the member function 'OLEDDisplay::getHeight' can be const.
+  uint getHeight();
+       ^
+lib/System/TaskManager.h:67:36: style:inconclusive: Technically the member function 'TaskManager::getTasks' can be const. [functionConst]
+  std::list<std::shared_ptr<Task>> getTasks();
+                                   ^
+lib/System/TaskManager.cpp:26:47: note: Technically the member function 'TaskManager::getTasks' can be const.
+std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
+                                              ^
+lib/System/TaskManager.h:67:36: note: Technically the member function 'TaskManager::getTasks' can be const.
+  std::list<std::shared_ptr<Task>> getTasks();
+                                   ^
+lib/System/Timer.h:17:8: style:inconclusive: Technically the member function 'Timer::check' can be const. [functionConst]
+  bool check();
+       ^
+lib/System/Timer.cpp:22:13: note: Technically the member function 'Timer::check' can be const.
+bool Timer::check() {
+            ^
+lib/System/Timer.h:17:8: note: Technically the member function 'Timer::check' can be const.
+  bool check();
+       ^
+lib/TimeLib/TimeLib.cpp:159:23: style:inconclusive: Function 'breakTime' argument 1 names different: declaration 'time' definition 'timeInput'. [funcArgNamesDifferent]
+void breakTime(time_t timeInput, tmElements_t &tm){
+                      ^
+lib/TimeLib/TimeLib.h:123:23: note: Function 'breakTime' argument 1 names different: declaration 'time' definition 'timeInput'.
+void breakTime(time_t time, tmElements_t &tm);  // break time_t into elements
+                      ^
+lib/TimeLib/TimeLib.cpp:159:23: note: Function 'breakTime' argument 1 names different: declaration 'time' definition 'timeInput'.
+void breakTime(time_t timeInput, tmElements_t &tm){
+                      ^
+lib/TimeLib/TimeLib.cpp:294:41: style:inconclusive: Function 'setTime' argument 4 names different: declaration 'day' definition 'dy'. [funcArgNamesDifferent]
+void setTime(int hr,int min,int sec,int dy, int mnth, int yr){
+                                        ^
+lib/TimeLib/TimeLib.h:107:44: note: Function 'setTime' argument 4 names different: declaration 'day' definition 'dy'.
+void    setTime(int hr,int min,int sec,int day, int month, int yr);
+                                           ^
+lib/TimeLib/TimeLib.cpp:294:41: note: Function 'setTime' argument 4 names different: declaration 'day' definition 'dy'.
+void setTime(int hr,int min,int sec,int dy, int mnth, int yr){
+                                        ^
+lib/TimeLib/TimeLib.cpp:294:49: style:inconclusive: Function 'setTime' argument 5 names different: declaration 'month' definition 'mnth'. [funcArgNamesDifferent]
+void setTime(int hr,int min,int sec,int dy, int mnth, int yr){
+                                                ^
+lib/TimeLib/TimeLib.h:107:53: note: Function 'setTime' argument 5 names different: declaration 'month' definition 'mnth'.
+void    setTime(int hr,int min,int sec,int day, int month, int yr);
+                                                    ^
+lib/TimeLib/TimeLib.cpp:294:49: note: Function 'setTime' argument 5 names different: declaration 'month' definition 'mnth'.
+void setTime(int hr,int min,int sec,int dy, int mnth, int yr){
+                                                ^
+lib/TimeLib/TimeLib.cpp:164:10: style: Local variable 'year' shadows outer function [shadowFunction]
+ uint8_t year;
+         ^
+lib/TimeLib/TimeLib.h:99:9: note: Shadowed declaration
+int     year();            // the full four digit year: (2009, 2010 etc)
+        ^
+lib/TimeLib/TimeLib.cpp:164:10: note: Shadow variable
+ uint8_t year;
+         ^
+lib/TimeLib/TimeLib.cpp:165:10: style: Local variable 'month' shadows outer function [shadowFunction]
+ uint8_t month, monthLength;
+         ^
+lib/TimeLib/TimeLib.h:97:9: note: Shadowed declaration
+int     month();           // the month now  (Jan is month 1)
+        ^
+lib/TimeLib/TimeLib.cpp:165:10: note: Shadow variable
+ uint8_t month, monthLength;
+         ^
+lib/TimeLib/TimeLib.cpp:188:6: style: Variable 'days' is assigned a value that is never used. [unreadVariable]
+ days=0;
+     ^
+lib/TimeLib/TimeLib.cpp:190:13: style: Variable 'monthLength' is assigned a value that is never used. [unreadVariable]
+ monthLength=0;
+            ^
+src/LoRa_APRS_iGate.cpp:59:25: warning: Either the condition 'boardConfig==0' is redundant or there is possible null pointer dereference: boardConfig. [nullPointerRedundantCheck]
+    userConfig->board = boardConfig->Name;
+                        ^
+src/LoRa_APRS_iGate.cpp:54:21: note: Assuming that condition 'boardConfig==0' is not redundant
+    if (boardConfig == 0) {
+                    ^
+src/LoRa_APRS_iGate.cpp:59:25: note: Null pointer dereference
+    userConfig->board = boardConfig->Name;
+                        ^
+src/LoRa_APRS_iGate.cpp:65:13: warning: Either the condition 'boardConfig==0' is redundant or there is possible null pointer dereference: boardConfig. [nullPointerRedundantCheck]
+  logPrintI(boardConfig->Name);
+            ^
+src/LoRa_APRS_iGate.cpp:54:21: note: Assuming that condition 'boardConfig==0' is not redundant
+    if (boardConfig == 0) {
+                    ^
+src/LoRa_APRS_iGate.cpp:65:13: note: Null pointer dereference
+  logPrintI(boardConfig->Name);
+            ^
+src/project_configuration.cpp:36:61: style:inconclusive: Boolean expression 'true' is used in bitwise operation. Did you mean '||'? [bitwiseOnBoolean]
+  conf->display.alwaysOn     = data["display"]["always_on"] | true;
+                                                            ^
+src/project_configuration.cpp:39:59: style:inconclusive: Boolean expression 'true' is used in bitwise operation. Did you mean '||'? [bitwiseOnBoolean]
+  conf->display.turn180      = data["display"]["turn180"] | true;
+                                                          ^
+src/project_configuration.cpp:41:44: style:inconclusive: Boolean expression 'false' is used in bitwise operation. Did you mean '||'? [bitwiseOnBoolean]
+  conf->ftp.active = data["ftp"]["active"] | false;
+                                           ^
+lib/PowerManagement/power_management.cpp:28:0: style: The function 'activateGPS' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLib.cpp:310:0: style: The function 'adjustTime' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLibString.cpp:53:0: style: The function 'dayShortStr' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLibString.cpp:42:0: style: The function 'dayStr' is never used. [unusedFunction]
+
+^
+lib/PowerManagement/power_management.cpp:23:0: style: The function 'deactivateLoRa' is never used. [unusedFunction]
+
+^
+lib/PowerManagement/power_management.cpp:43:0: style: The function 'decativateOLED' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:558:0: style: The function 'disableInvertIQ' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:123:0: style: The function 'drawCircle' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:61:0: style: The function 'drawLine' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:218:0: style: The function 'drawProgressBar' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:108:0: style: The function 'drawRect' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:313:0: style: The function 'drawStringLFf' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:290:0: style: The function 'drawStringf' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:625:0: style: The function 'dumpRegisters' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:552:0: style: The function 'enableInvertIQ' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:127:0: style: The function 'getDay' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:130:0: style: The function 'getHours' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:133:0: style: The function 'getMinutes' is never used. [unusedFunction]
+
+^
+lib/Display/Bitmap.cpp:48:0: style: The function 'getPixel' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:136:0: style: The function 'getSeconds' is never used. [unusedFunction]
+
+^
+lib/LoRa_APRS/LoRa_APRS.cpp:65:0: style: The function 'getTxFrequency' is never used. [unusedFunction]
+
+^
+lib/Display/OLEDDisplay.cpp:63:0: style: The function 'invertDisplay' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLib.cpp:68:0: style: The function 'isAM' is never used. [unusedFunction]
+
+^
+lib/Display/OLEDDisplay.cpp:114:0: style: The function 'mirrorScreen' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLibString.cpp:31:0: style: The function 'monthShortStr' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLibString.cpp:20:0: style: The function 'monthStr' is never used. [unusedFunction]
+
+^
+lib/Display/OLEDDisplay.cpp:68:0: style: The function 'normalDisplay' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:269:0: style: The function 'packetFrequencyError' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:334:0: style: The function 'peek' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:356:0: style: The function 'receive' is never used. [unusedFunction]
+
+^
+lib/Display/OLEDDisplay.cpp:102:0: style: The function 'resetOrientation' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:288:0: style: The function 'rssi' is never used. [unusedFunction]
+
+^
+lib/Display/OLEDDisplay.cpp:86:0: style: The function 'setBrightness' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:577:0: style: The function 'setGain' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:168:0: style: The function 'setPoolServerName' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:531:0: style: The function 'setPreambleLength' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:199:0: style: The function 'setRandomPort' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:615:0: style: The function 'setSPI' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:620:0: style: The function 'setSPIFrequency' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLib.cpp:326:0: style: The function 'setSyncInterval' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLib.cpp:320:0: style: The function 'setSyncProvider' is never used. [unusedFunction]
+
+^
+lib/LoRa/LoRa.cpp:537:0: style: The function 'setSyncWord' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:160:0: style: The function 'setTimeOffset' is never used. [unusedFunction]
+
+^
+lib/NTPClient/NTPClient.cpp:164:0: style: The function 'setUpdateInterval' is never used. [unusedFunction]
+
+^
+lib/TimeLib/TimeLib.cpp:315:0: style: The function 'timeStatus' is never used. [unusedFunction]
+
+^
+nofile:0:0: information: Cppcheck cannot find all the include files (use --check-config for details) [missingIncludeSystem]
+
