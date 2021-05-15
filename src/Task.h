@@ -10,6 +10,7 @@ enum TaskNames
   TaskNtp,
   TaskOta,
   TaskWifi,
+  TaskRouter,
   TaskSize,
 };
 
@@ -22,5 +23,6 @@ enum TaskNames
 #define TASK_NTP     "NTPTask"
 #define TASK_OTA     "OTATask"
 #define TASK_WIFI    "WifiTask"
+#define TASK_ROUTER  "RouterTask"
 
 #endif
