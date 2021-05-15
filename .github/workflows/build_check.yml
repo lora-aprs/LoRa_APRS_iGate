@@ -79,20 +79,20 @@ jobs:
           clang-format-version: '11'
           check-path: ${{ matrix.path }}
 
-  cppcheck:
-    name: Run Cppcheck
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Run Cppcheck
-        uses: Bedzior/cppcheck-action
-        with:
-          enabled checks: all
-          enable inconclusive: true
-          generate report: true
-      - name: Upload report
-        uses: actions/upload-artifact@v1
-        with:
-          name: report
-          path: output
+#  cppcheck:
+#    name: Run Cppcheck
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v2
+#      - name: Run Cppcheck
+#        uses: Bedzior/cppcheck-action
+#        with:
+#          enabled checks: all
+#          enable inconclusive: true
+#          generate report: true
+#      - name: Upload report
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: report
+#          path: output
 
