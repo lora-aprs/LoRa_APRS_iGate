@@ -7,8 +7,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> * const fromModem, TaskQueue<std::shared_ptr<APRSMessage>> * const toAprsIs)
-: Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> *const fromModem, TaskQueue<std::shared_ptr<APRSMessage>> *const toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
 }
 
 RouterTask::~RouterTask() {
@@ -29,8 +28,7 @@ bool RouterTask::setup(std::shared_ptr<System> system) {
 
 bool RouterTask::loop(std::shared_ptr<System> system) {
   // do routing
-  if(!_fromModem->empty())
-  {
+  if (!_fromModem->empty()) {
     _toAprsIs->addElement(_fromModem->getElement());
   }
 

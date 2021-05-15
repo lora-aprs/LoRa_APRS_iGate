@@ -5,7 +5,7 @@
 #include "TaskAprsIs.h"
 #include "project_configuration.h"
 
-AprsIsTask::AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> * const toAprsIs) : Task(TASK_APRS_IS, TaskAprsIs), _toAprsIs(toAprsIs) {
+AprsIsTask::AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> *const toAprsIs) : Task(TASK_APRS_IS, TaskAprsIs), _toAprsIs(toAprsIs) {
 }
 
 AprsIsTask::~AprsIsTask() {

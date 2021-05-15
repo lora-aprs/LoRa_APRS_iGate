@@ -15,8 +15,8 @@
 #include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
-#include "TaskWifi.h"
 #include "TaskRouter.h"
+#include "TaskWifi.h"
 #include "project_configuration.h"
 
 #define VERSION "21.14.0-dev"
