@@ -7,7 +7,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> & fromModem, TaskQueue<std::shared_ptr<APRSMessage>> & toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
 }
 
 RouterTask::~RouterTask() {
