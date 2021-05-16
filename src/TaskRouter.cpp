@@ -29,7 +29,7 @@ bool RouterTask::setup(std::shared_ptr<System> system) {
 bool RouterTask::loop(std::shared_ptr<System> system) {
   // do routing
   if (!_fromModem.empty()) {
-    _toAprsIs.addElement(_fromModem->getElement());
+    _toAprsIs.addElement(_fromModem.getElement());
   }
 
   // check for beacon
