@@ -7,7 +7,8 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> *const fromModem, TaskQueue<std::shared_ptr<APRSMessage>> *const toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> & fromModem, TaskQueue<std::shared_ptr<APRSMessage>> *
+& toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
 }
 
 RouterTask::~RouterTask() {
@@ -28,15 +29,15 @@ bool RouterTask::setup(std::shared_ptr<System> system) {
 
 bool RouterTask::loop(std::shared_ptr<System> system) {
   // do routing
-  if (!_fromModem->empty()) {
-    _toAprsIs->addElement(_fromModem->getElement());
+  if (!_fromModem.empty()) {
+    _toAprsIs.addElement(_fromModem->getElement());
   }
 
   // check for beacon
   if (_beacon_timer.check()) {
     logPrintD("[" + timeString() + "] ");
     logPrintlnD(_beaconMsg->encode());
-    _toAprsIs->addElement(_beaconMsg);
+    _toAprsIs.addElement(_beaconMsg);
     system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
     _beacon_timer.start();
   }

@@ -7,7 +7,7 @@
 
 class ModemTask : public Task {
 public:
-  ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> *const fromModem);
+  ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> & fromModem);
   virtual ~ModemTask();
 
   virtual bool setup(std::shared_ptr<System> system) override;
@@ -15,7 +15,7 @@ public:
 
 private:
   std::shared_ptr<LoRa_APRS>                     _lora_aprs;
-  TaskQueue<std::shared_ptr<APRSMessage>> *const _fromModem;
+  TaskQueue<std::shared_ptr<APRSMessage>> & _fromModem;
 };
 
 #endif

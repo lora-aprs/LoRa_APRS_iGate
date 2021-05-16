@@ -84,7 +84,7 @@ void setup() {
 
   LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(&fromModem)));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(fromModem)));
   if (boardConfig->Type == eETH_BOARD) {
     LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
   } else {
@@ -95,8 +95,8 @@ void setup() {
   if (userConfig->ftp.active) {
     LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
   }
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(&toAprsIs)));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(&fromModem, &toAprsIs)));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(toAprsIs)));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(fromModem, toAprsIs)));
 
   LoRaSystem->getTaskManager().setup(LoRaSystem);
 
