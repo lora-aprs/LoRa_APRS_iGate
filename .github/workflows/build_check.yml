@@ -11,9 +11,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Install PlatformIO
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade platformio
+        run: python -m pip install --upgrade pip platformio
       - name: Run PlatformIO CI
         run: platformio run
       - name: Upload artifacts
