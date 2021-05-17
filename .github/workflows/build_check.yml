@@ -47,16 +47,18 @@ jobs:
           check-path: ${{ matrix.path }}
 
   cppcheck:
-    name: Run Cppcheck
+    name: Run cppcheck
     runs-on: ubuntu-latest
+    env:
+      CPPCHECK_ARGS: -v --enable=all .
     steps:
       - name: checkout code
         uses: actions/checkout@v2
       - run: docker pull facthunder/cppcheck:latest
-      - name: Run Cppcheck
-        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest cppcheck -v --xml --enable=all . 2> report.xml
-      - name: Generate HTML report
-        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest cppcheck-htmlreport --file=report.xml --report-dir=output
+      - name: Run cppcheck and print result
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"
+      - name: Run cppcheck and create html
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
       - name: Upload report
         uses: actions/upload-artifact@v1
         with:
