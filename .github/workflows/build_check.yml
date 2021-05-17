@@ -1,9 +1,10 @@
-name: push pull checks
+name: Integreation Tests
 
 on: [push, pull_request]
 
 jobs:
   build:
+    name: Compile Firmware
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
