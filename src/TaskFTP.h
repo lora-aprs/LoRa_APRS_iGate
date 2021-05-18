@@ -13,8 +13,8 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<FTPServer> _ftpServer;
-  bool                       _beginCalled;
+  FTPServer _ftpServer;
+  bool      _beginCalled;
 };
 
 #endif
