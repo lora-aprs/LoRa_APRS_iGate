@@ -13,8 +13,8 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<NTPClient> _ntpClient;
-  bool                       _beginCalled;
+  NTPClient _ntpClient;
+  bool      _beginCalled;
 };
 
 #endif

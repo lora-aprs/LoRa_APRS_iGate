@@ -12,7 +12,7 @@ NTPTask::~NTPTask() {
 }
 
 bool NTPTask::setup(System &system) {
-  _ntpClient = std::shared_ptr<NTPClient>(new NTPClient(system.getUserConfig()->ntpServer.c_str()));
+  _ntpClient.setPoolServerName(system.getUserConfig()->ntpServer.c_str());
   return true;
 }
 
@@ -21,15 +21,15 @@ bool NTPTask::loop(System &system) {
     return false;
   }
   if (!_beginCalled) {
-    _ntpClient->begin();
+    _ntpClient.begin();
     _beginCalled = true;
   }
-  if (_ntpClient->update()) {
-    setTime(_ntpClient->getEpochTime());
+  if (_ntpClient.update()) {
+    setTime(_ntpClient.getEpochTime());
     logPrintI("Current time: ");
-    logPrintlnI(_ntpClient->getFormattedTime());
+    logPrintlnI(_ntpClient.getFormattedTime());
   }
-  _stateInfo = _ntpClient->getFormattedTime();
+  _stateInfo = _ntpClient.getFormattedTime();
   _state     = Okay;
   return true;
 }
