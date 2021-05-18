@@ -71,15 +71,15 @@ void setup() {
 
   if (boardConfig->Type == eTTGO_T_Beam_V1_0) {
     Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
-    std::shared_ptr<PowerManagement> powerManagement = std::shared_ptr<PowerManagement>(new PowerManagement);
-    if (!powerManagement->begin(Wire)) {
+    PowerManagement powerManagement;
+    if (!powerManagement.begin(Wire)) {
       logPrintlnI("AXP192 init done!");
     } else {
       logPrintlnE("AXP192 init failed!");
     }
-    powerManagement->activateLoRa();
-    powerManagement->activateOLED();
-    powerManagement->deactivateGPS();
+    powerManagement.activateLoRa();
+    powerManagement.activateOLED();
+    powerManagement.deactivateGPS();
   }
 
   LoRaSystem.setBoardConfig(boardConfig);
