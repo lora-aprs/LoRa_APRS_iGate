@@ -28,7 +28,7 @@ public:
   Display();
   ~Display();
 
-  void setup(std::shared_ptr<BoardConfig> boardConfig);
+  void setup(BoardConfig const *const boardConfig);
   // setup functions
   void showSpashScreen(String firmwareTitle, String version);
   void setStatusFrame(std::shared_ptr<StatusFrame> frame);

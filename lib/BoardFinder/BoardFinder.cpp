@@ -6,14 +6,14 @@ BoardConfig::BoardConfig(String name, BoardType type, uint8_t oledsda, uint8_t o
     : Name(name), Type(type), OledSda(oledsda), OledScl(oledscl), OledAddr(oledaddr), OledReset(oledreset), LoraSck(lorasck), LoraMiso(loramiso), LoraMosi(loramosi), LoraCS(loracs), LoraReset(lorareset), LoraIRQ(lorairq), needCheckPowerChip(needcheckpowerchip), powerCheckStatus(powercheckstatus) {
 }
 
-BoardFinder::BoardFinder(std::list<std::shared_ptr<BoardConfig>> &boardConfigs) : _boardConfigs(boardConfigs) {
+BoardFinder::BoardFinder(std::list<BoardConfig const *> boardConfigs) : _boardConfigs(boardConfigs) {
 }
 
-std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
+BoardConfig const *BoardFinder::searchBoardConfig() {
   logPrintlnI("looking for a board config.");
   logPrintlnI("searching for OLED...");
 
-  for (std::shared_ptr<BoardConfig> boardconf : _boardConfigs) {
+  for (BoardConfig const *boardconf : _boardConfigs) {
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
       Wire.begin(boardconf->OledSda, boardconf->OledScl);
@@ -31,7 +31,7 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
 
   logPrintlnI("could not find OLED, will search for the modem now...");
 
-  for (std::shared_ptr<BoardConfig> boardconf : _boardConfigs) {
+  for (BoardConfig const *boardconf : _boardConfigs) {
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
       Wire.begin(boardconf->OledSda, boardconf->OledScl);
@@ -50,8 +50,8 @@ std::shared_ptr<BoardConfig> BoardFinder::searchBoardConfig() {
   return 0;
 }
 
-std::shared_ptr<BoardConfig> BoardFinder::getBoardConfig(String name) {
-  std::_List_iterator<std::shared_ptr<BoardConfig>> elem = std::find_if(_boardConfigs.begin(), _boardConfigs.end(), [&](std::shared_ptr<BoardConfig> conf) {
+BoardConfig const *BoardFinder::getBoardConfig(String name) {
+  std::_List_iterator<BoardConfig const *> elem = std::find_if(_boardConfigs.begin(), _boardConfigs.end(), [&](BoardConfig const *conf) {
     return conf->Name == name;
   });
   if (elem == _boardConfigs.end()) {
@@ -60,7 +60,7 @@ std::shared_ptr<BoardConfig> BoardFinder::getBoardConfig(String name) {
   return *elem;
 }
 
-bool BoardFinder::checkOledConfig(std::shared_ptr<BoardConfig> boardConfig) {
+bool BoardFinder::checkOledConfig(BoardConfig const *boardConfig) {
   if (boardConfig->OledReset > 0) {
     pinMode(boardConfig->OledReset, OUTPUT);
     digitalWrite(boardConfig->OledReset, HIGH);
@@ -80,7 +80,7 @@ bool BoardFinder::checkOledConfig(std::shared_ptr<BoardConfig> boardConfig) {
   return false;
 }
 
-bool BoardFinder::checkModemConfig(std::shared_ptr<BoardConfig> boardConfig) {
+bool BoardFinder::checkModemConfig(BoardConfig const *boardConfig) {
   pinMode(boardConfig->LoraReset, OUTPUT);
   digitalWrite(boardConfig->LoraReset, LOW);
   delay(10);
@@ -107,7 +107,7 @@ bool BoardFinder::checkModemConfig(std::shared_ptr<BoardConfig> boardConfig) {
   return false;
 }
 
-bool BoardFinder::checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig) {
+bool BoardFinder::checkPowerConfig(BoardConfig const *boardConfig) {
   if (!Wire.begin(boardConfig->OledSda, boardConfig->OledScl)) {
     logPrintlnW("issue with wire");
     return false;
@@ -128,3 +128,14 @@ bool BoardFinder::checkPowerConfig(std::shared_ptr<BoardConfig> boardConfig) {
   logPrintlnD("power chip NOT found");
   return false;
 }
+
+// clang-format off
+BoardConfig TTGO_LORA32_V1        ("TTGO_LORA32_V1",         eTTGO_LORA32_V1,          4, 15, 0x3C,  0,  5, 19, 27, 18, 14, 26);
+BoardConfig TTGO_LORA32_V2        ("TTGO_LORA32_V2",         eTTGO_LORA32_V2,         21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
+BoardConfig TTGO_T_Beam_V0_7      ("TTGO_T_Beam_V0_7",       eTTGO_T_Beam_V0_7,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
+BoardConfig TTGO_T_Beam_V1_0      ("TTGO_T_Beam_V1_0",       eTTGO_T_Beam_V1_0,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true, true);
+BoardConfig ETH_BOARD             ("ETH_BOARD",              eETH_BOARD,              33, 32, 0x3C,  0, 14,  2, 15, 12,  4, 36);
+BoardConfig TRACKERD              ("TRACKERD",               eTRACKERD,                5,  4, 0x3C,  0, 18, 19, 23, 16, 14, 26);
+BoardConfig HELTEC_WIFI_LORA_32_V1("HELTEC_WIFI_LORA_32_V1", eHELTEC_WIFI_LORA_32_V1,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
+BoardConfig HELTEC_WIFI_LORA_32_V2("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
+// clang-format on

@@ -1,13 +1,13 @@
 
 #include "System.h"
 
-System::System(std::shared_ptr<BoardConfig> boardConfig, std::shared_ptr<Configuration> userConfig) : _boardConfig(boardConfig), _userConfig(userConfig), _isWifiEthConnected(false) {
+System::System(BoardConfig const *const boardConfig, std::shared_ptr<Configuration> userConfig) : _boardConfig(boardConfig), _userConfig(userConfig), _isWifiEthConnected(false) {
 }
 
 System::~System() {
 }
 
-std::shared_ptr<BoardConfig> System::getBoardConfig() const {
+BoardConfig const *const System::getBoardConfig() const {
   return _boardConfig;
 }
 

@@ -10,10 +10,10 @@
 
 class System {
 public:
-  System(std::shared_ptr<BoardConfig> boardConfig, std::shared_ptr<Configuration> userConfig);
+  System(BoardConfig const *const boardConfig, std::shared_ptr<Configuration> userConfig);
   ~System();
 
-  std::shared_ptr<BoardConfig>   getBoardConfig() const;
+  BoardConfig const *const       getBoardConfig() const;
   std::shared_ptr<Configuration> getUserConfig() const;
   TaskManager &                  getTaskManager();
   Display &                      getDisplay();
@@ -21,7 +21,7 @@ public:
   void                           connectedViaWifiEth(bool status);
 
 private:
-  std::shared_ptr<BoardConfig>   _boardConfig;
+  BoardConfig const *const       _boardConfig;
   std::shared_ptr<Configuration> _userConfig;
   TaskManager                    _taskManager;
   Display                        _display;

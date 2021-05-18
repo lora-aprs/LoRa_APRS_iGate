@@ -33,22 +33,20 @@ void setup() {
   logPrintlnI("LoRa APRS iGate by OE5BPA (Peter Buchegger)");
   logPrintlnI("Version: " VERSION);
 
-  std::list<std::shared_ptr<BoardConfig>> boardConfigs;
-  // clang-format off
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TTGO_LORA32_V1",         eTTGO_LORA32_V1,          4, 15, 0x3C,  0,  5, 19, 27, 18, 14, 26)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TTGO_LORA32_V2",         eTTGO_LORA32_V2,         21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TTGO_T_Beam_V0_7",       eTTGO_T_Beam_V0_7,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TTGO_T_Beam_V1_0",       eTTGO_T_Beam_V1_0,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true, true)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("ETH_BOARD",              eETH_BOARD,              33, 32, 0x3C,  0, 14,  2, 15, 12,  4, 36)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("TRACKERD",               eTRACKERD,                5,  4, 0x3C,  0, 18, 19, 23, 16, 14, 26)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("HELTEC_WIFI_LORA_32_V1", eHELTEC_WIFI_LORA_32_V1,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26)));
-  boardConfigs.push_back(std::shared_ptr<BoardConfig>(new BoardConfig("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26)));
-  // clang-format on
+  std::list<BoardConfig const *> boardConfigs;
+  boardConfigs.push_back(&TTGO_LORA32_V1);
+  boardConfigs.push_back(&TTGO_LORA32_V2);
+  boardConfigs.push_back(&TTGO_T_Beam_V0_7);
+  boardConfigs.push_back(&TTGO_T_Beam_V1_0);
+  boardConfigs.push_back(&ETH_BOARD);
+  boardConfigs.push_back(&TRACKERD);
+  boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
+  boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
 
   ProjectConfigurationManagement confmg;
   std::shared_ptr<Configuration> userConfig = confmg.readConfiguration();
   BoardFinder                    finder(boardConfigs);
-  std::shared_ptr<BoardConfig>   boardConfig = finder.getBoardConfig(userConfig->board);
+  BoardConfig const *            boardConfig = finder.getBoardConfig(userConfig->board);
   if (boardConfig == 0) {
     boardConfig = finder.searchBoardConfig();
     if (boardConfig == 0) {
