@@ -50,7 +50,7 @@ jobs:
     name: Run cppcheck
     runs-on: ubuntu-latest
     env:
-      CPPCHECK_ARGS: -v --enable=all .
+      CPPCHECK_ARGS: --enable=all --std=c++14 -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
     steps:
       - name: checkout code
         uses: actions/checkout@v2
