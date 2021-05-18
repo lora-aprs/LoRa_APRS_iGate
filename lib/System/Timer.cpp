@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #include "Timer.h"
 
 Timer::Timer() : _timeout_ms(0), _nextTimeout(0) {
@@ -7,7 +9,7 @@ void Timer::setTimeout(const uint32_t timeout_ms) {
   _timeout_ms = timeout_ms;
 }
 
-time_t Timer::getTriggerTimeInSec() const {
+uint32_t Timer::getTriggerTimeInSec() const {
   return (_nextTimeout - millis()) / 1000;
 }
 

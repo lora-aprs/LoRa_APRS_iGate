@@ -1,5 +1,7 @@
 #include <logger.h>
 
+#include <TimeLib.h>
+
 #include "Task.h"
 #include "TaskRouter.h"
 #include "project_configuration.h"
@@ -40,7 +42,7 @@ bool RouterTask::loop(System &system) {
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
     _beacon_timer.start();
   }
-  time_t diff = _beacon_timer.getTriggerTimeInSec();
-  _stateInfo  = "beacon " + String(diff / 60) + ":" + String(diff % 60);
+  uint32_t diff = _beacon_timer.getTriggerTimeInSec();
+  _stateInfo    = "beacon " + String(uint32_t(diff / 60)) + ":" + String(uint32_t(diff % 60));
   return true;
 }

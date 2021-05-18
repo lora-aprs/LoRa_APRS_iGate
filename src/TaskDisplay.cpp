@@ -1,4 +1,3 @@
-#include <TimeLib.h>
 #include <logger.h>
 
 #include "TaskDisplay.h"
