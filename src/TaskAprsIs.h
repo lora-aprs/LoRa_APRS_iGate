@@ -8,7 +8,7 @@
 
 class AprsIsTask : public Task {
 public:
-  AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
+  explicit AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
   virtual ~AprsIsTask();
 
   virtual bool setup(std::shared_ptr<System> system) override;

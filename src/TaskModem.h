@@ -7,7 +7,7 @@
 
 class ModemTask : public Task {
 public:
-  ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem);
+  explicit ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem);
   virtual ~ModemTask();
 
   virtual bool setup(std::shared_ptr<System> system) override;
