@@ -27,7 +27,7 @@ std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
   return _tasks;
 }
 
-bool TaskManager::setup(std::shared_ptr<System> system) {
+bool TaskManager::setup(System &system) {
   logPrintlnV("will setup all tasks...");
   for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
     logPrintD("call setup from ");
@@ -43,7 +43,7 @@ bool TaskManager::setup(std::shared_ptr<System> system) {
   return true;
 }
 
-bool TaskManager::loop(std::shared_ptr<System> system) {
+bool TaskManager::loop(System &system) {
   // logPrintlnD("will loop all tasks...");
   for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
     // logPrintD("call loop from ");

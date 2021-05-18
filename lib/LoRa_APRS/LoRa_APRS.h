@@ -16,7 +16,7 @@
 
 class LoRa_APRS : public LoRaClass {
 public:
-  explicit LoRa_APRS(std::shared_ptr<BoardConfig> boardConfig);
+  explicit LoRa_APRS(BoardConfig const *const boardConfig);
 
   bool                         checkMessage();
   std::shared_ptr<APRSMessage> getMessage();

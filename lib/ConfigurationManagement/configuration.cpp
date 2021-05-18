@@ -15,11 +15,11 @@ ConfigurationManagement::ConfigurationManagement(String FilePath) : mFilePath(Fi
 ConfigurationManagement::~ConfigurationManagement() {
 }
 
-std::shared_ptr<Configuration> ConfigurationManagement::readConfiguration() {
+void ConfigurationManagement::readConfiguration(Configuration &conf) {
   File file = SPIFFS.open(mFilePath);
   if (!file) {
-    logPrintlnE("Failed to open file for reading...");
-    return 0;
+    logPrintlnE("Failed to open file for reading, using default configuration.");
+    return;
   }
   DynamicJsonDocument  data(2048);
   DeserializationError error = deserializeJson(data, file);
@@ -30,15 +30,13 @@ std::shared_ptr<Configuration> ConfigurationManagement::readConfiguration() {
   // Serial.println();
   file.close();
 
-  std::shared_ptr<Configuration> conf = readProjectConfiguration(data);
+  readProjectConfiguration(data, conf);
 
   // update config in memory to get the new fields:
   writeConfiguration(conf);
-
-  return conf;
 }
 
-void ConfigurationManagement::writeConfiguration(std::shared_ptr<Configuration> conf) {
+void ConfigurationManagement::writeConfiguration(Configuration &conf) {
   File file = SPIFFS.open(mFilePath, "w");
   if (!file) {
     logPrintlnE("Failed to open file for writing...");

@@ -10,8 +10,8 @@ public:
   explicit ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem);
   virtual ~ModemTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
   std::shared_ptr<LoRa_APRS>               _lora_aprs;

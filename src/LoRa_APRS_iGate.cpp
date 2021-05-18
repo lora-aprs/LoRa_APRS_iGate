@@ -24,7 +24,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-std::shared_ptr<System> LoRaSystem;
+System LoRaSystem;
 
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
@@ -50,9 +50,11 @@ void setup() {
   // clang-format on
 
   ProjectConfigurationManagement confmg;
-  std::shared_ptr<Configuration> userConfig = confmg.readConfiguration();
-  BoardFinder                    finder(boardConfigs);
-  std::shared_ptr<BoardConfig>   boardConfig = finder.getBoardConfig(userConfig->board);
+  Configuration                  userConfig;
+  confmg.readConfiguration(userConfig);
+
+  BoardFinder                  finder(boardConfigs);
+  std::shared_ptr<BoardConfig> boardConfig = finder.getBoardConfig(userConfig.board);
   if (boardConfig == 0) {
     boardConfig = finder.searchBoardConfig();
     if (boardConfig == 0) {
@@ -60,7 +62,7 @@ void setup() {
       while (true) {
       }
     }
-    userConfig->board = boardConfig->Name;
+    userConfig.board = boardConfig->Name;
     confmg.writeConfiguration(userConfig);
     logPrintlnI("will restart board now!");
     ESP.restart();
@@ -82,36 +84,37 @@ void setup() {
     powerManagement->deactivateGPS();
   }
 
-  LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(fromModem)));
+  LoRaSystem.setBoardConfig(boardConfig.get());
+  LoRaSystem.setUserConfig(&userConfig);
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(fromModem)));
   if (boardConfig->Type == eETH_BOARD) {
-    LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
+    LoRaSystem.getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
   } else {
-    LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new WifiTask()));
+    LoRaSystem.getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new WifiTask()));
   }
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new OTATask()));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new NTPTask()));
-  if (userConfig->ftp.active) {
-    LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new OTATask()));
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new NTPTask()));
+  if (userConfig.ftp.active) {
+    LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
   }
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(toAprsIs)));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(fromModem, toAprsIs)));
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(toAprsIs)));
+  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(fromModem, toAprsIs)));
 
-  LoRaSystem->getTaskManager().setup(LoRaSystem);
+  LoRaSystem.getTaskManager().setup(LoRaSystem);
 
-  LoRaSystem->getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
+  LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
 
-  if (userConfig->callsign == "NOCALL-10") {
+  if (userConfig.callsign == "NOCALL-10") {
     logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
-    LoRaSystem->getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+    LoRaSystem.getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
     while (true)
       ;
   }
 
-  if (userConfig->display.overwritePin != 0) {
-    pinMode(userConfig->display.overwritePin, INPUT);
-    pinMode(userConfig->display.overwritePin, INPUT_PULLUP);
+  if (userConfig.display.overwritePin != 0) {
+    pinMode(userConfig.display.overwritePin, INPUT);
+    pinMode(userConfig.display.overwritePin, INPUT_PULLUP);
   }
 
   delay(5000);
@@ -120,7 +123,7 @@ void setup() {
 
 // cppcheck-suppress unusedFunction
 void loop() {
-  LoRaSystem->getTaskManager().loop(LoRaSystem);
+  LoRaSystem.getTaskManager().loop(LoRaSystem);
 }
 
 String create_lat_aprs(double lat) {

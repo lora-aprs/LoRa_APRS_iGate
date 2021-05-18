@@ -16,12 +16,12 @@ public:
   explicit ConfigurationManagement(String FilePath);
   virtual ~ConfigurationManagement();
 
-  std::shared_ptr<Configuration> readConfiguration();
-  void                           writeConfiguration(std::shared_ptr<Configuration> conf);
+  void readConfiguration(Configuration &conf);
+  void writeConfiguration(Configuration &conf);
 
 private:
-  virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument &data)                                       = 0;
-  virtual void                           writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument &data) = 0;
+  virtual void readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf)  = 0;
+  virtual void writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) = 0;
 
   const String mFilePath;
 };

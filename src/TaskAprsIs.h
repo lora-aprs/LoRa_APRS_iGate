@@ -11,15 +11,15 @@ public:
   explicit AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
   virtual ~AprsIsTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
   std::shared_ptr<APRS_IS> _aprs_is;
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
 
-  bool connect(std::shared_ptr<System> system);
+  bool connect(System &system);
 };
 
 #endif

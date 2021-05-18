@@ -12,9 +12,9 @@ FTPTask::FTPTask() : Task(TASK_FTP, TaskFtp), _beginCalled(false) {
 FTPTask::~FTPTask() {
 }
 
-bool FTPTask::setup(std::shared_ptr<System> system) {
+bool FTPTask::setup(System &system) {
   _ftpServer = std::shared_ptr<FTPServer>(new FTPServer());
-  for (Configuration::Ftp::User user : system->getUserConfig()->ftp.users) {
+  for (Configuration::Ftp::User user : system.getUserConfig()->ftp.users) {
     logPrintD("Adding user to FTP Server: ");
     logPrintlnD(user.name);
     _ftpServer->addUser(user.name, user.password);
@@ -24,7 +24,7 @@ bool FTPTask::setup(std::shared_ptr<System> system) {
   return true;
 }
 
-bool FTPTask::loop(std::shared_ptr<System> system) {
+bool FTPTask::loop(System &system) {
   if (!_beginCalled) {
     _ftpServer->begin();
     _beginCalled = true;

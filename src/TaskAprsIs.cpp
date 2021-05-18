@@ -11,14 +11,14 @@ AprsIsTask::AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task
 AprsIsTask::~AprsIsTask() {
 }
 
-bool AprsIsTask::setup(std::shared_ptr<System> system) {
-  _aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(system->getUserConfig()->callsign, system->getUserConfig()->aprs_is.passcode, "ESP32-APRS-IS", "0.2"));
+bool AprsIsTask::setup(System &system) {
+  _aprs_is = std::shared_ptr<APRS_IS>(new APRS_IS(system.getUserConfig()->callsign, system.getUserConfig()->aprs_is.passcode, "ESP32-APRS-IS", "0.2"));
 
   return true;
 }
 
-bool AprsIsTask::loop(std::shared_ptr<System> system) {
-  if (!system->isWifiEthConnected()) {
+bool AprsIsTask::loop(System &system) {
+  if (!system.isWifiEthConnected()) {
     return false;
   }
   if (!_aprs_is->connected()) {
@@ -42,12 +42,12 @@ bool AprsIsTask::loop(std::shared_ptr<System> system) {
   return true;
 }
 
-bool AprsIsTask::connect(std::shared_ptr<System> system) {
+bool AprsIsTask::connect(System &system) {
   logPrintI("connecting to APRS-IS server: ");
-  logPrintI(system->getUserConfig()->aprs_is.server);
+  logPrintI(system.getUserConfig()->aprs_is.server);
   logPrintI(" on port: ");
-  logPrintlnI(String(system->getUserConfig()->aprs_is.port));
-  if (!_aprs_is->connect(system->getUserConfig()->aprs_is.server, system->getUserConfig()->aprs_is.port)) {
+  logPrintlnI(String(system.getUserConfig()->aprs_is.port));
+  if (!_aprs_is->connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port)) {
     logPrintlnE("Connection failed.");
     return false;
   }

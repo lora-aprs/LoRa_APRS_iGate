@@ -101,8 +101,8 @@ public:
   }
 
 private:
-  virtual std::shared_ptr<Configuration> readProjectConfiguration(DynamicJsonDocument &data) override;
-  virtual void                           writeProjectConfiguration(std::shared_ptr<Configuration> conf, DynamicJsonDocument &data) override;
+  virtual void readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf) override;
+  virtual void writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) override;
 };
 
 std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig);

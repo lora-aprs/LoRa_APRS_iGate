@@ -48,7 +48,7 @@ EthTask::EthTask() : Task(TASK_ETH, TaskEth) {
 EthTask::~EthTask() {
 }
 
-bool EthTask::setup(std::shared_ptr<System> system) {
+bool EthTask::setup(System &system) {
   WiFi.onEvent(WiFiEvent);
 
   constexpr uint8_t          ETH_NRST      = 5;
@@ -73,14 +73,14 @@ bool EthTask::setup(std::shared_ptr<System> system) {
   return true;
 }
 
-bool EthTask::loop(std::shared_ptr<System> system) {
+bool EthTask::loop(System &system) {
   if (!eth_connected) {
-    system->connectedViaWifiEth(false);
+    system.connectedViaWifiEth(false);
     _stateInfo = "Ethernet not connected";
     _state     = Error;
     return false;
   }
-  system->connectedViaWifiEth(true);
+  system.connectedViaWifiEth(true);
   _stateInfo = ETH.localIP().toString();
   _state     = Okay;
   return true;

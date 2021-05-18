@@ -12,8 +12,8 @@ ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem) : Task(
 ModemTask::~ModemTask() {
 }
 
-bool ModemTask::setup(std::shared_ptr<System> system) {
-  _lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(system->getBoardConfig()));
+bool ModemTask::setup(System &system) {
+  _lora_aprs = std::shared_ptr<LoRa_APRS>(new LoRa_APRS(system.getBoardConfig()));
   if (!_lora_aprs->begin(_lora_aprs->getRxFrequency())) {
     logPrintlnE("Starting LoRa failed!");
     _stateInfo = "LoRa-Modem failed";
@@ -21,19 +21,19 @@ bool ModemTask::setup(std::shared_ptr<System> system) {
     while (true)
       ;
   }
-  _lora_aprs->setRxFrequency(system->getUserConfig()->lora.frequencyRx);
-  _lora_aprs->setTxFrequency(system->getUserConfig()->lora.frequencyTx);
-  _lora_aprs->setTxPower(system->getUserConfig()->lora.power);
-  _lora_aprs->setSpreadingFactor(system->getUserConfig()->lora.spreadingFactor);
-  _lora_aprs->setSignalBandwidth(system->getUserConfig()->lora.signalBandwidth);
-  _lora_aprs->setCodingRate4(system->getUserConfig()->lora.codingRate4);
+  _lora_aprs->setRxFrequency(system.getUserConfig()->lora.frequencyRx);
+  _lora_aprs->setTxFrequency(system.getUserConfig()->lora.frequencyTx);
+  _lora_aprs->setTxPower(system.getUserConfig()->lora.power);
+  _lora_aprs->setSpreadingFactor(system.getUserConfig()->lora.spreadingFactor);
+  _lora_aprs->setSignalBandwidth(system.getUserConfig()->lora.signalBandwidth);
+  _lora_aprs->setCodingRate4(system.getUserConfig()->lora.codingRate4);
   _lora_aprs->enableCrc();
 
   _stateInfo = "";
   return true;
 }
 
-bool ModemTask::loop(std::shared_ptr<System> system) {
+bool ModemTask::loop(System &system) {
   if (_lora_aprs->checkMessage()) {
     std::shared_ptr<APRSMessage> msg = _lora_aprs->getMessage();
     // msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
@@ -53,10 +53,10 @@ bool ModemTask::loop(std::shared_ptr<System> system) {
     if (!path.isEmpty()) {
       path += ",";
     }
-    msg->setPath(path + "qAR," + system->getUserConfig()->callsign);
+    msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
 
     _fromModem.addElement(msg);
-    system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
+    system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
   }
 
   return true;

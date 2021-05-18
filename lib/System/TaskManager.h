@@ -43,8 +43,8 @@ public:
     return _stateInfo;
   }
 
-  virtual bool setup(std::shared_ptr<System> system) = 0;
-  virtual bool loop(std::shared_ptr<System> system)  = 0;
+  virtual bool setup(System &system) = 0;
+  virtual bool loop(System &system)  = 0;
 
 protected:
   TaskDisplayState _state;
@@ -66,8 +66,8 @@ public:
   std::shared_ptr<Task>            getTask(const char *name);
   std::list<std::shared_ptr<Task>> getTasks();
 
-  bool setup(std::shared_ptr<System> system);
-  bool loop(std::shared_ptr<System> system);
+  bool setup(System &system);
+  bool loop(System &system);
 
 private:
   std::list<std::shared_ptr<Task>>           _tasks;

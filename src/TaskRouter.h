@@ -9,8 +9,8 @@ public:
   RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
   virtual ~RouterTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromModem;

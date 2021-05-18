@@ -8,8 +8,8 @@ public:
   EthTask();
   virtual ~EthTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
 };

@@ -13,20 +13,20 @@ RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQ
 RouterTask::~RouterTask() {
 }
 
-bool RouterTask::setup(std::shared_ptr<System> system) {
+bool RouterTask::setup(System &system) {
   // setup beacon
-  _beacon_timer.setTimeout(system->getUserConfig()->beacon.timeout * 60 * 1000);
+  _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
-  _beaconMsg->setSource(system->getUserConfig()->callsign);
+  _beaconMsg->setSource(system.getUserConfig()->callsign);
   _beaconMsg->setDestination("APLG01");
-  String lat = create_lat_aprs(system->getUserConfig()->beacon.positionLatitude);
-  String lng = create_long_aprs(system->getUserConfig()->beacon.positionLongitude);
-  _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system->getUserConfig()->beacon.message);
+  String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
+  String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
+  _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
 
   return true;
 }
 
-bool RouterTask::loop(std::shared_ptr<System> system) {
+bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
     _toAprsIs.addElement(_fromModem.getElement());
@@ -37,7 +37,7 @@ bool RouterTask::loop(std::shared_ptr<System> system) {
     logPrintD("[" + timeString() + "] ");
     logPrintlnD(_beaconMsg->encode());
     _toAprsIs.addElement(_beaconMsg);
-    system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
+    system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
     _beacon_timer.start();
   }
   time_t diff = _beacon_timer.getTriggerTimeInSec();
