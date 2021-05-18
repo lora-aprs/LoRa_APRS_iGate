@@ -8,18 +8,16 @@
 
 class AprsIsTask : public Task {
 public:
-  AprsIsTask();
+  explicit AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
   virtual ~AprsIsTask();
 
   virtual bool setup(std::shared_ptr<System> system) override;
   virtual bool loop(std::shared_ptr<System> system) override;
 
-  TaskQueue<std::shared_ptr<APRSMessage>> inputQueue;
-
 private:
-  std::shared_ptr<APRS_IS>     _aprs_is;
-  std::shared_ptr<APRSMessage> _beaconMsg;
-  Timer                        _beacon_timer;
+  std::shared_ptr<APRS_IS> _aprs_is;
+
+  TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
 
   bool connect(std::shared_ptr<System> system);
 };

@@ -15,6 +15,7 @@
 #include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
+#include "TaskRouter.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
@@ -24,6 +25,9 @@ String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
 std::shared_ptr<System> LoRaSystem;
+
+TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
+TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 
 // cppcheck-suppress unusedFunction
 void setup() {
@@ -78,7 +82,7 @@ void setup() {
 
   LoRaSystem = std::shared_ptr<System>(new System(boardConfig, userConfig));
   LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(fromModem)));
   if (boardConfig->Type == eETH_BOARD) {
     LoRaSystem->getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
   } else {
@@ -89,7 +93,8 @@ void setup() {
   if (userConfig->ftp.active) {
     LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
   }
-  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask()));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(toAprsIs)));
+  LoRaSystem->getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(fromModem, toAprsIs)));
 
   LoRaSystem->getTaskManager().setup(LoRaSystem);
 

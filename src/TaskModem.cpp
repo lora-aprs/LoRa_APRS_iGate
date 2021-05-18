@@ -6,7 +6,7 @@
 #include "TaskModem.h"
 #include "project_configuration.h"
 
-ModemTask::ModemTask() : Task(TASK_LORA, TaskLora) {
+ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem) : Task(TASK_MODEM, TaskModem), _fromModem(fromModem) {
 }
 
 ModemTask::~ModemTask() {
@@ -55,14 +55,8 @@ bool ModemTask::loop(std::shared_ptr<System> system) {
     }
     msg->setPath(path + "qAR," + system->getUserConfig()->callsign);
 
-    std::shared_ptr<AprsIsTask> is_thread = std::static_pointer_cast<AprsIsTask>(system->getTaskManager().getTask(TASK_APRS_IS));
-    is_thread->inputQueue.addElement(msg);
+    _fromModem.addElement(msg);
     system->getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
-  }
-
-  if (!inputQueue.empty()) {
-    std::shared_ptr<APRSMessage> msg = inputQueue.getElement();
-    _lora_aprs->sendMessage(msg);
   }
 
   return true;
