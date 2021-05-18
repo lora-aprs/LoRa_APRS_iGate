@@ -13,8 +13,8 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<WiFiMulti> _wiFiMulti;
-  uint8_t                    _oldWifiStatus;
+  WiFiMulti _wiFiMulti;
+  uint8_t   _oldWifiStatus;
 };
 
 #endif

@@ -14,18 +14,16 @@ WifiTask::~WifiTask() {
 bool WifiTask::setup(System &system) {
   // WiFi.onEvent(WiFiEvent);
   WiFi.setHostname(system.getUserConfig()->callsign.c_str());
-  _wiFiMulti = std::shared_ptr<WiFiMulti>(new WiFiMulti());
-  ;
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");
     logPrintlnD(ap.SSID);
-    _wiFiMulti->addAP(ap.SSID.c_str(), ap.password.c_str());
+    _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
   }
   return true;
 }
 
 bool WifiTask::loop(System &system) {
-  const uint8_t wifi_status = _wiFiMulti->run();
+  const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
     system.connectedViaWifiEth(false);
     logPrintlnE("WiFi not connected!");
