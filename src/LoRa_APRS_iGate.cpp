@@ -26,7 +26,8 @@ String create_long_aprs(double lng);
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 
-System LoRaSystem;
+System        LoRaSystem;
+Configuration userConfig;
 
 DisplayTask displayTask;
 ModemTask   modemTask(fromModem);
@@ -57,7 +58,6 @@ void setup() {
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
 
   ProjectConfigurationManagement confmg;
-  Configuration                  userConfig;
   confmg.readConfiguration(userConfig);
 
   BoardFinder        finder(boardConfigs);
