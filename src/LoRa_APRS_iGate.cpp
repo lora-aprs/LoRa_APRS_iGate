@@ -24,10 +24,20 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-System LoRaSystem;
-
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
+
+System LoRaSystem;
+
+DisplayTask displayTask;
+ModemTask   modemTask(fromModem);
+EthTask     ethTask;
+WifiTask    wifiTask;
+OTATask     otaTask;
+NTPTask     ntpTask;
+FTPTask     ftpTask;
+AprsIsTask  aprsIsTask(toAprsIs);
+RouterTask  routerTask(fromModem, toAprsIs);
 
 // cppcheck-suppress unusedFunction
 void setup() {
@@ -84,20 +94,20 @@ void setup() {
 
   LoRaSystem.setBoardConfig(boardConfig);
   LoRaSystem.setUserConfig(&userConfig);
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new DisplayTask()));
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new ModemTask(fromModem)));
+  LoRaSystem.getTaskManager().addTask(&displayTask);
+  LoRaSystem.getTaskManager().addTask(&modemTask);
   if (boardConfig->Type == eETH_BOARD) {
-    LoRaSystem.getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new EthTask()));
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
   } else {
-    LoRaSystem.getTaskManager().addAlwaysRunTask(std::shared_ptr<Task>(new WifiTask()));
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
   }
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new OTATask()));
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new NTPTask()));
+  LoRaSystem.getTaskManager().addTask(&otaTask);
+  LoRaSystem.getTaskManager().addTask(&ntpTask);
   if (userConfig.ftp.active) {
-    LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new FTPTask()));
+    LoRaSystem.getTaskManager().addTask(&ftpTask);
   }
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new AprsIsTask(toAprsIs)));
-  LoRaSystem.getTaskManager().addTask(std::shared_ptr<Task>(new RouterTask(fromModem, toAprsIs)));
+  LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  LoRaSystem.getTaskManager().addTask(&routerTask);
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
