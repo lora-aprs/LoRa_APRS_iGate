@@ -105,6 +105,4 @@ private:
   virtual void writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) override;
 };
 
-std::shared_ptr<Configuration> load_config(std::shared_ptr<BoardConfig> boardConfig);
-
 #endif
