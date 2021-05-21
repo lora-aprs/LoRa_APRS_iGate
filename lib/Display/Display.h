@@ -42,7 +42,7 @@ public:
   void addFrame(std::shared_ptr<DisplayFrame> frame);
 
 private:
-  std::shared_ptr<OLEDDisplay> _disp;
+  OLEDDisplay *_disp;
 
   Timer                        _displayFrameRate;
   std::shared_ptr<StatusFrame> _statusFrame;

@@ -66,8 +66,8 @@ void setup() {
     boardConfig = finder.searchBoardConfig();
     if (boardConfig == 0) {
       logPrintlnE("Board config not set and search failed!");
-      while (true) {
-      }
+      while (true)
+        ;
     }
     userConfig.board = boardConfig->Name;
     confmg.writeConfiguration(userConfig);

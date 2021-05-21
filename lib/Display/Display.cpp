@@ -18,7 +18,7 @@ void Display::setup(BoardConfig const *const boardConfig) {
     digitalWrite(boardConfig->OledReset, HIGH);
   }
   Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
-  _disp = std::shared_ptr<OLEDDisplay>(new SSD1306(&Wire, boardConfig->OledAddr));
+  _disp = new SSD1306(&Wire, boardConfig->OledAddr);
 
   Bitmap bitmap(_disp->getWidth(), _disp->getHeight());
   _disp->display(&bitmap);
@@ -47,7 +47,7 @@ void Display::update() {
 
     if (_frames.size() > 0) {
       std::shared_ptr<DisplayFrame> frame = *_frames.begin();
-      Bitmap                        bitmap(_disp.get());
+      Bitmap                        bitmap(_disp);
       frame->drawStatusPage(bitmap);
       _disp->display(&bitmap);
 
@@ -60,7 +60,7 @@ void Display::update() {
       }
     } else {
       if (_disp->isDisplayOn()) {
-        Bitmap bitmap(_disp.get());
+        Bitmap bitmap(_disp);
         _statusFrame->drawStatusPage(bitmap);
         _disp->display(&bitmap);
 
@@ -88,7 +88,7 @@ void Display::setStatusFrame(std::shared_ptr<StatusFrame> frame) {
 }
 
 void Display::showSpashScreen(String firmwareTitle, String version) {
-  Bitmap bitmap(_disp.get());
+  Bitmap bitmap(_disp);
   bitmap.drawString(0, 10, firmwareTitle);
   bitmap.drawString(0, 20, version);
   bitmap.drawString(0, 35, "by Peter Buchegger");
@@ -97,7 +97,7 @@ void Display::showSpashScreen(String firmwareTitle, String version) {
 }
 
 void Display::showStatusScreen(String header, String text) {
-  Bitmap bitmap(_disp.get());
+  Bitmap bitmap(_disp);
   bitmap.drawString(0, 0, header);
   bitmap.drawStringLF(0, 10, text);
   _disp->display(&bitmap);
