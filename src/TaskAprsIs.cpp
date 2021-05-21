@@ -40,7 +40,7 @@ bool AprsIsTask::loop(System &system) {
   return true;
 }
 
-bool AprsIsTask::connect(System &system) {
+bool AprsIsTask::connect(const System &system) {
   logPrintI("connecting to APRS-IS server: ");
   logPrintI(system.getUserConfig()->aprs_is.server);
   logPrintI(" on port: ");
