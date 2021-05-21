@@ -15,7 +15,7 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<APRS_IS> _aprs_is;
+  APRS_IS _aprs_is;
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
 
