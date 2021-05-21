@@ -1,10 +1,5 @@
 #include "LoRa_APRS.h"
 
-LoRa_APRS::LoRa_APRS(BoardConfig const *const boardConfig) : _LastReceivedMsg(0), _RxFrequency(LORA_RX_FREQUENCY), _TxFrequency(LORA_TX_FREQUENCY) {
-  SPI.begin(boardConfig->LoraSck, boardConfig->LoraMiso, boardConfig->LoraMosi, boardConfig->LoraCS);
-  setPins(boardConfig->LoraCS, boardConfig->LoraReset, boardConfig->LoraIRQ);
-}
-
 bool LoRa_APRS::checkMessage() {
   if (!parsePacket()) {
     return false;
