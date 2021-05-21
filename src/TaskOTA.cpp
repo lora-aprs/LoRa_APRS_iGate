@@ -11,10 +11,9 @@ OTATask::~OTATask() {
 }
 
 bool OTATask::setup(System &system) {
-  _ota = std::shared_ptr<ArduinoOTAClass>(new ArduinoOTAClass());
-  _ota->onStart([&]() {
+  _ota.onStart([&]() {
         String type;
-        if (_ota->getCommand() == U_FLASH)
+        if (_ota.getCommand() == U_FLASH)
           type = "sketch";
         else // U_SPIFFS
           type = "filesystem";
@@ -44,16 +43,16 @@ bool OTATask::setup(System &system) {
         else if (error == OTA_END_ERROR)
           logPrintlnE("End Failed");
       });
-  _ota->setHostname(system.getUserConfig()->callsign.c_str());
+  _ota.setHostname(system.getUserConfig()->callsign.c_str());
   _stateInfo = "";
   return true;
 }
 
 bool OTATask::loop(System &system) {
   if (!_beginCalled) {
-    _ota->begin();
+    _ota.begin();
     _beginCalled = true;
   }
-  _ota->handle();
+  _ota.handle();
   return true;
 }

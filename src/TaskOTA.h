@@ -13,8 +13,8 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<ArduinoOTAClass> _ota;
-  bool                             _beginCalled;
+  ArduinoOTAClass _ota;
+  bool            _beginCalled;
 };
 
 #endif
