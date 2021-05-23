@@ -2,6 +2,7 @@
 #include <logger.h>
 
 #include "Task.h"
+#include "TaskEth.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
@@ -12,7 +13,7 @@ WifiTask::~WifiTask() {
 }
 
 bool WifiTask::setup(System &system) {
-  // WiFi.onEvent(WiFiEvent);
+  WiFi.onEvent(WiFiEvent);
   WiFi.setHostname(system.getUserConfig()->callsign.c_str());
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");

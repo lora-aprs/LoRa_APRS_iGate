@@ -7,8 +7,26 @@
 
 volatile bool eth_connected = false;
 
-static void WiFiEvent(WiFiEvent_t event) {
+void WiFiEvent(WiFiEvent_t event) {
   switch (event) {
+  case SYSTEM_EVENT_STA_START:
+    logPrintlnI("WiFi Started");
+    break;
+  case SYSTEM_EVENT_STA_CONNECTED:
+    logPrintlnI("WiFi Connected");
+    break;
+  case SYSTEM_EVENT_STA_GOT_IP:
+    logPrintI("WiFi MAC: ");
+    logPrintI(WiFi.macAddress());
+    logPrintI(", IPv4: ");
+    logPrintlnI(WiFi.localIP().toString());
+    break;
+  case SYSTEM_EVENT_STA_DISCONNECTED:
+    logPrintlnW("WiFi Disconnected");
+    break;
+  case SYSTEM_EVENT_STA_STOP:
+    logPrintlnW("WiFi Stopped");
+    break;
   case SYSTEM_EVENT_ETH_START:
     logPrintlnI("ETH Started");
     ETH.setHostname("esp32-ethernet");
