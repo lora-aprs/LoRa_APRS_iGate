@@ -47,16 +47,6 @@ bool ModemTask::loop(System &system) {
     logPrintD(" and SNR ");
     logPrintlnD(String(_lora_aprs.packetSnr()));
 
-    String path = msg->getPath();
-    if (path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1) {
-      return true;
-    }
-
-    if (!path.isEmpty()) {
-      path += ",";
-    }
-    msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
-
     _fromModem.addElement(msg);
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
   }

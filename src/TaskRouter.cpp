@@ -31,7 +31,17 @@ bool RouterTask::setup(System &system) {
 bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
-    _toAprsIs.addElement(_fromModem.getElement());
+    std::shared_ptr<APRSMessage> msg  = _fromModem.getElement();
+    String                       path = msg->getPath();
+
+    if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
+      if (!path.isEmpty()) {
+        path += ",";
+      }
+      msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
+
+      _toAprsIs.addElement(msg);
+    }
   }
 
   // check for beacon
