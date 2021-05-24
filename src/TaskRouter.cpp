@@ -35,17 +35,20 @@ bool RouterTask::setup(System &system) {
 bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
-    std::shared_ptr<APRSMessage> msg  = _fromModem.getElement();
-    String                       path = msg->getPath();
+    std::shared_ptr<APRSMessage> modemMsg  = _fromModem.getElement();
 
-    if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
-      if (!path.isEmpty()) {
-        path += ",";
-      }
-      msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
+    if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
+      std::shared_ptr<APRSMessage> msg = std::make_shared<APRSMessage>(*modemMsg);
+      String path = msg->getPath();
 
-      if (system.getUserConfig()->aprs_is.active)
+      if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
+        if (!path.isEmpty()) {
+          path += ",";
+        }
+
+        msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
         _toAprsIs.addElement(msg);
+      }
     }
   }
 
