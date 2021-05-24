@@ -40,7 +40,8 @@ bool RouterTask::loop(System &system) {
       }
       msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
 
-      _toAprsIs.addElement(msg);
+      if (system.getUserConfig()->aprs_is.active)
+        _toAprsIs.addElement(msg);
     }
   }
 
@@ -48,11 +49,17 @@ bool RouterTask::loop(System &system) {
   if (_beacon_timer.check()) {
     logPrintD("[" + timeString() + "] ");
     logPrintlnD(_beaconMsg->encode());
-    _toAprsIs.addElement(_beaconMsg);
+
+    if (system.getUserConfig()->aprs_is.active)
+      _toAprsIs.addElement(_beaconMsg);
+
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
+
     _beacon_timer.start();
   }
+
   uint32_t diff = _beacon_timer.getTriggerTimeInSec();
   _stateInfo    = "beacon " + String(uint32_t(diff / 60)) + ":" + String(uint32_t(diff % 60));
+
   return true;
 }

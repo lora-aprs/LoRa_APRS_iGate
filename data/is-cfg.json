@@ -17,6 +17,7 @@
 		"timeout": 15
 	},
 	"aprs_is": {
+		"active": true,
 		"passcode": "",
 		"server": "euro.aprs2.net",
 		"port": 14580

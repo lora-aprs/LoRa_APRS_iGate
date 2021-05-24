@@ -105,7 +105,9 @@ void setup() {
   if (userConfig.ftp.active) {
     LoRaSystem.getTaskManager().addTask(&ftpTask);
   }
-  LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  if (userConfig.aprs_is.active) {
+    LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  }
   LoRaSystem.getTaskManager().addTask(&routerTask);
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);

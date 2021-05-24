@@ -33,9 +33,10 @@ public:
 
   class APRS_IS {
   public:
-    APRS_IS() : server("euro.aprs2.net"), port(14580) {
+    APRS_IS() : active(true), server("euro.aprs2.net"), port(14580) {
     }
 
+    bool active;
     String passcode;
     String server;
     int    port;
