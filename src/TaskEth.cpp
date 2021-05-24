@@ -39,6 +39,8 @@ void WiFiEvent(WiFiEvent_t event) {
     logPrintI(ETH.macAddress());
     logPrintI(", IPv4: ");
     logPrintI(ETH.localIP().toString());
+    logPrintI(", DNS: ");
+    logPrintI(ETH.dnsIP().toString());
     if (ETH.fullDuplex()) {
       logPrintI(", FULL_DUPLEX");
     }
