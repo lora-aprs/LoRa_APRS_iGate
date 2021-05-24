@@ -29,7 +29,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
   conf.digi.active          = data["digi"]["active"] | false;
   conf.digi.forwardTimeout  = data["digi"]["forward_timeout"] | 5;
-  conf.digi.beacon          = data["digi"]["beacon"] | true;
+  conf.digi.beacon          = data["digi"]["beacon"] | false;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
