@@ -36,10 +36,11 @@ bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
     std::shared_ptr<APRSMessage> modemMsg  = _fromModem.getElement();
+    String path;
 
     if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
       std::shared_ptr<APRSMessage> aprsIsMsg = std::make_shared<APRSMessage>(*modemMsg);
-      String path = aprsIsMsg->getPath();
+      path = aprsIsMsg->getPath();
 
       if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
         if (!path.isEmpty()) {
@@ -60,6 +61,22 @@ bool RouterTask::loop(System &system) {
 
       if (modemMsg->getSource() == system.getUserConfig()->callsign)
         logPrintlnD("APRS-IS: no forward => own paket erceived");
+    }
+
+    if (system.getUserConfig()->digi.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
+      std::shared_ptr<APRSMessage> digiMsg = std::make_shared<APRSMessage>(*modemMsg);
+      path = digiMsg->getPath();
+
+      // simple loop check
+      if (path.indexOf("WIDE1-1") >= 0 || path.indexOf(system.getUserConfig()->callsign) == -1) {
+        // fixme
+        digiMsg->setPath(system.getUserConfig()->callsign + "*");
+
+        logPrintD("DIGI: ");
+        logPrintlnD(digiMsg->toString());
+
+        _toModem.addElement(digiMsg);
+      }
     }
   }
 
