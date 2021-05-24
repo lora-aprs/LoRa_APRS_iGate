@@ -24,6 +24,7 @@ bool RouterTask::setup(System &system) {
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
   _beaconMsg->setSource(system.getUserConfig()->callsign);
   _beaconMsg->setDestination("APLG01");
+  _beaconMsg->setPath("WIDE1-1");
   String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
   String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
   _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
@@ -56,12 +57,8 @@ bool RouterTask::loop(System &system) {
     if (system.getUserConfig()->aprs_is.active)
       _toAprsIs.addElement(_beaconMsg);
 
-    if (system.getUserConfig()->digi.beacon) {
-      std::shared_ptr<APRSMessage> msg = _beaconMsg;
-      msg->setPath("WIDE1-1");
-
-      _toModem.addElement(msg);
-    }
+    if (system.getUserConfig()->digi.beacon)
+      _toModem.addElement(_beaconMsg);
 
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
 
