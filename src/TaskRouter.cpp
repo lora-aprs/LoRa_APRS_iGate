@@ -38,17 +38,28 @@ bool RouterTask::loop(System &system) {
     std::shared_ptr<APRSMessage> modemMsg  = _fromModem.getElement();
 
     if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
-      std::shared_ptr<APRSMessage> msg = std::make_shared<APRSMessage>(*modemMsg);
-      String path = msg->getPath();
+      std::shared_ptr<APRSMessage> aprsIsMsg = std::make_shared<APRSMessage>(*modemMsg);
+      String path = aprsIsMsg->getPath();
 
       if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
         if (!path.isEmpty()) {
           path += ",";
         }
 
-        msg->setPath(path + "qAR," + system.getUserConfig()->callsign);
-        _toAprsIs.addElement(msg);
+        aprsIsMsg->setPath(path + "qAR," + system.getUserConfig()->callsign);
+
+        logPrintD("APRS-IS: ");
+        logPrintlnD(aprsIsMsg->toString());
+        _toAprsIs.addElement(aprsIsMsg);
+      } else {
+        logPrintlnD("APRS-IS: no forward => RFonly");
       }
+    } else {
+      if (!system.getUserConfig()->aprs_is.active)
+        logPrintlnD("APRS-IS: disabled");
+
+      if (modemMsg->getSource() == system.getUserConfig()->callsign)
+        logPrintlnD("APRS-IS: no forward => own paket erceived");
     }
   }
 
