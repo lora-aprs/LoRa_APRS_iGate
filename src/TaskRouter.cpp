@@ -9,7 +9,10 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem
+                     , TaskQueue<std::shared_ptr<APRSMessage>> &toModem
+                     , TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs)
+  : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs) {
 }
 
 RouterTask::~RouterTask() {
@@ -52,6 +55,13 @@ bool RouterTask::loop(System &system) {
 
     if (system.getUserConfig()->aprs_is.active)
       _toAprsIs.addElement(_beaconMsg);
+
+    if (system.getUserConfig()->digi.beacon) {
+      std::shared_ptr<APRSMessage> msg = _beaconMsg;
+      msg->setPath("WIDE1-1");
+
+      _toModem.addElement(msg);
+    }
 
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
 
