@@ -25,7 +25,7 @@
 	"digi": {
 		"active": false,
 		"forward_timeout": 5,
-		"beacon": true,
+		"beacon": false,
 	},
 	"lora": {
 		"frequency_rx": 433775000,
