@@ -36,7 +36,7 @@ public:
     APRS_IS() : active(true), server("euro.aprs2.net"), port(14580) {
     }
 
-    bool active;
+    bool   active;
     String passcode;
     String server;
     int    port;
@@ -48,7 +48,7 @@ public:
     }
 
     bool active;
-    int forwardTimeout;
+    int  forwardTimeout;
     bool beacon;
   };
 

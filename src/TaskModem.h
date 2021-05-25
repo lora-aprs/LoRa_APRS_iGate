@@ -14,7 +14,7 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  LoRa_APRS                                _lora_aprs;
+  LoRa_APRS _lora_aprs;
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromModem;
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
