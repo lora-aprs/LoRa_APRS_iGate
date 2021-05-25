@@ -13,16 +13,6 @@ void TaskManager::addAlwaysRunTask(Task *task) {
   _alwaysRunTasks.push_back(task);
 }
 
-Task *TaskManager::getTask(const char *name) {
-  std::_List_iterator<Task *> elem = std::find_if(_tasks.begin(), _tasks.end(), [&](Task *task) {
-    return task->getName() == name;
-  });
-  if (elem == _tasks.end()) {
-    return 0;
-  }
-  return *elem;
-}
-
 std::list<Task *> TaskManager::getTasks() {
   return _tasks;
 }

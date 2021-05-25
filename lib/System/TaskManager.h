@@ -63,7 +63,6 @@ public:
 
   void              addTask(Task *task);
   void              addAlwaysRunTask(Task *task);
-  Task *            getTask(const char *name);
   std::list<Task *> getTasks();
 
   bool setup(System &system);
