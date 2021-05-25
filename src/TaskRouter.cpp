@@ -21,10 +21,10 @@ RouterTask::~RouterTask() {
 bool RouterTask::setup(System &system) {
   // setup beacon
   _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
+
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
   _beaconMsg->setSource(system.getUserConfig()->callsign);
   _beaconMsg->setDestination("APLG01");
-  _beaconMsg->setPath("WIDE1-1");
   String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
   String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
   _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
@@ -88,8 +88,11 @@ bool RouterTask::loop(System &system) {
     if (system.getUserConfig()->aprs_is.active)
       _toAprsIs.addElement(_beaconMsg);
 
-    if (system.getUserConfig()->digi.beacon)
-      _toModem.addElement(_beaconMsg);
+    if (system.getUserConfig()->digi.beacon) {
+      std::shared_ptr<APRSMessage> digiBeaconMsg = std::make_shared<APRSMessage>(*_beaconMsg);
+      digiBeaconMsg->setPath("WIDE1-1");
+      _toModem.addElement(digiBeaconMsg);
+    }
 
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
 
