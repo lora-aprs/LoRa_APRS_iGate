@@ -1,6 +1,6 @@
 #include "LoRa_APRS.h"
 
-LoRa_APRS::LoRa_APRS() {
+LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000) {
 }
 
 bool LoRa_APRS::checkMessage() {

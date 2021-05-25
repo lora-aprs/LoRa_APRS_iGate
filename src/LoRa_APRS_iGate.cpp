@@ -132,7 +132,6 @@ void setup() {
   logPrintlnI("setup done...");
 }
 
-// cppcheck-suppress unusedFunction
 void loop() {
   LoRaSystem.getTaskManager().loop(LoRaSystem);
 }
