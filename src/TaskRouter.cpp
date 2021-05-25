@@ -60,7 +60,7 @@ bool RouterTask::loop(System &system) {
         logPrintlnD("APRS-IS: disabled");
 
       if (modemMsg->getSource() == system.getUserConfig()->callsign)
-        logPrintlnD("APRS-IS: no forward => own paket erceived");
+        logPrintlnD("APRS-IS: no forward => own packet received");
     }
 
     if (system.getUserConfig()->digi.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
