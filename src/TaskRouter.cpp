@@ -85,9 +85,7 @@ bool RouterTask::loop(System &system) {
       _toAprsIs.addElement(_beaconMsg);
 
     if (system.getUserConfig()->digi.beacon) {
-      std::shared_ptr<APRSMessage> digiBeaconMsg = std::make_shared<APRSMessage>(*_beaconMsg);
-      //digiBeaconMsg->setPath("WIDE1-1");
-      _toModem.addElement(digiBeaconMsg);
+      _toModem.addElement(_beaconMsg);
     }
 
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
