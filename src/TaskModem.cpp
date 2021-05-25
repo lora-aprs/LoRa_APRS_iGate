@@ -7,7 +7,7 @@
 #include "TaskModem.h"
 #include "project_configuration.h"
 
-ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem) : Task(TASK_MODEM, TaskModem), _lora_aprs(), _fromModem(fromModem) {
+ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_MODEM, TaskModem), _lora_aprs(), _fromModem(fromModem), _toModem(toModem) {
 }
 
 ModemTask::~ModemTask() {
@@ -49,6 +49,11 @@ bool ModemTask::loop(System &system) {
 
     _fromModem.addElement(msg);
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
+  }
+
+  if (!_toModem.empty()) {
+    std::shared_ptr<APRSMessage> msg = _toModem.getElement();
+    _lora_aprs.sendMessage(msg);
   }
 
   return true;

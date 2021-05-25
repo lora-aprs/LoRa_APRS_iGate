@@ -25,19 +25,20 @@ String create_long_aprs(double lng);
 
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
+TaskQueue<std::shared_ptr<APRSMessage>> toModem;
 
 System        LoRaSystem;
 Configuration userConfig;
 
 DisplayTask displayTask;
-ModemTask   modemTask(fromModem);
+ModemTask   modemTask(fromModem, toModem);
 EthTask     ethTask;
 WifiTask    wifiTask;
 OTATask     otaTask;
 NTPTask     ntpTask;
 FTPTask     ftpTask;
 AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toAprsIs);
+RouterTask  routerTask(fromModem, toModem, toAprsIs);
 
 void setup() {
   Serial.begin(115200);
@@ -106,7 +107,9 @@ void setup() {
   if (userConfig.ftp.active) {
     LoRaSystem.getTaskManager().addTask(&ftpTask);
   }
-  LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  if (userConfig.aprs_is.active) {
+    LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  }
   LoRaSystem.getTaskManager().addTask(&routerTask);
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
