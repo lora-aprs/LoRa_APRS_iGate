@@ -6,7 +6,7 @@ BoardConfig::BoardConfig(String name, BoardType type, uint8_t oledsda, uint8_t o
     : Name(name), Type(type), OledSda(oledsda), OledScl(oledscl), OledAddr(oledaddr), OledReset(oledreset), LoraSck(lorasck), LoraMiso(loramiso), LoraMosi(loramosi), LoraCS(loracs), LoraReset(lorareset), LoraIRQ(lorairq), needCheckPowerChip(needcheckpowerchip), powerCheckStatus(powercheckstatus) {
 }
 
-BoardFinder::BoardFinder(std::list<BoardConfig const *> boardConfigs) : _boardConfigs(boardConfigs) {
+BoardFinder::BoardFinder(const std::list<BoardConfig const *> &boardConfigs) : _boardConfigs(boardConfigs) {
 }
 
 BoardConfig const *BoardFinder::searchBoardConfig() {
@@ -51,7 +51,7 @@ BoardConfig const *BoardFinder::searchBoardConfig() {
 }
 
 BoardConfig const *BoardFinder::getBoardConfig(String name) {
-  std::_List_iterator<BoardConfig const *> elem = std::find_if(_boardConfigs.begin(), _boardConfigs.end(), [&](BoardConfig const *conf) {
+  std::_List_const_iterator<BoardConfig const *> elem = std::find_if(_boardConfigs.begin(), _boardConfigs.end(), [&](BoardConfig const *conf) {
     return conf->Name == name;
   });
   if (elem == _boardConfigs.end()) {

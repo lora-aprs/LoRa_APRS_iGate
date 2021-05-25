@@ -45,14 +45,14 @@ public:
 
 class BoardFinder {
 public:
-  explicit BoardFinder(std::list<BoardConfig const *> boardConfigs);
+  explicit BoardFinder(const std::list<BoardConfig const *> &boardConfigs);
 
   BoardConfig const *searchBoardConfig();
 
   BoardConfig const *getBoardConfig(String name);
 
 private:
-  std::list<BoardConfig const *> _boardConfigs;
+  const std::list<BoardConfig const *> &_boardConfigs;
 
   bool checkOledConfig(BoardConfig const *boardConfig);
   bool checkModemConfig(BoardConfig const *boardConfig);
