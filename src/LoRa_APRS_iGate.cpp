@@ -39,7 +39,6 @@ FTPTask     ftpTask;
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toAprsIs);
 
-// cppcheck-suppress unusedFunction
 void setup() {
   Serial.begin(115200);
   Logger::instance().setSerial(&Serial);
@@ -62,18 +61,20 @@ void setup() {
 
   BoardFinder        finder(boardConfigs);
   BoardConfig const *boardConfig = finder.getBoardConfig(userConfig.board);
-  if (boardConfig == 0) {
+  if (!boardConfig) {
     boardConfig = finder.searchBoardConfig();
-    if (boardConfig == 0) {
+    if (!boardConfig) {
       logPrintlnE("Board config not set and search failed!");
       while (true)
         ;
+    } else {
+      userConfig.board = boardConfig->Name;
+      confmg.writeConfiguration(userConfig);
+      logPrintlnI("will restart board now!");
+      ESP.restart();
     }
-    userConfig.board = boardConfig->Name;
-    confmg.writeConfiguration(userConfig);
-    logPrintlnI("will restart board now!");
-    ESP.restart();
   }
+
   logPrintI("Board ");
   logPrintI(boardConfig->Name);
   logPrintlnI(" loaded.");
