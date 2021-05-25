@@ -33,12 +33,22 @@ public:
 
   class APRS_IS {
   public:
-    APRS_IS() : server("euro.aprs2.net"), port(14580) {
+    APRS_IS() : active(true), server("euro.aprs2.net"), port(14580) {
     }
 
+    bool   active;
     String passcode;
     String server;
     int    port;
+  };
+
+  class Digi {
+  public:
+    Digi() : active(false), beacon(true) {
+    }
+
+    bool active;
+    bool beacon;
   };
 
   class LoRa {
@@ -86,6 +96,7 @@ public:
   Wifi    wifi;
   Beacon  beacon;
   APRS_IS aprs_is;
+  Digi    digi;
   LoRa    lora;
   Display display;
   Ftp     ftp;

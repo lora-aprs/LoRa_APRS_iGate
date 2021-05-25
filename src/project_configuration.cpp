@@ -20,12 +20,15 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"] | 0.0;
   conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"] | 0.0;
   conf.beacon.timeout           = data["beacon"]["timeout"] | 15;
+  conf.aprs_is.active           = data["aprs_is"]["active"] | true;
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("passcode"))
     conf.aprs_is.passcode = data["aprs_is"]["passcode"].as<String>();
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
     conf.aprs_is.server = data["aprs_is"]["server"].as<String>();
   conf.aprs_is.port = data["aprs_is"]["port"] | 14580;
 
+  conf.digi.active          = data["digi"]["active"] | false;
+  conf.digi.beacon          = data["digi"]["beacon"] | false;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
@@ -70,9 +73,12 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
   data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
   data["beacon"]["timeout"]               = conf.beacon.timeout;
+  data["aprs_is"]["active"]               = conf.aprs_is.active;
   data["aprs_is"]["passcode"]             = conf.aprs_is.passcode;
   data["aprs_is"]["server"]               = conf.aprs_is.server;
   data["aprs_is"]["port"]                 = conf.aprs_is.port;
+  data["digi"]["active"]                  = conf.digi.active;
+  data["digi"]["beacon"]                  = conf.digi.beacon;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
   data["lora"]["power"]                   = conf.lora.power;
