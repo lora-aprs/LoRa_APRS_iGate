@@ -44,11 +44,10 @@ public:
 
   class Digi {
   public:
-    Digi() : active(false), forwardTimeout(5), beacon(true) {
+    Digi() : active(false), beacon(true) {
     }
 
     bool active;
-    int  forwardTimeout;
     bool beacon;
   };
 
