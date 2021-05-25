@@ -14,8 +14,6 @@ enum TaskNames
   TaskSize,
 };
 
-// char const * const getTaskName(TaskNames task);
-
 #define TASK_APRS_IS "AprsIsTask"
 #define TASK_ETH     "EthTask"
 #define TASK_FTP     "FTPTask"
