@@ -1,5 +1,8 @@
 #include "LoRa_APRS.h"
 
+LoRa_APRS::LoRa_APRS() {
+}
+
 bool LoRa_APRS::checkMessage() {
   if (!parsePacket()) {
     return false;
@@ -28,7 +31,6 @@ std::shared_ptr<APRSMessage> LoRa_APRS::getMessage() {
   return _LastReceivedMsg;
 }
 
-// cppcheck-suppress unusedFunction
 void LoRa_APRS::sendMessage(const std::shared_ptr<APRSMessage> msg) {
   setFrequency(_TxFrequency);
   String data = msg->encode();
@@ -48,6 +50,7 @@ void LoRa_APRS::setRxFrequency(long frequency) {
   setFrequency(_RxFrequency);
 }
 
+// cppcheck-suppress unusedFunction
 long LoRa_APRS::getRxFrequency() const {
   return _RxFrequency;
 }

@@ -9,6 +9,8 @@
 
 class LoRa_APRS : public LoRaClass {
 public:
+  LoRa_APRS();
+
   bool                         checkMessage();
   std::shared_ptr<APRSMessage> getMessage();
 
