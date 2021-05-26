@@ -97,22 +97,21 @@ void setup() {
   LoRaSystem.setUserConfig(&userConfig);
   LoRaSystem.getTaskManager().addTask(&displayTask);
   LoRaSystem.getTaskManager().addTask(&modemTask);
+  LoRaSystem.getTaskManager().addTask(&routerTask);
+
   if (userConfig.aprs_is.active) {
     if (boardConfig->Type == eETH_BOARD) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
     } else {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     }
-  }
-  LoRaSystem.getTaskManager().addTask(&otaTask);
-  LoRaSystem.getTaskManager().addTask(&ntpTask);
-  if (userConfig.ftp.active) {
-    LoRaSystem.getTaskManager().addTask(&ftpTask);
-  }
-  if (userConfig.aprs_is.active) {
+    LoRaSystem.getTaskManager().addTask(&otaTask);
+    LoRaSystem.getTaskManager().addTask(&ntpTask);
+    if (userConfig.ftp.active) {
+      LoRaSystem.getTaskManager().addTask(&ftpTask);
+    }
     LoRaSystem.getTaskManager().addTask(&aprsIsTask);
   }
-  LoRaSystem.getTaskManager().addTask(&routerTask);
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
