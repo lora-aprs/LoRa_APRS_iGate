@@ -97,10 +97,12 @@ void setup() {
   LoRaSystem.setUserConfig(&userConfig);
   LoRaSystem.getTaskManager().addTask(&displayTask);
   LoRaSystem.getTaskManager().addTask(&modemTask);
-  if (boardConfig->Type == eETH_BOARD) {
-    LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-  } else {
-    LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
+  if (userConfig.aprs_is.active) {
+    if (boardConfig->Type == eETH_BOARD) {
+      LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
+    } else {
+      LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
+    }
   }
   LoRaSystem.getTaskManager().addTask(&otaTask);
   LoRaSystem.getTaskManager().addTask(&ntpTask);
@@ -119,6 +121,12 @@ void setup() {
   if (userConfig.callsign == "NOCALL-10") {
     logPrintlnE("You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
     LoRaSystem.getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
+    while (true)
+      ;
+  }
+  if ((!userConfig.aprs_is.active) && !(userConfig.digi.active)) {
+    logPrintlnE("No mode selected (iGate or Digi)! You have to activate one of iGate or Digi.");
+    LoRaSystem.getDisplay().showStatusScreen("ERROR", "No mode selected (iGate or Digi)! You have to activate one of iGate or Digi.");
     while (true)
       ;
   }
