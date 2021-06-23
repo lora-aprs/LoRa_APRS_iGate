@@ -1,5 +1,6 @@
-#include <TimeLib.h>
 #include <logger.h>
+
+#include <TimeLib.h>
 
 #include "Task.h"
 #include "TaskNTP.h"
@@ -11,25 +12,25 @@ NTPTask::NTPTask() : Task(TASK_NTP, TaskNtp), _beginCalled(false) {
 NTPTask::~NTPTask() {
 }
 
-bool NTPTask::setup(std::shared_ptr<System> system) {
-  _ntpClient = std::shared_ptr<NTPClient>(new NTPClient(system->getUserConfig()->ntpServer.c_str()));
+bool NTPTask::setup(System &system) {
+  _ntpClient.setPoolServerName(system.getUserConfig()->ntpServer.c_str());
   return true;
 }
 
-bool NTPTask::loop(std::shared_ptr<System> system) {
-  if (!system->isWifiEthConnected()) {
+bool NTPTask::loop(System &system) {
+  if (!system.isWifiEthConnected()) {
     return false;
   }
   if (!_beginCalled) {
-    _ntpClient->begin();
+    _ntpClient.begin();
     _beginCalled = true;
   }
-  if (_ntpClient->update()) {
-    setTime(_ntpClient->getEpochTime());
+  if (_ntpClient.update()) {
+    setTime(_ntpClient.getEpochTime());
     logPrintI("Current time: ");
-    logPrintlnI(_ntpClient->getFormattedTime());
+    logPrintlnI(_ntpClient.getFormattedTime());
   }
-  _stateInfo = _ntpClient->getFormattedTime();
+  _stateInfo = _ntpClient.getFormattedTime();
   _state     = Okay;
   return true;
 }

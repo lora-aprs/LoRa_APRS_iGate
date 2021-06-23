@@ -9,12 +9,12 @@ public:
   NTPTask();
   virtual ~NTPTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<NTPClient> _ntpClient;
-  bool                       _beginCalled;
+  NTPClient _ntpClient;
+  bool      _beginCalled;
 };
 
 #endif

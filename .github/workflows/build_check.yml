@@ -1,56 +1,22 @@
-name: push pull checks
+name: Integreation Tests
 
 on: [push, pull_request]
 
 jobs:
-  #check:
-  #  runs-on: ubuntu-latest
-  #  steps:
-  #    - uses: actions/checkout@v2
-  #    - name: Cache pip
-  #      uses: actions/cache@v2
-  #      with:
-  #        path: ~/.cache/pip
-  #        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-  #        restore-keys: ${{ runner.os }}-pip-
-  #    - name: Cache PlatformIO
-  #      uses: actions/cache@v2
-  #      with:
-  #        path: ~/.platformio
-  #        key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
-  #    - name: Set up Python
-  #      uses: actions/setup-python@v2
-  #    - name: Install PlatformIO
-  #      run: |
-  #        python -m pip install --upgrade pip
-  #        pip install --upgrade platformio
-  #    - name: Run PlatformIO Check
-  #      run: platformio check --fail-on-defect low --fail-on-defect medium --fail-on-defect high
-
   build:
+    name: Compile Firmware
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Cache pip
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
-      - name: Cache PlatformIO
-        uses: actions/cache@v2
-        with:
-          path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Set up Python
         uses: actions/setup-python@v2
       - name: Install PlatformIO
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade platformio
+        run: python -m pip install --upgrade pip platformio
       - name: Run PlatformIO CI
         run: platformio run
-      - uses: actions/upload-artifact@v2
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: firmware
           path: .pio/build/lora_board/firmware.bin
@@ -72,10 +38,29 @@ jobs:
           - 'lib/System'
           #- 'lib/TimeLib'
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: Run clang-format style check for C/C++ programs.
         uses: jidicula/clang-format-action@v3.2.0
         with:
           clang-format-version: '11'
           check-path: ${{ matrix.path }}
 
+  cppcheck:
+    name: Run cppcheck
+    runs-on: ubuntu-latest
+    env:
+      CPPCHECK_ARGS: --enable=all --std=c++14 --inline-suppr -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - run: docker pull facthunder/cppcheck:latest
+      - name: Run cppcheck and print result
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"
+      - name: Run cppcheck and create html
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
+      - name: Upload report
+        uses: actions/upload-artifact@v1
+        with:
+          name: Cppcheck Report
+          path: output

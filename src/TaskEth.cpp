@@ -7,8 +7,26 @@
 
 volatile bool eth_connected = false;
 
-static void WiFiEvent(WiFiEvent_t event) {
+void WiFiEvent(WiFiEvent_t event) {
   switch (event) {
+  case SYSTEM_EVENT_STA_START:
+    logPrintlnI("WiFi Started");
+    break;
+  case SYSTEM_EVENT_STA_CONNECTED:
+    logPrintlnI("WiFi Connected");
+    break;
+  case SYSTEM_EVENT_STA_GOT_IP:
+    logPrintI("WiFi MAC: ");
+    logPrintI(WiFi.macAddress());
+    logPrintI(", IPv4: ");
+    logPrintlnI(WiFi.localIP().toString());
+    break;
+  case SYSTEM_EVENT_STA_DISCONNECTED:
+    logPrintlnW("WiFi Disconnected");
+    break;
+  case SYSTEM_EVENT_STA_STOP:
+    logPrintlnW("WiFi Stopped");
+    break;
   case SYSTEM_EVENT_ETH_START:
     logPrintlnI("ETH Started");
     ETH.setHostname("esp32-ethernet");
@@ -21,6 +39,8 @@ static void WiFiEvent(WiFiEvent_t event) {
     logPrintI(ETH.macAddress());
     logPrintI(", IPv4: ");
     logPrintI(ETH.localIP().toString());
+    logPrintI(", DNS: ");
+    logPrintI(ETH.dnsIP().toString());
     if (ETH.fullDuplex()) {
       logPrintI(", FULL_DUPLEX");
     }
@@ -48,7 +68,7 @@ EthTask::EthTask() : Task(TASK_ETH, TaskEth) {
 EthTask::~EthTask() {
 }
 
-bool EthTask::setup(std::shared_ptr<System> system) {
+bool EthTask::setup(System &system) {
   WiFi.onEvent(WiFiEvent);
 
   constexpr uint8_t          ETH_NRST      = 5;
@@ -73,14 +93,14 @@ bool EthTask::setup(std::shared_ptr<System> system) {
   return true;
 }
 
-bool EthTask::loop(std::shared_ptr<System> system) {
+bool EthTask::loop(System &system) {
   if (!eth_connected) {
-    system->connectedViaWifiEth(false);
+    system.connectedViaWifiEth(false);
     _stateInfo = "Ethernet not connected";
     _state     = Error;
     return false;
   }
-  system->connectedViaWifiEth(true);
+  system.connectedViaWifiEth(true);
   _stateInfo = ETH.localIP().toString();
   _state     = Okay;
   return true;

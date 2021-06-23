@@ -1,14 +1,12 @@
 #ifndef TIMER_H_
 #define TIMER_H_
 
-#include <TimeLib.h>
-
 class Timer {
 public:
   Timer();
 
-  void   setTimeout(const uint32_t timeout_ms);
-  time_t getTriggerTimeInSec() const;
+  void     setTimeout(const uint32_t timeout_ms);
+  uint32_t getTriggerTimeInSec() const;
 
   bool isActive() const;
 

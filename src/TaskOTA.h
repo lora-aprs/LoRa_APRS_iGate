@@ -9,12 +9,12 @@ public:
   OTATask();
   virtual ~OTATask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<ArduinoOTAClass> _ota;
-  bool                             _beginCalled;
+  ArduinoOTAClass _ota;
+  bool            _beginCalled;
 };
 
 #endif

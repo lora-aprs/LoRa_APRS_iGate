@@ -1,8 +1,6 @@
 #include "LoRa_APRS.h"
 
-LoRa_APRS::LoRa_APRS(std::shared_ptr<BoardConfig> boardConfig) : _LastReceivedMsg(0), _RxFrequency(LORA_RX_FREQUENCY), _TxFrequency(LORA_TX_FREQUENCY) {
-  SPI.begin(boardConfig->LoraSck, boardConfig->LoraMiso, boardConfig->LoraMosi, boardConfig->LoraCS);
-  setPins(boardConfig->LoraCS, boardConfig->LoraReset, boardConfig->LoraIRQ);
+LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000) {
 }
 
 bool LoRa_APRS::checkMessage() {
@@ -33,7 +31,6 @@ std::shared_ptr<APRSMessage> LoRa_APRS::getMessage() {
   return _LastReceivedMsg;
 }
 
-// cppcheck-suppress unusedFunction
 void LoRa_APRS::sendMessage(const std::shared_ptr<APRSMessage> msg) {
   setFrequency(_TxFrequency);
   String data = msg->encode();
@@ -53,6 +50,7 @@ void LoRa_APRS::setRxFrequency(long frequency) {
   setFrequency(_RxFrequency);
 }
 
+// cppcheck-suppress unusedFunction
 long LoRa_APRS::getRxFrequency() const {
   return _RxFrequency;
 }

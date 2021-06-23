@@ -43,8 +43,8 @@ public:
     return _stateInfo;
   }
 
-  virtual bool setup(std::shared_ptr<System> system) = 0;
-  virtual bool loop(std::shared_ptr<System> system)  = 0;
+  virtual bool setup(System &system) = 0;
+  virtual bool loop(System &system)  = 0;
 
 protected:
   TaskDisplayState _state;
@@ -61,30 +61,29 @@ public:
   ~TaskManager() {
   }
 
-  void                             addTask(std::shared_ptr<Task> task);
-  void                             addAlwaysRunTask(std::shared_ptr<Task> task);
-  std::shared_ptr<Task>            getTask(const char *name);
-  std::list<std::shared_ptr<Task>> getTasks();
+  void              addTask(Task *task);
+  void              addAlwaysRunTask(Task *task);
+  std::list<Task *> getTasks();
 
-  bool setup(std::shared_ptr<System> system);
-  bool loop(std::shared_ptr<System> system);
+  bool setup(System &system);
+  bool loop(System &system);
 
 private:
-  std::list<std::shared_ptr<Task>>           _tasks;
-  std::list<std::shared_ptr<Task>>::iterator _nextTask;
-  std::list<std::shared_ptr<Task>>           _alwaysRunTasks;
+  std::list<Task *>           _tasks;
+  std::list<Task *>::iterator _nextTask;
+  std::list<Task *>           _alwaysRunTasks;
 };
 
 class StatusFrame : public DisplayFrame {
 public:
-  explicit StatusFrame(const std::list<std::shared_ptr<Task>> &tasks) : _tasks(tasks) {
+  explicit StatusFrame(const std::list<Task *> &tasks) : _tasks(tasks) {
   }
   virtual ~StatusFrame() {
   }
   void drawStatusPage(Bitmap &bitmap) override;
 
 private:
-  std::list<std::shared_ptr<Task>> _tasks;
+  std::list<Task *> _tasks;
 };
 
 #include "System.h"

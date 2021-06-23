@@ -2,6 +2,7 @@
 #include <logger.h>
 
 #include "Task.h"
+#include "TaskEth.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
@@ -11,23 +12,21 @@ WifiTask::WifiTask() : Task(TASK_WIFI, TaskWifi), _oldWifiStatus(WL_IDLE_STATUS)
 WifiTask::~WifiTask() {
 }
 
-bool WifiTask::setup(std::shared_ptr<System> system) {
-  // WiFi.onEvent(WiFiEvent);
-  WiFi.setHostname(system->getUserConfig()->callsign.c_str());
-  _wiFiMulti = std::shared_ptr<WiFiMulti>(new WiFiMulti());
-  ;
-  for (Configuration::Wifi::AP ap : system->getUserConfig()->wifi.APs) {
+bool WifiTask::setup(System &system) {
+  WiFi.onEvent(WiFiEvent);
+  WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+  for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");
     logPrintlnD(ap.SSID);
-    _wiFiMulti->addAP(ap.SSID.c_str(), ap.password.c_str());
+    _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
   }
   return true;
 }
 
-bool WifiTask::loop(std::shared_ptr<System> system) {
-  const uint8_t wifi_status = _wiFiMulti->run();
+bool WifiTask::loop(System &system) {
+  const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
-    system->connectedViaWifiEth(false);
+    system.connectedViaWifiEth(false);
     logPrintlnE("WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
@@ -39,7 +38,7 @@ bool WifiTask::loop(std::shared_ptr<System> system) {
     _oldWifiStatus = wifi_status;
     return false;
   }
-  system->connectedViaWifiEth(true);
+  system.connectedViaWifiEth(true);
   _stateInfo = WiFi.localIP().toString();
   _state     = Okay;
   return true;

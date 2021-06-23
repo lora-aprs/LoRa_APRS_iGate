@@ -5,47 +5,37 @@
 TaskManager::TaskManager() {
 }
 
-void TaskManager::addTask(std::shared_ptr<Task> task) {
+void TaskManager::addTask(Task *task) {
   _tasks.push_back(task);
 }
 
-void TaskManager::addAlwaysRunTask(std::shared_ptr<Task> task) {
+void TaskManager::addAlwaysRunTask(Task *task) {
   _alwaysRunTasks.push_back(task);
 }
 
-std::shared_ptr<Task> TaskManager::getTask(const char *name) {
-  std::_List_iterator<std::shared_ptr<Task>> elem = std::find_if(_tasks.begin(), _tasks.end(), [&](std::shared_ptr<Task> task) {
-    return task->getName() == name;
-  });
-  if (elem == _tasks.end()) {
-    return 0;
-  }
-  return *elem;
-}
-
-std::list<std::shared_ptr<Task>> TaskManager::getTasks() {
+std::list<Task *> TaskManager::getTasks() {
   return _tasks;
 }
 
-bool TaskManager::setup(std::shared_ptr<System> system) {
+bool TaskManager::setup(System &system) {
   logPrintlnV("will setup all tasks...");
-  for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
-    logPrintW("call setup from ");
-    logPrintlnW(elem->getName());
+  for (Task *elem : _alwaysRunTasks) {
+    logPrintD("call setup from ");
+    logPrintlnD(elem->getName());
     elem->setup(system);
   }
-  for (std::shared_ptr<Task> &elem : _tasks) {
-    logPrintW("call setup from ");
-    logPrintlnW(elem->getName());
+  for (Task *elem : _tasks) {
+    logPrintD("call setup from ");
+    logPrintlnD(elem->getName());
     elem->setup(system);
   }
   _nextTask = _tasks.begin();
   return true;
 }
 
-bool TaskManager::loop(std::shared_ptr<System> system) {
+bool TaskManager::loop(System &system) {
   // logPrintlnD("will loop all tasks...");
-  for (std::shared_ptr<Task> &elem : _alwaysRunTasks) {
+  for (Task *elem : _alwaysRunTasks) {
     // logPrintD("call loop from ");
     // logPrintlnD(elem->getName());
     elem->loop(system);
@@ -59,9 +49,10 @@ bool TaskManager::loop(std::shared_ptr<System> system) {
   return ret;
 }
 
+// cppcheck-suppress unusedFunction
 void StatusFrame::drawStatusPage(Bitmap &bitmap) {
   int y = 0;
-  for (std::shared_ptr<Task> task : _tasks) {
+  for (Task *task : _tasks) {
     int x = bitmap.drawString(0, y, (task->getName()).substring(0, task->getName().indexOf("Task")));
     x     = bitmap.drawString(x, y, ": ");
     if (task->getStateInfo() == "") {

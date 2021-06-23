@@ -9,12 +9,12 @@ public:
   WifiTask();
   virtual ~WifiTask();
 
-  virtual bool setup(std::shared_ptr<System> system) override;
-  virtual bool loop(std::shared_ptr<System> system) override;
+  virtual bool setup(System &system) override;
+  virtual bool loop(System &system) override;
 
 private:
-  std::shared_ptr<WiFiMulti> _wiFiMulti;
-  uint8_t                    _oldWifiStatus;
+  WiFiMulti _wiFiMulti;
+  uint8_t   _oldWifiStatus;
 };
 
 #endif

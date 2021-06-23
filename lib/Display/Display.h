@@ -4,7 +4,6 @@
 #include <Arduino.h>
 #include <BoardFinder.h>
 #include <SSD1306.h>
-#include <TimeLib.h>
 #include <Timer.h>
 #include <Wire.h>
 #include <list>
@@ -28,7 +27,7 @@ public:
   Display();
   ~Display();
 
-  void setup(std::shared_ptr<BoardConfig> boardConfig);
+  void setup(BoardConfig const *const boardConfig);
   // setup functions
   void showSpashScreen(String firmwareTitle, String version);
   void setStatusFrame(std::shared_ptr<StatusFrame> frame);
@@ -43,7 +42,7 @@ public:
   void addFrame(std::shared_ptr<DisplayFrame> frame);
 
 private:
-  std::shared_ptr<OLEDDisplay> _disp;
+  OLEDDisplay *_disp;
 
   Timer                        _displayFrameRate;
   std::shared_ptr<StatusFrame> _statusFrame;
