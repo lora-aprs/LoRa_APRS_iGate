@@ -13,8 +13,18 @@ WifiTask::~WifiTask() {
 }
 
 bool WifiTask::setup(System &system) {
+  // Don't save WiFi configuration in flash
+  WiFi.persistent(false);
+
+  // Set WiFi to station mode
+  WiFi.mode(WIFI_STA);
+
   WiFi.onEvent(WiFiEvent);
   WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+
+  if (system.getUserConfig()->network.DHCP == false)
+    WiFi.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns);
+
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");
     logPrintlnD(ap.SSID);
