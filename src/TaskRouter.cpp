@@ -64,7 +64,7 @@ bool RouterTask::loop(System &system) {
       String                       path    = digiMsg->getPath();
 
       // simple loop check
-      if (path.indexOf("WIDE1-1") >= 0 || path.indexOf(system.getUserConfig()->callsign) == -1) {
+      if (path.indexOf("WIDE1-1") >= 0 && path.indexOf(system.getUserConfig()->callsign) == -1) {
         // fixme
         digiMsg->setPath(system.getUserConfig()->callsign + "*");
 
