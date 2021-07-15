@@ -9,12 +9,12 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.callsign = data["callsign"].as<String>();
 
   if (data.containsKey("eth") && data["eth"].containsKey("DHCP")) {
-    conf.eth.DHCP    = data["eth"]["DHCP"];
-    conf.eth.IP      = data["eth"]["IP"].as<String>();
-    conf.eth.Netmask = data["eth"]["Netmask"].as<String>();
-    conf.eth.Gateway = data["eth"]["Gateway"].as<String>();
-    conf.eth.DNS1    = data["eth"]["DNS1"].as<String>();
-    conf.eth.DNS2    = data["eth"]["DNS2"].as<String>();
+    conf.eth.DHCP = data["eth"]["DHCP"];
+    conf.eth.staticIP.fromString(data["eth"]["staticIP"].as<String>());
+    conf.eth.subnet.fromString(data["eth"]["subnet"].as<String>());
+    conf.eth.gateway.fromString(data["eth"]["gateway"].as<String>());
+    conf.eth.dns1.fromString(data["eth"]["dns1"].as<String>());
+    conf.eth.dns2.fromString(data["eth"]["dns2"].as<String>());
   }
 
   JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
@@ -23,12 +23,12 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     ap.SSID     = v["SSID"].as<String>();
     ap.password = v["password"].as<String>();
     if (v.containsKey("DHCP")) {
-      ap.DHCP    = v["DHCP"];
-      ap.IP      = v["IP"].as<String>();
-      ap.Netmask = v["Netmask"].as<String>();
-      ap.Gateway = v["Gateway"].as<String>();
-      ap.DNS1    = v["DNS1"].as<String>();
-      ap.DNS2    = v["DNS2"].as<String>();
+      ap.DHCP = v["DHCP"];
+      ap.staticIP.fromString(v["staticIP"].as<String>());
+      ap.subnet.fromString(v["subnet"].as<String>());
+      ap.gateway.fromString(v["Gateway"].as<String>());
+      ap.dns1.fromString(v["dns1"].as<String>());
+      ap.dns2.fromString(v["dns2"].as<String>());
     }
     conf.wifi.APs.push_back(ap);
   }
@@ -83,12 +83,12 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["callsign"] = conf.callsign;
 
   if (conf.eth.DHCP == false) {
-    data["eth"]["DHCP"]    = conf.eth.DHCP;
-    data["eth"]["IP"]      = conf.eth.IP;
-    data["eth"]["Netmask"] = conf.eth.Netmask;
-    data["eth"]["Gateway"] = conf.eth.Gateway;
-    data["eth"]["DNS1"]    = conf.eth.DNS1;
-    data["eth"]["DNS2"]    = conf.eth.DNS2;
+    data["eth"]["DHCP"]     = conf.eth.DHCP;
+    data["eth"]["staticIP"] = conf.eth.staticIP.toString();
+    data["eth"]["subnet"]   = conf.eth.subnet.toString();
+    data["eth"]["gateway"]  = conf.eth.gateway.toString();
+    data["eth"]["dns1"]     = conf.eth.dns1.toString();
+    data["eth"]["dns2"]     = conf.eth.dns2.toString();
   }
 
   JsonArray aps = data["wifi"].createNestedArray("AP");
@@ -97,12 +97,12 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     v["SSID"]     = ap.SSID;
     v["password"] = ap.password;
     if (ap.DHCP == false) {
-      v["DHCP"]    = ap.DHCP;
-      v["IP"]      = ap.IP;
-      v["Netmask"] = ap.Netmask;
-      v["Gateway"] = ap.Gateway;
-      v["DNS1"]    = ap.DNS1;
-      v["DNS2"]    = ap.DNS2;
+      v["DHCP"]     = ap.DHCP;
+      v["staticIP"] = ap.staticIP.toString();
+      v["subnet"]   = ap.subnet.toString();
+      v["gateway"]  = ap.gateway.toString();
+      v["dns1"]     = ap.dns1.toString();
+      v["dns2"]     = ap.dns2.toString();
     }
   }
 

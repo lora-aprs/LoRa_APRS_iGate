@@ -11,12 +11,12 @@ public:
     ETH() : DHCP(true) {
     }
 
-    bool   DHCP;
-    String IP;
-    String Netmask;
-    String Gateway;
-    String DNS1;
-    String DNS2;
+    bool      DHCP;
+    IPAddress staticIP;
+    IPAddress subnet;
+    IPAddress gateway;
+    IPAddress dns1;
+    IPAddress dns2;
   };
 
   class Wifi {
@@ -26,14 +26,14 @@ public:
       AP() : DHCP(true) {
       }
 
-      String SSID;
-      String password;
-      bool   DHCP;
-      String IP;
-      String Netmask;
-      String Gateway;
-      String DNS1;
-      String DNS2;
+      String    SSID;
+      String    password;
+      bool      DHCP;
+      IPAddress staticIP;
+      IPAddress subnet;
+      IPAddress gateway;
+      IPAddress dns1;
+      IPAddress dns2;
     };
 
     Wifi() {
