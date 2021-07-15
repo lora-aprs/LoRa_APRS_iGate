@@ -8,13 +8,31 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   if (data.containsKey("callsign"))
     conf.callsign = data["callsign"].as<String>();
 
+  if (data.containsKey("eth") && data["eth"].containsKey("DHCP")) {
+    conf.eth.DHCP    = data["eth"]["DHCP"];
+    conf.eth.IP      = data["eth"]["IP"].as<String>();
+    conf.eth.Netmask = data["eth"]["Netmask"].as<String>();
+    conf.eth.Gateway = data["eth"]["Gateway"].as<String>();
+    conf.eth.DNS1    = data["eth"]["DNS1"].as<String>();
+    conf.eth.DNS2    = data["eth"]["DNS2"].as<String>();
+  }
+
   JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
   for (JsonVariant v : aps) {
     Configuration::Wifi::AP ap;
     ap.SSID     = v["SSID"].as<String>();
     ap.password = v["password"].as<String>();
+    if (v.containsKey("DHCP")) {
+      ap.DHCP    = v["DHCP"];
+      ap.IP      = v["IP"].as<String>();
+      ap.Netmask = v["Netmask"].as<String>();
+      ap.Gateway = v["Gateway"].as<String>();
+      ap.DNS1    = v["DNS1"].as<String>();
+      ap.DNS2    = v["DNS2"].as<String>();
+    }
     conf.wifi.APs.push_back(ap);
   }
+
   if (data.containsKey("beacon") && data["beacon"].containsKey("message"))
     conf.beacon.message = data["beacon"]["message"].as<String>();
   conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"] | 0.0;
@@ -63,12 +81,31 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
   data["callsign"] = conf.callsign;
-  JsonArray aps    = data["wifi"].createNestedArray("AP");
+
+  if (conf.eth.DHCP == false) {
+    data["eth"]["DHCP"]    = conf.eth.DHCP;
+    data["eth"]["IP"]      = conf.eth.IP;
+    data["eth"]["Netmask"] = conf.eth.Netmask;
+    data["eth"]["Gateway"] = conf.eth.Gateway;
+    data["eth"]["DNS1"]    = conf.eth.DNS1;
+    data["eth"]["DNS2"]    = conf.eth.DNS2;
+  }
+
+  JsonArray aps = data["wifi"].createNestedArray("AP");
   for (Configuration::Wifi::AP ap : conf.wifi.APs) {
     JsonObject v  = aps.createNestedObject();
     v["SSID"]     = ap.SSID;
     v["password"] = ap.password;
+    if (ap.DHCP == false) {
+      v["DHCP"]    = ap.DHCP;
+      v["IP"]      = ap.IP;
+      v["Netmask"] = ap.Netmask;
+      v["Gateway"] = ap.Gateway;
+      v["DNS1"]    = ap.DNS1;
+      v["DNS2"]    = ap.DNS2;
+    }
   }
+
   data["beacon"]["message"]               = conf.beacon.message;
   data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
   data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
