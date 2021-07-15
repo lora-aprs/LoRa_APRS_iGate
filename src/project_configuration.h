@@ -6,34 +6,24 @@
 
 class Configuration {
 public:
-  class ETH {
+  class NETWORK {
   public:
-    ETH() : DHCP(true) {
+    NETWORK() : DHCP(true) {
     }
 
     bool      DHCP;
     IPAddress staticIP;
     IPAddress subnet;
     IPAddress gateway;
-    IPAddress dns1;
-    IPAddress dns2;
+    IPAddress dns;
   };
 
   class Wifi {
   public:
     class AP {
     public:
-      AP() : DHCP(true) {
-      }
-
-      String    SSID;
-      String    password;
-      bool      DHCP;
-      IPAddress staticIP;
-      IPAddress subnet;
-      IPAddress gateway;
-      IPAddress dns1;
-      IPAddress dns2;
+      String SSID;
+      String password;
     };
 
     Wifi() {
@@ -115,7 +105,7 @@ public:
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
   String  callsign;
-  ETH     eth;
+  NETWORK network;
   Wifi    wifi;
   Beacon  beacon;
   APRS_IS aprs_is;

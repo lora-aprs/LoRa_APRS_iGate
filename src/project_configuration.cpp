@@ -8,13 +8,12 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   if (data.containsKey("callsign"))
     conf.callsign = data["callsign"].as<String>();
 
-  if (data.containsKey("eth") && data["eth"].containsKey("DHCP")) {
-    conf.eth.DHCP = data["eth"]["DHCP"];
-    conf.eth.staticIP.fromString(data["eth"]["staticIP"].as<String>());
-    conf.eth.subnet.fromString(data["eth"]["subnet"].as<String>());
-    conf.eth.gateway.fromString(data["eth"]["gateway"].as<String>());
-    conf.eth.dns1.fromString(data["eth"]["dns1"].as<String>());
-    conf.eth.dns2.fromString(data["eth"]["dns2"].as<String>());
+  if (data.containsKey("network") && data["network"].containsKey("DHCP")) {
+    conf.network.DHCP = data["network"]["DHCP"];
+    conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
+    conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
+    conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
+    conf.network.dns.fromString(data["network"]["dns"].as<String>());
   }
 
   JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
@@ -22,17 +21,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     Configuration::Wifi::AP ap;
     ap.SSID     = v["SSID"].as<String>();
     ap.password = v["password"].as<String>();
-    if (v.containsKey("DHCP")) {
-      ap.DHCP = v["DHCP"];
-      ap.staticIP.fromString(v["staticIP"].as<String>());
-      ap.subnet.fromString(v["subnet"].as<String>());
-      ap.gateway.fromString(v["Gateway"].as<String>());
-      ap.dns1.fromString(v["dns1"].as<String>());
-      ap.dns2.fromString(v["dns2"].as<String>());
-    }
     conf.wifi.APs.push_back(ap);
   }
-
   if (data.containsKey("beacon") && data["beacon"].containsKey("message"))
     conf.beacon.message = data["beacon"]["message"].as<String>();
   conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"] | 0.0;
@@ -82,13 +72,12 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
   data["callsign"] = conf.callsign;
 
-  if (conf.eth.DHCP == false) {
-    data["eth"]["DHCP"]     = conf.eth.DHCP;
-    data["eth"]["staticIP"] = conf.eth.staticIP.toString();
-    data["eth"]["subnet"]   = conf.eth.subnet.toString();
-    data["eth"]["gateway"]  = conf.eth.gateway.toString();
-    data["eth"]["dns1"]     = conf.eth.dns1.toString();
-    data["eth"]["dns2"]     = conf.eth.dns2.toString();
+  if (conf.network.DHCP == false) {
+    data["network"]["DHCP"]     = conf.network.DHCP;
+    data["network"]["staticIP"] = conf.network.staticIP.toString();
+    data["network"]["subnet"]   = conf.network.subnet.toString();
+    data["network"]["gateway"]  = conf.network.gateway.toString();
+    data["network"]["dns"]      = conf.network.dns.toString();
   }
 
   JsonArray aps = data["wifi"].createNestedArray("AP");
@@ -96,16 +85,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     JsonObject v  = aps.createNestedObject();
     v["SSID"]     = ap.SSID;
     v["password"] = ap.password;
-    if (ap.DHCP == false) {
-      v["DHCP"]     = ap.DHCP;
-      v["staticIP"] = ap.staticIP.toString();
-      v["subnet"]   = ap.subnet.toString();
-      v["gateway"]  = ap.gateway.toString();
-      v["dns1"]     = ap.dns1.toString();
-      v["dns2"]     = ap.dns2.toString();
-    }
   }
-
   data["beacon"]["message"]               = conf.beacon.message;
   data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
   data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
