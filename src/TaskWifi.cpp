@@ -23,7 +23,7 @@ bool WifiTask::setup(System &system) {
   WiFi.setHostname(system.getUserConfig()->callsign.c_str());
 
   if (system.getUserConfig()->network.DHCP == false)
-    WiFi.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns);
+    WiFi.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
 
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
     logPrintD("Looking for AP: ");

@@ -13,7 +13,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
     conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
     conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
-    conf.network.dns.fromString(data["network"]["dns"].as<String>());
+    conf.network.dns1.fromString(data["network"]["dns1"].as<String>());
+    conf.network.dns2.fromString(data["network"]["dns2"].as<String>());
   }
 
   JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
@@ -77,7 +78,8 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     data["network"]["staticIP"] = conf.network.staticIP.toString();
     data["network"]["subnet"]   = conf.network.subnet.toString();
     data["network"]["gateway"]  = conf.network.gateway.toString();
-    data["network"]["dns"]      = conf.network.dns.toString();
+    data["network"]["dns1"]     = conf.network.dns1.toString();
+    data["network"]["dns2"]     = conf.network.dns2.toString();
   }
 
   JsonArray aps = data["wifi"].createNestedArray("AP");

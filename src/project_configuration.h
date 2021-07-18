@@ -15,7 +15,8 @@ public:
     IPAddress staticIP;
     IPAddress subnet;
     IPAddress gateway;
-    IPAddress dns;
+    IPAddress dns1;
+    IPAddress dns2;
   };
 
   class Wifi {
