@@ -6,7 +6,8 @@
 #include "TaskManager.h"
 #include <BoardFinder.h>
 #include <Display.h>
-#include <configuration.h>
+
+class Configuration; // needs to be defined in user programm
 
 class System {
 public:

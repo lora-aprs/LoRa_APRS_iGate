@@ -2,7 +2,7 @@
 
 #include "Task.h"
 #include "TaskOTA.h"
-#include "project_configuration.h"
+#include "configuration.h"
 
 OTATask::OTATask() : Task(TASK_OTA, TaskOta), _beginCalled(false) {
 }
@@ -43,7 +43,7 @@ bool OTATask::setup(System &system) {
         else if (error == OTA_END_ERROR)
           logPrintlnE("End Failed");
       });
-  _ota.setHostname(system.getUserConfig()->callsign.c_str());
+  _ota.setHostname(system.getUserConfig()->callsign().c_str());
   _stateInfo = "";
   return true;
 }

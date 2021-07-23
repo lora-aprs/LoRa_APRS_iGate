@@ -4,9 +4,9 @@
 #include "Task.h"
 #include "TaskEth.h"
 #include "TaskWifi.h"
-#include "project_configuration.h"
+#include "configuration.h"
 
-WifiTask::WifiTask() : Task(TASK_WIFI, TaskWifi), _oldWifiStatus(WL_IDLE_STATUS) {
+WifiTask::WifiTask() : Task(TASK_WIFI, TaskWifi), _oldWifiStatus(WL_IDLE_STATUS), _isAPMode(false) {
 }
 
 WifiTask::~WifiTask() {
@@ -14,16 +14,27 @@ WifiTask::~WifiTask() {
 
 bool WifiTask::setup(System &system) {
   WiFi.onEvent(WiFiEvent);
-  WiFi.setHostname(system.getUserConfig()->callsign.c_str());
-  for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
+  WiFi.setHostname(system.getUserConfig()->callsign().c_str());
+  if (system.getUserConfig()->wifi.ssid() == "" && system.getUserConfig()->wifi.password() == "") {
+    // ssid and password not set...
+    WiFi.softAP("LoRa APRS iGate", "LoRaAPRS");
+    IPAddress IP = WiFi.softAPIP();
+    logPrintD("AP IP address: ");
+    logPrintlnD(IP.toString());
+    _isAPMode = true;
+    system.connectedViaWifiEth(true);
+  } else {
     logPrintD("Looking for AP: ");
-    logPrintlnD(ap.SSID);
-    _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
+    logPrintlnD(system.getUserConfig()->wifi.ssid());
+    _wiFiMulti.addAP(system.getUserConfig()->wifi.ssid().c_str(), system.getUserConfig()->wifi.password().c_str());
   }
   return true;
 }
 
 bool WifiTask::loop(System &system) {
+  if (_isAPMode) {
+    return false;
+  }
   const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
     system.connectedViaWifiEth(false);

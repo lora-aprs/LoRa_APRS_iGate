@@ -4,7 +4,7 @@
 
 #include "Task.h"
 #include "TaskNTP.h"
-#include "project_configuration.h"
+#include "configuration.h"
 
 NTPTask::NTPTask() : Task(TASK_NTP, TaskNtp), _beginCalled(false) {
 }
@@ -13,7 +13,7 @@ NTPTask::~NTPTask() {
 }
 
 bool NTPTask::setup(System &system) {
-  _ntpClient.setPoolServerName(system.getUserConfig()->ntpServer.c_str());
+  _ntpClient.setPoolServerName(system.getUserConfig()->ntpServer().c_str());
   return true;
 }
 

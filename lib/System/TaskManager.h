@@ -7,7 +7,6 @@
 
 #include <BoardFinder.h>
 #include <Display.h>
-#include <configuration.h>
 
 #include "TaskQueue.h"
 

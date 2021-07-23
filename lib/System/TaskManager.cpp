@@ -18,17 +18,19 @@ std::list<Task *> TaskManager::getTasks() {
 }
 
 bool TaskManager::setup(System &system) {
-  logPrintlnV("will setup all tasks...");
+  logPrintlnV("will setup all always run tasks...");
   for (Task *elem : _alwaysRunTasks) {
-    logPrintD("call setup from ");
+    logPrintD("call setup from always task ");
     logPrintlnD(elem->getName());
     elem->setup(system);
   }
+  logPrintlnD("done, will setup all normal tasks...");
   for (Task *elem : _tasks) {
     logPrintD("call setup from ");
     logPrintlnD(elem->getName());
     elem->setup(system);
   }
+  logPrintlnD("done");
   _nextTask = _tasks.begin();
   return true;
 }
@@ -36,7 +38,7 @@ bool TaskManager::setup(System &system) {
 bool TaskManager::loop(System &system) {
   // logPrintlnD("will loop all tasks...");
   for (Task *elem : _alwaysRunTasks) {
-    // logPrintD("call loop from ");
+    // logPrintD("call always loop for ");
     // logPrintlnD(elem->getName());
     elem->loop(system);
   }
@@ -44,6 +46,8 @@ bool TaskManager::loop(System &system) {
   if (_nextTask == _tasks.end()) {
     _nextTask = _tasks.begin();
   }
+  // logPrintD("call loop for ");
+  // logPrintlnD((*_nextTask)->getName());
   bool ret = (*_nextTask)->loop(system);
   ++_nextTask;
   return ret;

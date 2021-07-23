@@ -15,6 +15,7 @@ public:
 private:
   WiFiMulti _wiFiMulti;
   uint8_t   _oldWifiStatus;
+  bool      _isAPMode;
 };
 
 #endif

@@ -4,7 +4,7 @@
 
 #include "Task.h"
 #include "TaskFTP.h"
-#include "project_configuration.h"
+#include "configuration.h"
 
 FTPTask::FTPTask() : Task(TASK_FTP, TaskFtp), _beginCalled(false) {
 }
@@ -13,11 +13,14 @@ FTPTask::~FTPTask() {
 }
 
 bool FTPTask::setup(System &system) {
-  for (Configuration::Ftp::User user : system.getUserConfig()->ftp.users) {
+  /*for (Configuration::Ftp::User user : system.getUserConfig()->ftp.users) {
     logPrintD("Adding user to FTP Server: ");
     logPrintlnD(user.name);
     _ftpServer.addUser(user.name, user.password);
-  }
+  }*/
+  logPrintD("Adding user to FTP Server: ");
+  logPrintlnD(system.getUserConfig()->ftp.name());
+  _ftpServer.addUser(system.getUserConfig()->ftp.name(), system.getUserConfig()->ftp.password());
   _ftpServer.addFilesystem("SPIFFS", &SPIFFS);
   _stateInfo = "waiting";
   return true;
