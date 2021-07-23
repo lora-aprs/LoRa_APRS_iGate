@@ -100,8 +100,9 @@ bool EthTask::setup(System &system) {
   delay(200);
   digitalWrite(ETH_NRST, 1);
 
-  if (system.getUserConfig()->network.DHCP == false)
+  if (!system.getUserConfig()->network.DHCP) {
     ETH.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
+  }
 
   ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
   return true;

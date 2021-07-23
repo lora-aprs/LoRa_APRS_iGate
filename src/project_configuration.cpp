@@ -73,7 +73,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
   data["callsign"] = conf.callsign;
 
-  if (conf.network.DHCP == false) {
+  if (!conf.network.DHCP) {
     data["network"]["DHCP"]     = conf.network.DHCP;
     data["network"]["staticIP"] = conf.network.staticIP.toString();
     data["network"]["subnet"]   = conf.network.subnet.toString();
