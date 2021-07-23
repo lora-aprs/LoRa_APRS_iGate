@@ -8,6 +8,7 @@
 #include <power_management.h>
 
 #include "TaskAprsIs.h"
+#include "TaskConfig.h"
 #include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
@@ -27,12 +28,10 @@ TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 TaskQueue<std::shared_ptr<APRSMessage>> toModem;
 
-System         LoRaSystem;
-Configuration  userConfig;
-ConfigHTML     html;
-ConfigFactory  fact;
-const String   config_filename = "/is-cfg.json";
-AsyncWebServer server(80);
+System        LoRaSystem;
+Configuration userConfig;
+ConfigFactory fact;
+const String  config_filename("/is-cfg.json");
 
 DisplayTask displayTask;
 ModemTask   modemTask(fromModem, toModem);
@@ -43,6 +42,7 @@ NTPTask     ntpTask;
 FTPTask     ftpTask;
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs);
+ConfigTask  configTask;
 
 void setup() {
   Serial.begin(115200);
@@ -62,14 +62,7 @@ void setup() {
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
 
-  fact.addPage(&page);
-  fact.loadConfig(config_filename);
-
-  html.addPage(&page);
-  html.registerWebServer(server);
-  server.onNotFound([](AsyncWebServerRequest *request) {
-    request->send(404, "text/plain", "Not found");
-  });
+  configTask.setup(LoRaSystem);
 
   BoardFinder        finder(boardConfigs);
   BoardConfig const *boardConfig = finder.getBoardConfig(userConfig.board());
@@ -107,6 +100,7 @@ void setup() {
   LoRaSystem.setBoardConfig(boardConfig);
   LoRaSystem.setUserConfig(&userConfig);
   LoRaSystem.getTaskManager().addTask(&displayTask);
+  LoRaSystem.getTaskManager().addTask(&configTask);
   if (userConfig.callsign() != "NOCALL-10") {
     LoRaSystem.getTaskManager().addTask(&modemTask);
     LoRaSystem.getTaskManager().addTask(&routerTask);
@@ -143,17 +137,6 @@ void setup() {
 
 void loop() {
   LoRaSystem.getTaskManager().loop(LoRaSystem);
-  if (html.wasSaved()) {
-    fact.saveConfig(config_filename);
-    ESP.restart();
-  }
-
-  // we can start the http server just when we are connected to something
-  static bool httpServerInitDone = false;
-  if (LoRaSystem.isWifiEthConnected() && !httpServerInitDone) {
-    server.begin();
-    httpServerInitDone = true;
-  }
 }
 
 String create_lat_aprs(double lat) {

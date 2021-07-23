@@ -4,6 +4,7 @@
 enum TaskNames
 {
   TaskAprsIs = 1,
+  TaskConfig,
   TaskEth,
   TaskFtp,
   TaskModem,
@@ -15,6 +16,7 @@ enum TaskNames
 };
 
 #define TASK_APRS_IS "AprsIsTask"
+#define TASK_CONFIG  "ConfigTask"
 #define TASK_ETH     "EthTask"
 #define TASK_FTP     "FTPTask"
 #define TASK_MODEM   "ModemTask"
