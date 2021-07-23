@@ -19,6 +19,7 @@ private:
   AsyncWebServer _server;
   const String   _config_filename;
   bool           _setupDone;
+  bool           _httpServerInitDone;
 };
 
 #endif

@@ -5,7 +5,7 @@
 #include "TaskConfig.h"
 #include "configuration.h"
 
-ConfigTask::ConfigTask() : Task(TASK_CONFIG, TaskConfig), _server(80), _config_filename("/is-cfg.json"), _setupDone(false) {
+ConfigTask::ConfigTask() : Task(TASK_CONFIG, TaskConfig), _server(80), _config_filename("/is-cfg.json"), _setupDone(false), _httpServerInitDone(false) {
 }
 
 ConfigTask::~ConfigTask() {
@@ -30,10 +30,9 @@ bool ConfigTask::setup(System &system) {
 
 bool ConfigTask::loop(System &system) {
   // we can start the http server just when we are connected to something
-  static bool httpServerInitDone = false;
-  if (system.isWifiEthConnected() && !httpServerInitDone) {
+  if (system.isWifiEthConnected() && !_httpServerInitDone) {
     _server.begin();
-    httpServerInitDone = true;
+    _httpServerInitDone = true;
   }
 
   if (_html.wasSaved()) {
