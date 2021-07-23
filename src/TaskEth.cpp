@@ -4,6 +4,7 @@
 
 #include "Task.h"
 #include "TaskEth.h"
+#include "project_configuration.h"
 
 volatile bool eth_connected = false;
 
@@ -19,7 +20,13 @@ void WiFiEvent(WiFiEvent_t event) {
     logPrintI("WiFi MAC: ");
     logPrintI(WiFi.macAddress());
     logPrintI(", IPv4: ");
-    logPrintlnI(WiFi.localIP().toString());
+    logPrintI(WiFi.localIP().toString());
+    logPrintI(", Gateway: ");
+    logPrintI(WiFi.gatewayIP().toString());
+    logPrintI(", DNS1: ");
+    logPrintI(WiFi.dnsIP().toString());
+    logPrintI(", DNS2: ");
+    logPrintlnI(WiFi.dnsIP(1).toString());
     break;
   case SYSTEM_EVENT_STA_DISCONNECTED:
     logPrintlnW("WiFi Disconnected");
@@ -39,8 +46,12 @@ void WiFiEvent(WiFiEvent_t event) {
     logPrintI(ETH.macAddress());
     logPrintI(", IPv4: ");
     logPrintI(ETH.localIP().toString());
-    logPrintI(", DNS: ");
+    logPrintI(", Gateway: ");
+    logPrintI(ETH.gatewayIP().toString());
+    logPrintI(", DNS1: ");
     logPrintI(ETH.dnsIP().toString());
+    logPrintI(", DNS2: ");
+    logPrintI(ETH.dnsIP(1).toString());
     if (ETH.fullDuplex()) {
       logPrintI(", FULL_DUPLEX");
     }
@@ -88,6 +99,10 @@ bool EthTask::setup(System &system) {
   digitalWrite(ETH_NRST, 0);
   delay(200);
   digitalWrite(ETH_NRST, 1);
+
+  if (!system.getUserConfig()->network.DHCP) {
+    ETH.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
+  }
 
   ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
   return true;
