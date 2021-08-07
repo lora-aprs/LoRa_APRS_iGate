@@ -20,11 +20,10 @@ bool RouterTask::setup(System &system) {
   _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
 
   _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
-  _beaconMsg->setSource(system.getUserConfig()->callsign);
-  _beaconMsg->setDestination("APLG01");
-  String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
-  String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
-  _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
+  _beaconMsg->decode(system.getUserConfig()->callsign + ">APLG01:=" + 
+    create_lat_aprs(system.getUserConfig()->beacon.positionLatitude) + "L" +
+    create_long_aprs(system.getUserConfig()->beacon.positionLongitude) + "&" +
+    system.getUserConfig()->beacon.message);
 
   return true;
 }
