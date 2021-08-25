@@ -26,9 +26,12 @@ bool ModemTask::setup(System &system) {
   _lora_aprs.setRxFrequency(system.getUserConfig()->lora.frequencyRx);
   _lora_aprs.setTxFrequency(system.getUserConfig()->lora.frequencyTx);
   _lora_aprs.setTxPower(system.getUserConfig()->lora.power);
-  _lora_aprs.setSpreadingFactor(system.getUserConfig()->lora.spreadingFactor);
-  _lora_aprs.setSignalBandwidth(system.getUserConfig()->lora.signalBandwidth);
-  _lora_aprs.setCodingRate4(system.getUserConfig()->lora.codingRate4);
+  _lora_aprs.setRxSpreadingFactor(system.getUserConfig()->lora.spreadingFactorRx);
+  _lora_aprs.setRxSignalBandwidth(system.getUserConfig()->lora.signalBandwidthRx);
+  _lora_aprs.setRxCodingRate4(system.getUserConfig()->lora.codingRate4Rx);
+  _lora_aprs.setTxSpreadingFactor(system.getUserConfig()->lora.spreadingFactorTx);
+  _lora_aprs.setTxSignalBandwidth(system.getUserConfig()->lora.signalBandwidthTx);
+  _lora_aprs.setTxCodingRate4(system.getUserConfig()->lora.codingRate4Tx);
   _lora_aprs.enableCrc();
 
   _stateInfo = "";

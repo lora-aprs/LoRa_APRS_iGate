@@ -66,15 +66,18 @@ public:
 
   class LoRa {
   public:
-    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {
+    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactorRx(12), signalBandwidthRx(125000), codingRate4Rx(5), spreadingFactorTx(12), signalBandwidthTx(125000), codingRate4Tx(5) {
     }
 
     long frequencyRx;
     long frequencyTx;
     int  power;
-    int  spreadingFactor;
-    long signalBandwidth;
-    int  codingRate4;
+    int  spreadingFactorRx;
+    long signalBandwidthRx;
+    int  codingRate4Rx;
+    int  spreadingFactorTx;
+    long signalBandwidthTx;
+    int  codingRate4Tx;
   };
 
   class Display {

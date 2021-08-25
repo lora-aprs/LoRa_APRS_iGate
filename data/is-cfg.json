@@ -38,9 +38,12 @@
 		"frequency_rx": 433775000,
 		"frequency_tx": 433775000,
 		"power": 20,
-		"spreading_factor": 12,
-		"signal_bandwidth": 125000,
-		"coding_rate4": 5
+		"spreading_factor_rx": 12,
+		"signal_bandwidth_rx": 125000,
+		"coding_rate4_rx": 5,
+		"spreading_factor_tx": 12,
+		"signal_bandwidth_tx": 125000,
+		"coding_rate4_tx": 5
 	},
 	"display": {
 		"always_on": true,
