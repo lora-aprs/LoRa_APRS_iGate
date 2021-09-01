@@ -8,6 +8,15 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   if (data.containsKey("callsign"))
     conf.callsign = data["callsign"].as<String>();
 
+  if (data.containsKey("network") && data["network"].containsKey("DHCP")) {
+    conf.network.DHCP = data["network"]["DHCP"];
+    conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
+    conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
+    conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
+    conf.network.dns1.fromString(data["network"]["dns1"].as<String>());
+    conf.network.dns2.fromString(data["network"]["dns2"].as<String>());
+  }
+
   JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
   for (JsonVariant v : aps) {
     Configuration::Wifi::AP ap;
@@ -63,7 +72,17 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
   data["callsign"] = conf.callsign;
-  JsonArray aps    = data["wifi"].createNestedArray("AP");
+
+  if (!conf.network.DHCP) {
+    data["network"]["DHCP"]     = conf.network.DHCP;
+    data["network"]["staticIP"] = conf.network.staticIP.toString();
+    data["network"]["subnet"]   = conf.network.subnet.toString();
+    data["network"]["gateway"]  = conf.network.gateway.toString();
+    data["network"]["dns1"]     = conf.network.dns1.toString();
+    data["network"]["dns2"]     = conf.network.dns2.toString();
+  }
+
+  JsonArray aps = data["wifi"].createNestedArray("AP");
   for (Configuration::Wifi::AP ap : conf.wifi.APs) {
     JsonObject v  = aps.createNestedObject();
     v["SSID"]     = ap.SSID;

@@ -1,5 +1,13 @@
 {
 	"callsign": "NOCALL-10",
+	"network": {
+		"DHCP": true,
+		"staticIP": "192.0.2.100",
+		"subnet": "255.255.255.0",
+		"gateway": "192.0.2.1",
+		"dns1": "192.0.2.1",
+		"dns2": "192.0.2.2"
+	},
 	"wifi": {
 		"AP": [
 			{

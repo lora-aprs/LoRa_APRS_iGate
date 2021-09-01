@@ -6,6 +6,19 @@
 
 class Configuration {
 public:
+  class Network {
+  public:
+    Network() : DHCP(true) {
+    }
+
+    bool      DHCP;
+    IPAddress staticIP;
+    IPAddress subnet;
+    IPAddress gateway;
+    IPAddress dns1;
+    IPAddress dns2;
+  };
+
   class Wifi {
   public:
     class AP {
@@ -93,6 +106,7 @@ public:
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
   String  callsign;
+  Network network;
   Wifi    wifi;
   Beacon  beacon;
   APRS_IS aprs_is;
