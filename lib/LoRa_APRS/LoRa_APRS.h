@@ -42,14 +42,14 @@ public:
 
 private:
   std::shared_ptr<APRSMessage> _LastReceivedMsg;
-  long                         _RxFrequency;
-  long                         _TxFrequency;
-  int                          _RxSpreadingFactor;
-  long                         _RxSignalBandwidth;
-  int                          _RxCodingRate4;
-  int                          _TxSpreadingFactor;
-  long                         _TxSignalBandwidth;
-  int                          _TxCodingRate4;
+  long                         _rxFrequency;
+  int                          _rxSpreadingFactor;
+  long                         _rxSignalBandwidth;
+  int                          _rxCodingRate4;
+  long                         _txFrequency;
+  int                          _txSpreadingFactor;
+  long                         _txSignalBandwidth;
+  int                          _txCodingRate4;
 };
 
 #endif

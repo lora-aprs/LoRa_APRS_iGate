@@ -35,15 +35,16 @@
 		"beacon": false
 	},
 	"lora": {
-		"frequency_rx": 433775000,
-		"frequency_tx": 433775000,
-		"power": 20,
-		"spreading_factor_rx": 12,
-		"signal_bandwidth_rx": 125000,
-		"coding_rate4_rx": 5,
-		"spreading_factor_tx": 12,
-		"signal_bandwidth_tx": 125000,
-		"coding_rate4_tx": 5
+		"rxFrequency": 433775000,
+		"rxSpreadingFactor": 12,
+		"rxSignalBandwidth": 125000,
+		"rxCodingRate4": 5,
+		"rxGain": 1,
+		"txFrequency": 433900000,
+		"txSpreadingFactor": 11,
+		"txSignalBandwidth": 125000,
+		"txCodingRate4": 5,
+		"txPower": 20
 	},
 	"display": {
 		"always_on": true,
