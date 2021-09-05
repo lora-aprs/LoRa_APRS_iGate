@@ -42,6 +42,11 @@ void Display::setDisplaySaveTimeout(uint32_t timeout) {
   _displaySaveModeTimer.setTimeout(timeout * 1000);
 }
 
+void Display::activateDistplay()
+{
+  _disp->displayOn();
+}
+
 void Display::update() {
   if (_displayFrameRate.check()) {
 

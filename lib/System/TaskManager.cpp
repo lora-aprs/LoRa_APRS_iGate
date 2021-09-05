@@ -14,7 +14,9 @@ void TaskManager::addAlwaysRunTask(Task *task) {
 }
 
 std::list<Task *> TaskManager::getTasks() {
-  return _tasks;
+  std::list<Task *> tasks = _alwaysRunTasks;
+  std::copy(_tasks.begin(), _tasks.end(), std::back_inserter(tasks));
+  return tasks;
 }
 
 bool TaskManager::setup(System &system) {
