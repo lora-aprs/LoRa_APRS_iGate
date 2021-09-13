@@ -35,12 +35,16 @@
 		"beacon": false
 	},
 	"lora": {
-		"frequency_rx": 433775000,
-		"frequency_tx": 433775000,
-		"power": 20,
-		"spreading_factor": 12,
-		"signal_bandwidth": 125000,
-		"coding_rate4": 5
+		"rxFrequency": 433775000,
+		"rxSpreadingFactor": 12,
+		"rxSignalBandwidth": 125000,
+		"rxCodingRate4": 5,
+		"rxGain": 1,
+		"txFrequency": 433900000,
+		"txSpreadingFactor": 11,
+		"txSignalBandwidth": 125000,
+		"txCodingRate4": 5,
+		"txPower": 20
 	},
 	"display": {
 		"always_on": true,

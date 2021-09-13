@@ -36,14 +36,21 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.aprs_is.server = data["aprs_is"]["server"].as<String>();
   conf.aprs_is.port = data["aprs_is"]["port"] | 14580;
 
-  conf.digi.active          = data["digi"]["active"] | false;
-  conf.digi.beacon          = data["digi"]["beacon"] | false;
-  conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
-  conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
-  conf.lora.power           = data["lora"]["power"] | 20;
-  conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;
-  conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"] | 125000;
-  conf.lora.codingRate4     = data["lora"]["coding_rate4"] | 5;
+  conf.digi.active = data["digi"]["active"] | false;
+  conf.digi.beacon = data["digi"]["beacon"] | false;
+
+  conf.lora.rxFrequency       = data["lora"]["rxFrequency"] | 433775000;
+  conf.lora.rxSpreadingFactor = data["lora"]["rxSpreadingFactor"] | 12;
+  conf.lora.rxSignalBandwidth = data["lora"]["rxSignalBandwidth"] | 125000;
+  conf.lora.rxCodingRate4     = data["lora"]["rxCodingRate4"] | 5;
+  conf.lora.rxGain            = data["lora"]["rxGain"] | 1;
+
+  conf.lora.txFrequency       = data["lora"]["txFrequency"] | 433775000;
+  conf.lora.txSpreadingFactor = data["lora"]["txSpreadingFactor"] | 12;
+  conf.lora.txSignalBandwidth = data["lora"]["txSignalBandwidth"] | 125000;
+  conf.lora.txCodingRate4     = data["lora"]["txCodingRate4"] | 5;
+  conf.lora.txPower           = data["lora"]["txPower"] | 20;
+
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
   conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
@@ -98,12 +105,16 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["aprs_is"]["port"]                 = conf.aprs_is.port;
   data["digi"]["active"]                  = conf.digi.active;
   data["digi"]["beacon"]                  = conf.digi.beacon;
-  data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
-  data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
-  data["lora"]["power"]                   = conf.lora.power;
-  data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
-  data["lora"]["signal_bandwidth"]        = conf.lora.signalBandwidth;
-  data["lora"]["coding_rate4"]            = conf.lora.codingRate4;
+  data["lora"]["rxFrequency"]             = conf.lora.rxFrequency;
+  data["lora"]["rxSpreadingFactor"]       = conf.lora.rxSpreadingFactor;
+  data["lora"]["rxSignalBandwidth"]       = conf.lora.rxSignalBandwidth;
+  data["lora"]["rxCodingRate4"]           = conf.lora.rxCodingRate4;
+  data["lora"]["rxGain"]                  = conf.lora.rxGain;
+  data["lora"]["txFrequency"]             = conf.lora.txFrequency;
+  data["lora"]["txSpreadingFactor"]       = conf.lora.txSpreadingFactor;
+  data["lora"]["txSignalBandwidth"]       = conf.lora.txSignalBandwidth;
+  data["lora"]["txCodingRate4"]           = conf.lora.txCodingRate4;
+  data["lora"]["txPower"]                 = conf.lora.txPower;
   data["display"]["always_on"]            = conf.display.alwaysOn;
   data["display"]["timeout"]              = conf.display.timeout;
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
