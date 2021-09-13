@@ -94,7 +94,7 @@ bool RouterTask::loop(System &system) {
   }
 
   uint32_t diff = _beacon_timer.getTriggerTimeInSec();
-  _stateInfo    = "beacon " + String(uint32_t(diff / 60)) + ":" + String(uint32_t(diff % 60));
+  _stateInfo    = "beacon " + String(uint32_t(diff / 600)) + String(uint32_t(diff / 60) % 10) + ":" + String(uint32_t(diff / 10) % 6) + String(uint32_t(diff % 10));
 
   return true;
 }
