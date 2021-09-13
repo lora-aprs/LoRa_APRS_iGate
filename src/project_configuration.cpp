@@ -36,14 +36,14 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.aprs_is.server = data["aprs_is"]["server"].as<String>();
   conf.aprs_is.port = data["aprs_is"]["port"] | 14580;
 
-  conf.digi.active            = data["digi"]["active"] | false;
-  conf.digi.beacon            = data["digi"]["beacon"] | false;
+  conf.digi.active = data["digi"]["active"] | false;
+  conf.digi.beacon = data["digi"]["beacon"] | false;
 
   conf.lora.rxFrequency       = data["lora"]["rxFrequency"] | 433775000;
   conf.lora.rxSpreadingFactor = data["lora"]["rxSpreadingFactor"] | 12;
   conf.lora.rxSignalBandwidth = data["lora"]["rxSignalBandwidth"] | 125000;
   conf.lora.rxCodingRate4     = data["lora"]["rxCodingRate4"] | 5;
-  conf.lora.rxGain            = data["lora"]["rxGain"]        | 1;
+  conf.lora.rxGain            = data["lora"]["rxGain"] | 1;
 
   conf.lora.txFrequency       = data["lora"]["txFrequency"] | 433775000;
   conf.lora.txSpreadingFactor = data["lora"]["txSpreadingFactor"] | 12;
@@ -51,10 +51,10 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.lora.txCodingRate4     = data["lora"]["txCodingRate4"] | 5;
   conf.lora.txPower           = data["lora"]["txPower"] | 20;
 
-  conf.display.alwaysOn       = data["display"]["always_on"] | true;
-  conf.display.timeout        = data["display"]["timeout"] | 10;
-  conf.display.overwritePin   = data["display"]["overwrite_pin"] | 0;
-  conf.display.turn180        = data["display"]["turn180"] | true;
+  conf.display.alwaysOn     = data["display"]["always_on"] | true;
+  conf.display.timeout      = data["display"]["timeout"] | 10;
+  conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
+  conf.display.turn180      = data["display"]["turn180"] | true;
 
   conf.ftp.active = data["ftp"]["active"] | false;
   JsonArray users = data["ftp"]["user"].as<JsonArray>();
