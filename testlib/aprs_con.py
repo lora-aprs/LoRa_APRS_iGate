@@ -73,11 +73,12 @@ def APRSIS():
     return aprs
 
 
-aprs = AprsIs("OE5BPA-1", passwd="22948",
-              #              host="localhost", port=10152)
-              host="rotate.aprs.net", port=10152)
-aprs.connect()
-while True:
-    line = list(aprs._get_line())
-    if len(line) > 0:
-        print(line)
+#aprs = AprsIs("OE5BPA-1", passwd="22948",
+#              #              host="localhost", port=10152)
+#              host="rotate.aprs.net", port=10152)
+#aprs.connect()
+#while True:
+#    line = list(aprs._get_line())
+#    if len(line) > 0:
+#        print(line)
+
