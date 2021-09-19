@@ -1,6 +1,6 @@
 name: DUT Tests
 
-on: [pull_request]
+on: [push, pull_request]
 
 jobs:
   dut_tests:
@@ -15,4 +15,3 @@ jobs:
         run: cd testlib && make install
       - name: Run Tests
         run: cd testlib && make test
-
