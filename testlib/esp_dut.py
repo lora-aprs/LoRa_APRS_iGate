@@ -35,16 +35,17 @@ class EspDut:
         self.serial = None
         self.flash = EspFlash(self.port)
 
-    def writeFlash(self, bin_dir, fs_path=None):
+    def writeFlash(self, bin_dir):
         self.flash.erase()
-        if fs_path:
-            fs_bin = "spiffs.bin"
-            self.flash.make_spiffs(fs_path, fs_bin)
-            self.flash.write("2686976", fs_bin)
         self.flash.write("0x1000",  f"{bin_dir}/bootloader_dio_40m.bin")
         self.flash.write("0x8000",  f"{bin_dir}/partitions.bin")
         self.flash.write("0xe000",  f"{bin_dir}/boot_app0.bin")
         self.flash.write("0x10000", f"{bin_dir}/firmware.bin")
+
+    def writeConfig(self, fs_path):
+        fs_bin = "spiffs.bin"
+        self.flash.make_spiffs(fs_path, fs_bin)
+        self.flash.write("0x290000", fs_bin)
 
     def openPort(self):
         self.serial = serial.Serial(self.port, 115200, timeout=0)
