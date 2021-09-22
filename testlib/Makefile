@@ -1,4 +1,4 @@
-.PHONY: install test
+.PHONY: install test debug
 
 default: install test
 
@@ -7,3 +7,6 @@ install:
 
 test:
 	ESP_PORT=/dev/ttyUSB0 pytest tests -v
+
+debug:
+	ESP_PORT=/dev/ttyUSB0 pytest tests -v --capture=tee-sys
