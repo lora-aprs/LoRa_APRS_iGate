@@ -44,10 +44,13 @@ class AprsIs:
             self.socket.sendall(bytearray(f"{line}\r\n", encoding='utf8'))
 
     def get_line(self):
-        line = self._get_line()
-        if line.startswith("#"):
-            return None
-        yield line
+        line_list = list(self._get_line())
+        new_list = []
+        if line_list:
+            for line in line_list:
+                if not line.startswith("#"):
+                    new_list.append(line)
+        return new_list
 
     def _get_line(self):
         if self.socket:
