@@ -25,7 +25,7 @@ class EspFlash:
             f"--baud 460800 --before default_reset --after hard_reset verify_flash --flash_mode dio --flash_size detect {addr} {bin_file}")
 
     def make_spiffs(self, fs_path, fs_bin):
-        self.runESPTool(
+        runProcess(
             f"{self.pio_package_path}/tool-mkspiffs/mkspiffs_espressif32_arduino -c {fs_path} -p 256 -b 4096 -s 1507328 {fs_bin}")
 
 
