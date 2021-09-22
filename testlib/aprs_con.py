@@ -27,15 +27,12 @@ class AprsIs:
             f"user {self.callsign} pass {self.passwd} vers testlib 0.1\r\n")
 
         login = list(self._get_line())
-        # self.socket.setblocking(0)
         print(f"login line: {login[0]}")
         _, _, _, status, _ = login[0].split(' ', 4)
         if status == "verified":
             return True
         self.close()
         return False
-
-        # self._send_login()
 
     def close(self):
         if not self.socket:
