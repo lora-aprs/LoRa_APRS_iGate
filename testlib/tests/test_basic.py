@@ -14,3 +14,7 @@ def test_flash(ESP):
     ESP.flash.verify("0xe000",  f"{bin_dir}/boot_app0.bin")
     ESP.flash.verify("0x10000", f"{bin_dir}/firmware.bin")
     ESP.flash.erase()
+
+
+def test_aprs_login(APRSIS):
+    pass
