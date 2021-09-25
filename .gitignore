@@ -7,3 +7,4 @@ report.xml
 output
 __pycache__
 .pytest_cache
+spiffs.bin

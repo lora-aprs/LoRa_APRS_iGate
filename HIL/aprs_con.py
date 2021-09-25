@@ -64,6 +64,14 @@ class AprsIs:
                 yield line
         return None
 
+    def wait_for(self, towait):
+        for i in range(2, 10):
+            line = self.get_line()
+            for l in line:
+                if l == towait:
+                    return
+        raise
+
 
 @pytest.fixture
 def APRSIS():

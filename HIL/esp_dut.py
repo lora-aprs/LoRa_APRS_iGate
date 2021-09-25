@@ -1,7 +1,7 @@
 import os
 import pytest
 import serial
-from testlib.common import runProcess
+from HIL.common import runProcess
 
 
 class EspFlash:

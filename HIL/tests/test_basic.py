@@ -1,5 +1,5 @@
-from testlib.esp_dut import ESP
-from testlib.aprs_con import APRSIS, AprsIs
+from HIL.esp_dut import ESP
+from HIL.aprs_con import APRSIS, AprsIs
 
 
 def test_basic_port(ESP):
