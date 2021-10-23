@@ -5,3 +5,5 @@
 .vscode/ipch
 report.xml
 output
+data/dd6sw.is-cfg.json
+*.workspace
