@@ -38,3 +38,30 @@ void PowerManagement::activateOLED() {
 void PowerManagement::decativateOLED() {
   axp.setPowerOutPut(AXP192_DCDC1, AXP202_OFF);
 }
+
+// cppcheck-suppress unusedFunction
+void PowerManagement::activateMeasurement() {
+  axp.adc1Enable(AXP202_BATT_CUR_ADC1 | AXP202_BATT_VOL_ADC1, true);
+}
+
+// cppcheck-suppress unusedFunction
+void PowerManagement::deactivateMeasurement() {
+  axp.adc1Enable(AXP202_BATT_CUR_ADC1 | AXP202_BATT_VOL_ADC1, false);
+}
+
+// cppcheck-suppress unusedFunction
+double PowerManagement::getBatteryVoltage() {
+  return axp.getBattVoltage() / 1000.0;
+}
+
+// cppcheck-suppress unusedFunction
+double PowerManagement::getBatteryChargeDischargeCurrent() {
+  if (axp.isChargeing()) {
+    return axp.getBattChargeCurrent();
+  }
+  return -1.0 * axp.getBattDischargeCurrent();
+}
+
+bool PowerManagement::isBatteryConnect() {
+  return axp.isBatteryConnect();
+}

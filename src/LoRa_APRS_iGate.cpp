@@ -91,6 +91,7 @@ void setup() {
     powerManagement.activateLoRa();
     powerManagement.activateOLED();
     powerManagement.deactivateGPS();
+    powerManagement.activateMeasurement();
   }
 
   LoRaSystem.setBoardConfig(boardConfig);
