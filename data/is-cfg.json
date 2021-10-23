@@ -57,5 +57,11 @@
             }
         ]
     },
-    "ntp_server": "pool.ntp.org"
+    "ntp_server": "pool.ntp.org",
+    "power": {
+        "active": true,
+        "pin": 35,
+        "max_voltage": 4.2,
+        "min_voltage": 2.8
+    }
 }

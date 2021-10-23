@@ -50,7 +50,7 @@ void PowerManagement::deactivateMeasurement() {
 }
 
 // cppcheck-suppress unusedFunction
-double PowerManagement::getBatteryVoltage() {
+double PowerManagement::getVoltage() {
   return axp.getBattVoltage() / 1000.0;
 }
 

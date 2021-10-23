@@ -31,6 +31,10 @@ Display &System::getDisplay() {
   return _display;
 }
 
+PowerManagementADC &System::getPower() {
+  return _powerManagementADC;
+}
+
 bool System::isWifiEthConnected() const {
   return _isWifiEthConnected;
 }

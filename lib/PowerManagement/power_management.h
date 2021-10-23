@@ -21,7 +21,7 @@ public:
   void activateMeasurement();
   void deactivateMeasurement();
 
-  double getBatteryVoltage();
+  double getVoltage();
   double getBatteryChargeDischargeCurrent();
 
   bool isBatteryConnect();

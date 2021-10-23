@@ -103,6 +103,16 @@ public:
     std::list<User> users;
   };
 
+  class PowerManagmentADC {
+    public:
+      PowerManagmentADC() : pin(35), max_voltage(3.7), min_voltage(2.8) {
+    }
+    bool            active;
+    int             pin;
+    double          max_voltage;
+    double          min_voltage;
+  };
+
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
   String  callsign;
@@ -116,6 +126,7 @@ public:
   Ftp     ftp;
   String  board;
   String  ntpServer;
+  PowerManagmentADC   power;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {

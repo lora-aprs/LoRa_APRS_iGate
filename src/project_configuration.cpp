@@ -68,6 +68,11 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
   if (data.containsKey("board"))
     conf.board = data["board"].as<String>();
+
+  conf.power.min_voltage = data["power"]["active"] | true;
+  conf.power.min_voltage = data["power"]["pin"] | 35;
+  conf.power.min_voltage = data["power"]["min_voltage"] | 2.8;
+  conf.power.min_voltage = data["power"]["max_voltage"] | 3.7;
 }
 
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
@@ -118,4 +123,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["ntp_server"] = conf.ntpServer;
 
   data["board"] = conf.board;
+
+  data["power"]["active"] = conf.power.active;
+  data["power"]["pin"] = conf.power.pin;
+  data["power"]["min_voltage"] = conf.power.min_voltage;
+  data["power"]["max_voltage"] = conf.power.max_voltage;
 }

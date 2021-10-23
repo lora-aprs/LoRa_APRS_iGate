@@ -6,6 +6,7 @@
 #include <TaskManager.h>
 #include <logger.h>
 #include <power_management.h>
+#include <power_management_adc.h>
 
 #include "TaskAprsIs.h"
 #include "TaskDisplay.h"
@@ -16,9 +17,10 @@
 #include "TaskOTA.h"
 #include "TaskRouter.h"
 #include "TaskWifi.h"
+#include "TaskPower.h"
 #include "project_configuration.h"
 
-#define VERSION "21.35.0"
+#define VERSION "21.35.1"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
@@ -37,6 +39,7 @@ WifiTask    wifiTask;
 OTATask     otaTask;
 NTPTask     ntpTask;
 FTPTask     ftpTask;
+POWERTask   powerTask;
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs);
 
@@ -100,6 +103,7 @@ void setup() {
   LoRaSystem.getTaskManager().addTask(&modemTask);
   LoRaSystem.getTaskManager().addTask(&routerTask);
 
+
   if (userConfig.aprs_is.active) {
     if (boardConfig->Type == eETH_BOARD) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
@@ -113,6 +117,14 @@ void setup() {
     }
     LoRaSystem.getTaskManager().addTask(&aprsIsTask);
   }
+
+  if (userConfig.power.active) {
+    if (boardConfig->Type == eTTGO_LORA32_V2) {
+      LoRaSystem.getTaskManager().addTask(&powerTask);
+  
+    }
+  }
+
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
