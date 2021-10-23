@@ -3,10 +3,12 @@
 
 #include <power_management_adc.h>
 #include <TaskManager.h>
+#include <APRSMessage.h>
+
 
 class POWERTask : public Task {
 public:
-  POWERTask();
+  POWERTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromPower);
   virtual ~POWERTask();
 
   virtual bool setup(System &system) override;
@@ -14,6 +16,7 @@ public:
 
 private:
   PowerManagementADC _powerManagementADC;
+  TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower;
 
 };
 #endif
