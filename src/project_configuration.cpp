@@ -69,8 +69,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   if (data.containsKey("board"))
     conf.board = data["board"].as<String>();
 
-  conf.power.min_voltage = data["power"]["active"] | true;
-  conf.power.min_voltage = data["power"]["pin"] | 35;
+  conf.power.active = data["power"]["active"] | true;
+  conf.power.pin = data["power"]["pin"] | 35;
   conf.power.min_voltage = data["power"]["min_voltage"] | 2.8;
   conf.power.min_voltage = data["power"]["max_voltage"] | 3.7;
 }

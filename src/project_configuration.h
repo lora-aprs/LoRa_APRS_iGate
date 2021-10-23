@@ -105,7 +105,7 @@ public:
 
   class PowerManagmentADC {
     public:
-      PowerManagmentADC() : pin(35), max_voltage(3.7), min_voltage(2.8) {
+      PowerManagmentADC() : active(true), pin(35), max_voltage(3.7), min_voltage(2.8) {
     }
     bool            active;
     int             pin;
@@ -126,7 +126,7 @@ public:
   Ftp     ftp;
   String  board;
   String  ntpServer;
-  PowerManagmentADC   power;
+  PowerManagmentADC  power;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {

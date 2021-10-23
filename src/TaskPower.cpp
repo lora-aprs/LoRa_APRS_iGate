@@ -19,9 +19,9 @@ bool POWERTask::setup(System &system) {
 }
 
 bool POWERTask::loop(System &system) {
-  logPrintI("Voltage: ");
-  logPrintlnI(String(_powerManagementADC.getVoltage()));
-  // _stateInfo = "voltage " + String(_powerManagementADC.getVoltage());
+  // logPrintI("Voltage: ");
+  // logPrintlnI(String(_powerManagementADC.getVoltage()));
+  _stateInfo = String(_powerManagementADC.getVoltage()*2.0) + "V";
   _state     = Okay;
   return true;
 }

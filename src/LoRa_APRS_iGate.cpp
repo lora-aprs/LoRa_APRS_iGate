@@ -121,7 +121,6 @@ void setup() {
   if (userConfig.power.active) {
     if (boardConfig->Type == eTTGO_LORA32_V2) {
       LoRaSystem.getTaskManager().addTask(&powerTask);
-  
     }
   }
 
