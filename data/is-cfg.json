@@ -61,7 +61,7 @@
     "power": {
         "active": true,
         "pin": 35,
-        "max_voltage": 4.2,
-        "min_voltage": 2.8
+        "max_voltage": 4.7,
+        "min_voltage": 3.0
     }
 }

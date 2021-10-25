@@ -105,7 +105,7 @@ public:
 
   class PowerManagmentADC {
     public:
-      PowerManagmentADC() : active(true), pin(35), max_voltage(3.7), min_voltage(2.8) {
+      PowerManagmentADC() : active(true), pin(35), max_voltage(4.7), min_voltage(3.0) {
     }
     bool            active;
     int             pin;

@@ -8,7 +8,7 @@
 
 class POWERTask : public Task {
 public:
-  POWERTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromPower);
+  POWERTask(TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower);
   virtual ~POWERTask();
 
   virtual bool setup(System &system) override;
@@ -17,6 +17,5 @@ public:
 private:
   PowerManagementADC _powerManagementADC;
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower;
-
 };
 #endif

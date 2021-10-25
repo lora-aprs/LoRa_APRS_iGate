@@ -28,6 +28,7 @@ String create_long_aprs(double lng);
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 TaskQueue<std::shared_ptr<APRSMessage>> toModem;
+TaskQueue<std::shared_ptr<APRSMessage>> fromPower;
 
 System        LoRaSystem;
 Configuration userConfig;
@@ -39,7 +40,7 @@ WifiTask    wifiTask;
 OTATask     otaTask;
 NTPTask     ntpTask;
 FTPTask     ftpTask;
-POWERTask   powerTask;
+POWERTask   powerTask(fromPower);
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs);
 

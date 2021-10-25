@@ -3,7 +3,7 @@
 #include "TaskPower.h"
 #include "project_configuration.h"
 
-POWERTask::POWERTask() : Task("POWERTask", 0) {
+POWERTask::POWERTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromPower) : Task("POWERTask", 0),  _fromPower(fromPower) {
 }
 
 POWERTask::~POWERTask() {
