@@ -71,8 +71,13 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
   conf.power.active = data["power"]["active"] | true;
   conf.power.pin = data["power"]["pin"] | 35;
-  conf.power.min_voltage = data["power"]["min_voltage"] | 2.8;
-  conf.power.min_voltage = data["power"]["max_voltage"] | 3.7;
+  conf.power.min_voltage = data["power"]["min_voltage"] | 3.0;
+  conf.power.min_voltage = data["power"]["max_voltage"] | 4.2;
+
+  conf.telegram.active = data["telegram"]["active"] | false;
+  conf.telegram.chatid = data["telegram"]["chatid"] | "";
+  conf.telegram.bottoken = data["telegram"]["bottoken"] | "";
+
 }
 
 void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
@@ -128,4 +133,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["power"]["pin"] = conf.power.pin;
   data["power"]["min_voltage"] = conf.power.min_voltage;
   data["power"]["max_voltage"] = conf.power.max_voltage;
+
+  data["telegram"]["active"] = conf.telegram.active;
+  data["telegram"]["chatid"] = conf.telegram.chatid;
+  data["telegram"]["bottoken"] = conf.telegram.bottoken;
+
 }

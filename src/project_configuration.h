@@ -113,6 +113,16 @@ public:
     double          min_voltage;
   };
 
+  class Telegram {
+    public:
+      Telegram() : active(false), chatid(""), bottoken("") {
+      }
+      bool    active;
+      String  chatid;
+      String  bottoken;
+  };
+
+
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
   String  callsign;
@@ -126,6 +136,7 @@ public:
   Ftp     ftp;
   String  board;
   String  ntpServer;
+  Telegram telegram;
   PowerManagmentADC  power;
 };
 

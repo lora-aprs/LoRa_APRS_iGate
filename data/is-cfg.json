@@ -1,5 +1,5 @@
 {
-	"callsign": "DD6SW-11",
+	"callsign": "NOCODE-11",
 	"network": {
 		"DHCP": true,
 		"staticIP": "192.0.2.100",
@@ -11,16 +11,16 @@
 	"wifi": {
 		"AP": [
 			{
-				"SSID": "PortalM",
-				"password": "ostsee!2014"
+				"SSID": "",
+				"password": ""
 			}
 		]
 	},
 	"beacon": {
 		"message": "LoRa iGATE & Digi, Info: github.com/lora-aprs/LoRa_APRS_iGate",
 		"position": {
-			"latitude": 52.510623,
-			"longitude": 13.271585
+			"latitude": 0.0,
+			"longitude": 0.0
 		},
 		"timeout": 15
 	},
@@ -32,7 +32,7 @@
 	},
 	"digi": {
 		"active": false,
-		"beacon": false
+		"beacon": true
 	},
 	"lora": {
 		"frequency_rx": 433775000,
@@ -53,15 +53,20 @@
 		"user": [
 			{
 				"name": "ftp",
-				"password": "alarm99"
+				"password": "ftp"
 			}
 		]
 	},
-	"ntp_server": "pool.ntp.org",
     "power": {
-        "active": true,
+        "active": false,
         "pin": 35,
-        "max_voltage": 4.7,
+        "max_voltage": 4.2,
         "min_voltage": 3.0
-    }
+    },
+	"telegram": {
+		"active": false,
+		"chatid": "",
+		"bottoken": ""
+	},
+	"ntp_server": "pool.ntp.org"
 }

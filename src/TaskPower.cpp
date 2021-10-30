@@ -19,9 +19,12 @@ bool POWERTask::setup(System &system) {
 }
 
 bool POWERTask::loop(System &system) {
-  // logPrintI("Voltage: ");
-  // logPrintlnI(String(_powerManagementADC.getVoltage()));
-  _stateInfo = String(_powerManagementADC.getVoltage()*2.0) + "V";
+  if (millis() > _lastTimePowerRead + _powerReadDelay) {
+    logPrintI("Voltage: ");
+    logPrintlnI(String(_powerManagementADC.getVoltage()*2.0));
+    _stateInfo = String(_powerManagementADC.getVoltage()*2.0) + "V";
+    _lastTimePowerRead = millis();
+  }
   _state     = Okay;
   return true;
 }

@@ -18,9 +18,10 @@
 #include "TaskRouter.h"
 #include "TaskWifi.h"
 #include "TaskPower.h"
+#include "TaskTelegram.h"
 #include "project_configuration.h"
 
-#define VERSION "21.35.1"
+#define VERSION "21.35.2"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
@@ -43,6 +44,7 @@ FTPTask     ftpTask;
 POWERTask   powerTask(fromPower);
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs);
+TelegramTask  telegramTask;
 
 void setup() {
   Serial.begin(115200);
@@ -125,6 +127,9 @@ void setup() {
     }
   }
 
+  if (userConfig.telegram.active) {
+    LoRaSystem.getTaskManager().addTask(&telegramTask);
+  }
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
