@@ -13,16 +13,21 @@ TelegramTask::~TelegramTask() {
 bool TelegramTask::setup(System &system) {
   _chatid = system.getUserConfig()->telegram.chatid;
   _bottoken = system.getUserConfig()->telegram.bottoken;
+  _client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
   _telegram = new UniversalTelegramBot(_bottoken, _client);
+  logPrintI("BotToken: ");
+  logPrintI(_bottoken);
+  logPrintI(" Chat-ID: ");
+  logPrintlnI(_chatid);
+  logPrintlnI("TelegramTask: setup done...");
   return true;
 }
 
 bool TelegramTask::loop(System &system) {
   if (!system.isWifiEthConnected()) {
-    _stateInfo = "Telegram: offline";
-    _state = Error;
     return false;
   }
+  // logPrintlnD("Telegram: check messages");
   if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) {
     int numNewMessages = _telegram->getUpdates(_telegram->last_message_received + 1);
     while (numNewMessages) {

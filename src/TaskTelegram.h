@@ -4,7 +4,7 @@
 #include <TaskManager.h>
 #include <UniversalTelegramBot.h>
 #include <WiFi.h>
-
+#include <WiFiClientSecure.h>
 
 class TelegramTask : public Task {
 
@@ -14,7 +14,7 @@ private:
   String                _bottoken;
   int                   _telegramRequestDelay = 1000;
   unsigned long         _lastTimeTelegramRan;
-  WiFiClient            _client;
+  WiFiClientSecure      _client;
 
 public:
   TelegramTask();
