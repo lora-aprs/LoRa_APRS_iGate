@@ -4,7 +4,10 @@
 #include "TaskTelegram.h"
 #include "project_configuration.h"
 
-TelegramTask::TelegramTask() : Task(TASK_Telegram, TaskTelegram) {
+#include <TimeLib.h>
+
+
+TelegramTask::TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_Telegram, TaskTelegram), _toTelegram(toTelegram) {
 }
 
 TelegramTask::~TelegramTask() {
@@ -24,13 +27,16 @@ bool TelegramTask::setup(System &system) {
 }
 
 bool TelegramTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) {
+  if (!system.isWifiEthConnected()) 
+  {
     return false;
   }
   // logPrintlnD("Telegram: check messages");
-  if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) {
+  if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) 
+  {
     int numNewMessages = _telegram->getUpdates(_telegram->last_message_received + 1);
-    while (numNewMessages) {
+    while (numNewMessages) 
+    {
       logPrintI("New Telegram Messages: ");
       logPrintlnI(String(numNewMessages));
 
@@ -41,19 +47,45 @@ bool TelegramTask::loop(System &system) {
           continue;
         }
 
-        String text = _telegram->messages[i].text;
+        String cmd = _telegram->messages[i].text;
         String from = _telegram->messages[i].from_name;
-        logPrintlnI(from + " " + text);
-
-        if (text == "/start") {
-          String welcome = "Welcome, " + from + ".\n";
-          welcome += "Use following commands to get current readings.\n\n";
-          welcome += "/bat - akku voltage\n";
-          welcome += "/last - last heard APRS Paket\n";
-          welcome += "/time - ntp time and date\n";
-          welcome += "/config - current configuration\n";
-          _telegram->sendMessage(_chatid, welcome, ""); 
-        }
+        cmd.toLowerCase();
+        logPrintlnI(from + ": " + cmd);
+        String text = "";
+        if (cmd == "/start") 
+        {
+          text = "Welcome, " + from + ".\n";
+          text += "Use following commands to get current readings.\n\n";
+          text += "/bat - akku voltage\n";
+          text += "/last - last heard Telegram Paket\n";
+          text += "/millis - arduino millis()\n";
+          text += "/time - time and date\n";
+          text += "/config - current configuration\n";
+        } else if (cmd == "/bat") 
+        {
+          text = "Batter Voltage: ";
+          text += "not implemented!";
+        } else if (cmd == "/last") 
+        {
+          text = "Last APRE message: ";
+          text += "not implemented!";
+        } else if (cmd == "/millis") 
+        {
+          text = "millis: ";
+          text += String(millis());
+        } else if (cmd == "/time") 
+        {
+          text += timeString(now()) + " (UTC)";
+          text += "  " + String(day()) + "." +  String(month()) + "." + String(year());
+        } else if (cmd == "/config") 
+        {
+        text = "Current config: ";
+          text += "not implemented!";
+        } else 
+        {
+          text ="unknwon command, try /start for help!";
+        };
+        _telegram->sendMessage(_chatid, text, ""); 
       }
       numNewMessages = _telegram->getUpdates(_telegram->last_message_received +1);
     }
@@ -62,5 +94,54 @@ bool TelegramTask::loop(System &system) {
   _stateInfo = "Telegram: active";
   _state = Okay;
   return true;
+}
+
+
+TelegramMessage::TelegramMessage()
+{
+}
+
+TelegramMessage::~TelegramMessage()
+{
+}
+
+UniversalTelegramBot * TelegramMessage::getBOT() {
+  return _body.bot;
+}
+
+void TelegramMessage::setBOT(UniversalTelegramBot *bot) {
+  _body.bot = bot;
+}
+
+String TelegramMessage::getMessage() const {
+  return _body.message;
+}
+
+void TelegramMessage::setMessage(const String & other_message) {
+  _body.message = other_message;
+}
+
+void TelegramMessage::setMessage(const String & other_message, const unsigned long & other_time) {
+  setMessage(other_message);
+  setTime(other_time);
+}
+
+void TelegramMessage::setMessage(UniversalTelegramBot *bot, const String & other_message) {
+  _body.bot = bot;
+  setMessage(other_message);
+}
+
+void TelegramMessage::setMessage(UniversalTelegramBot *bot, const String & other_message, const unsigned long & other_time) {
+  setBOT(bot);
+  setMessage(other_message);
+  setTime(other_time);
+}
+
+unsigned long TelegramMessage::getTime() const {
+  return _body.time;
+}
+
+void TelegramMessage::setTime(const unsigned long & other_time) {
+  _body.time = other_time;
 }
 

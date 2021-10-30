@@ -30,6 +30,7 @@ TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 TaskQueue<std::shared_ptr<APRSMessage>> toModem;
 TaskQueue<std::shared_ptr<APRSMessage>> fromPower;
+TaskQueue<std::shared_ptr<TelegramMessage>> toTelegram;
 
 System        LoRaSystem;
 Configuration userConfig;
@@ -44,7 +45,7 @@ FTPTask     ftpTask;
 POWERTask   powerTask(fromPower);
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs);
-TelegramTask  telegramTask;
+TelegramTask  telegramTask(toTelegram);
 
 void setup() {
   Serial.begin(115200);
