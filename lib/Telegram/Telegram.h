@@ -1,15 +1,14 @@
-#ifndef TASK_Telegram_H_
-#define TASK_Telegram_H_
+#ifndef Telegram_H_
+#define Telegram_H_
 
-#include <TaskManager.h>
+#include <Ardunio.h>
 #include <UniversalTelegramBot.h>
-#include <WiFi.h>
 
-
-class TelegramTask : public Task {
+class Telegram : public UniversalTelegramBot
+ {
 
 private:
-  UniversalTelegramBot  *_telegram;
+  UniversalTelegramBot  _telegram;
   String                _chatid;
   String                _bottoken;
   int                   _telegramRequestDelay = 1000;
@@ -17,8 +16,7 @@ private:
   WiFiClient            _client;
 
 public:
-  TelegramTask();
-  virtual ~TelegramTask();
+  Telegram();
 
   virtual bool setup(System &system) override;
   virtual bool loop(System &system) override;

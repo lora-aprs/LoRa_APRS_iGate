@@ -1,0 +1,72 @@
+{
+	"callsign": "NOCODE-11",
+	"network": {
+		"DHCP": true,
+		"staticIP": "192.0.2.100",
+		"subnet": "255.255.255.0",
+		"gateway": "192.0.2.1",
+		"dns1": "192.0.2.1",
+		"dns2": "192.0.2.2"
+	},
+	"wifi": {
+		"AP": [
+			{
+				"SSID": "",
+				"password": ""
+			}
+		]
+	},
+	"beacon": {
+		"message": "LoRa iGATE & Digi, Info: github.com/lora-aprs/LoRa_APRS_iGate",
+		"position": {
+			"latitude": 0.0,
+			"longitude": 0.0
+		},
+		"timeout": 15
+	},
+	"aprs_is": {
+		"active": true,
+		"passcode": "22261",
+		"server": "euro.aprs2.net",
+		"port": 14580
+	},
+	"digi": {
+		"active": false,
+		"beacon": true
+	},
+	"lora": {
+		"frequency_rx": 433775000,
+		"frequency_tx": 433775000,
+		"power": 20,
+		"spreading_factor": 12,
+		"signal_bandwidth": 125000,
+		"coding_rate4": 5
+	},
+	"display": {
+		"always_on": true,
+		"timeout": 10,
+		"overwrite_pin": 0,
+		"turn180": true
+	},
+	"ftp": {
+		"active": true,
+		"user": [
+			{
+				"name": "ftp",
+				"password": "ftp"
+			}
+		]
+	},
+    "power": {
+        "active": false,
+        "pin": 35,
+        "max_voltage": 4.2,
+        "min_voltage": 3.0
+    },
+	"telegram": {
+		"active": false,
+		"chatid": "",
+		"bottoken": ""
+	},
+	"ntp_server": "pool.ntp.org"
+}
