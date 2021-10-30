@@ -5,7 +5,7 @@
 .vscode/ipch
 report.xml
 output
-dd6sw-is-cfg.json
 dd6sw*
 is-cfg.json
 *.code-workspace
+src/data/*
