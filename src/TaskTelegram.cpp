@@ -6,7 +6,6 @@
 #include <System.h>
 #include <TimeLib.h>
 
-
 TelegramTask::TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_Telegram, TaskTelegram), _toTelegram(toTelegram) {
 }
 
@@ -14,7 +13,7 @@ TelegramTask::~TelegramTask() {
 }
 
 bool TelegramTask::setup(System &system) {
-  _chatid = system.getUserConfig()->telegram.chatid;
+  _chatid   = system.getUserConfig()->telegram.chatid;
   _bottoken = system.getUserConfig()->telegram.bottoken;
   _client.setCACert(TELEGRAM_CERTIFICATE_ROOT);
   _telegram = new UniversalTelegramBot(_bottoken, _client);
@@ -27,33 +26,38 @@ bool TelegramTask::setup(System &system) {
 }
 
 bool TelegramTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) 
-  {
+  if (!system.isWifiEthConnected()) {
     return false;
   }
   // logPrintlnD("Telegram: check messages");
-  if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) 
-  {
+  if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) {
+
+    if (!_toTelegram.empty()) {
+
+      std::shared_ptr<TelegramMessage> msg = _toTelegram.getElement();
+      logPrintI("New Telegram Messages in Queue: ");
+      logPrintlnI("New Telegram Messages: " + msg->toString());
+      _telegram->sendMessage(_chatid, msg->toString(), "");
+    }
+
     int numNewMessages = _telegram->getUpdates(_telegram->last_message_received + 1);
-    while (numNewMessages) 
-    {
+    while (numNewMessages) {
       logPrintI("New Telegram Messages: ");
       logPrintlnI(String(numNewMessages));
 
-      for (int i=0; i<numNewMessages; i++) {
+      for (int i = 0; i < numNewMessages; i++) {
         String chatid = String(_telegram->messages[i].chat_id);
         if (chatid != _chatid) {
           _telegram->sendMessage(chatid, "Unauthorized user", "");
           continue;
         }
 
-        String cmd = _telegram->messages[i].text;
+        String cmd  = _telegram->messages[i].text;
         String from = _telegram->messages[i].from_name;
         cmd.toLowerCase();
         logPrintlnI(from + ": " + cmd);
         String text = "";
-        if (cmd == "/start") 
-        {
+        if (cmd == "/start") {
           text = "Welcome, " + from + ".\n";
           text += "Use following commands to get current readings.\n\n";
           text += "/bat - battery voltage\n";
@@ -61,38 +65,31 @@ bool TelegramTask::loop(System &system) {
           text += "/millis - arduino millis()\n";
           text += "/time - time and date\n";
           text += "/config - current configuration\n";
-        } else if (cmd == "/bat") 
-        {
+        } else if (cmd == "/bat") {
           text = "Battery Voltage: ";
           text += String(system.getVoltage()) + " V";
-        } else if (cmd == "/last") 
-        {
+        } else if (cmd == "/last") {
           text = "Last APRE message: ";
           text += "not implemented!";
-        } else if (cmd == "/millis") 
-        {
+        } else if (cmd == "/millis") {
           text = "millis: ";
           text += String(millis());
-        } else if (cmd == "/time") 
-        {
+        } else if (cmd == "/time") {
           text += timeString(now()) + " (UTC)";
-          text += "  " + String(day()) + "." +  String(month()) + "." + String(year());
-        } else if (cmd == "/config") 
-        {
-        text = "Current config: ";
+          text += "  " + String(day()) + "." + String(month()) + "." + String(year());
+        } else if (cmd == "/config") {
+          text = "Current config: ";
           text += "not implemented!";
-        } else 
-        {
-          text ="unknwon command, try /start for help!";
+        } else {
+          text = "unknwon command, try /start for help!";
         };
-        _telegram->sendMessage(_chatid, text, ""); 
+        _telegram->sendMessage(_chatid, text, "");
       }
-      numNewMessages = _telegram->getUpdates(_telegram->last_message_received +1);
+      numNewMessages = _telegram->getUpdates(_telegram->last_message_received + 1);
     }
     _lastTimeTelegramRan = millis();
   }
   _stateInfo = "Telegram: active";
-  _state = Okay;
+  _state     = Okay;
   return true;
 }
-

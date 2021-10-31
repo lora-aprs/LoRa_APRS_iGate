@@ -23,7 +23,7 @@ public:
   virtual ~TelegramMessage();
 
   unsigned long       getTime() const;
-  void                setTime(const unsigned long &other_time);
+  void                setTime(const unsigned long &time);
   TelegramBody *const getBody();
 
   virtual String toString() const;

@@ -53,9 +53,10 @@ bool RouterTask::loop(System &system) {
         logPrintlnD(aprsIsMsg->toString());
         _toAprsIs.addElement(aprsIsMsg);
         if (_copyToTelegram) {
-          _tM = std::shared_ptr<TelegramMessage>(new TelegramMessage());
-          _tM.setMessage(aprsIsMsg->toString());
-          _toTelegram.addElement(_tM);
+          _telegramMsg = std::shared_ptr<TelegramMessage>(new TelegramMessage());
+          _telegramMsg->setTime(now());
+          _telegramMsg->getBody()->setData(aprsIsMsg->toString());
+          _toTelegram.addElement(_telegramMsg);
         }
       } else {
         logPrintlnD("APRS-IS: no forward => RFonly");

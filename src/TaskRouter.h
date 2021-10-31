@@ -20,10 +20,10 @@ private:
 
   TaskQueue<std::shared_ptr<TelegramMessage>> &_toTelegram;
 
-
-  std::shared_ptr<APRSMessage> _beaconMsg;
-  Timer                        _beacon_timer;
-  bool                         _copyToTelegram = false;
+  std::shared_ptr<APRSMessage>     _beaconMsg;
+  std::shared_ptr<TelegramMessage> _telegramMsg;
+  Timer                            _beacon_timer;
+  bool                             _copyToTelegram = false;
 };
 
 #endif
