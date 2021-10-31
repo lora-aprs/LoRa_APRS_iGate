@@ -19,7 +19,9 @@ TelegramMessage &TelegramMessage::operator=(TelegramMessage &other_msg) {
 }
 
 TelegramMessage::~TelegramMessage() {
-  delete _body;
+  if (_body != 0) {
+    delete _body;
+  }
 }
 
 unsigned long TelegramMessage::getTime() const {

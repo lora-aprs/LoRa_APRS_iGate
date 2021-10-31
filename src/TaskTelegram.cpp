@@ -33,10 +33,9 @@ bool TelegramTask::loop(System &system) {
   if (millis() > _lastTimeTelegramRan + _telegramRequestDelay) {
 
     if (!_toTelegram.empty()) {
-
       std::shared_ptr<TelegramMessage> msg = _toTelegram.getElement();
       logPrintI("New Telegram Messages in Queue: ");
-      logPrintlnI("New Telegram Messages: " + msg->toString());
+      logPrintlnI(msg->toString());
       _telegram->sendMessage(_chatid, msg->toString(), "");
     }
 
