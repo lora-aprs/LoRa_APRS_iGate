@@ -21,6 +21,9 @@ public:
   TaskManager &              getTaskManager();
   Display &                  getDisplay();
   bool                       isWifiEthConnected() const;
+  bool                       isCopyToTelegram() const;
+  void                       setCopyToTelegram();
+  void                       unsetCopyToTelegram();
   void                       connectedViaWifiEth(bool status);
   double                     getVoltage();
   void                       setVoltage(double last_voltage);
@@ -31,7 +34,8 @@ private:
   TaskManager          _taskManager;
   Display              _display;
   bool                 _isWifiEthConnected;
-  double               _voltage = -1.0;
+  bool                 _copyToTelegram = false;
+  double               _voltage        = -1.0;
 };
 
 #endif

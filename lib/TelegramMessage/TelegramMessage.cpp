@@ -1,6 +1,7 @@
 #include <logger.h>
 
 #include "TelegramMessage.h"
+#include <TimeLib.h>
 
 TelegramMessage::TelegramMessage() : _body(new TelegramBody()) {
 }
@@ -34,7 +35,7 @@ TelegramBody *const TelegramMessage::getBody() {
 }
 
 String TelegramMessage::toString() const {
-  return "Time: " + String(_time) + ", " + _body->toString();
+  return timeString(_time) + " (UTC), " + _body->toString();
 }
 
 TelegramBody::TelegramBody() {

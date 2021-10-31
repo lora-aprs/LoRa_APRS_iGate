@@ -104,40 +104,40 @@ public:
   };
 
   class PowerManagmentADC {
-    public:
-      PowerManagmentADC() : active(true), pin(35), max_voltage(4.7), min_voltage(3.0) {
+  public:
+    PowerManagmentADC() : active(true), pin(35), max_voltage(4.7), min_voltage(3.0) {
     }
-    bool            active;
-    int             pin;
-    double          max_voltage;
-    double          min_voltage;
+    bool   active;
+    int    pin;
+    double max_voltage;
+    double min_voltage;
   };
 
   class Telegram {
-    public:
-      Telegram() : active(false), chatid(""), bottoken("") {
-      }
-      bool    active;
-      String  chatid;
-      String  bottoken;
+  public:
+    Telegram() : active(false), chatid(""), bottoken("") {
+    }
+    bool   active;
+    String chatid;
+    String bottoken;
+    bool   monitor;
   };
-
 
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
-  String  callsign;
-  Network network;
-  Wifi    wifi;
-  Beacon  beacon;
-  APRS_IS aprs_is;
-  Digi    digi;
-  LoRa    lora;
-  Display display;
-  Ftp     ftp;
-  String  board;
-  String  ntpServer;
-  Telegram telegram;
-  PowerManagmentADC  power;
+  String            callsign;
+  Network           network;
+  Wifi              wifi;
+  Beacon            beacon;
+  APRS_IS           aprs_is;
+  Digi              digi;
+  LoRa              lora;
+  Display           display;
+  Ftp               ftp;
+  String            board;
+  String            ntpServer;
+  Telegram          telegram;
+  PowerManagmentADC power;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {

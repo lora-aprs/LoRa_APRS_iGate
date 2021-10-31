@@ -47,3 +47,14 @@ void System::setVoltage(double last_voltage) {
   _voltage = last_voltage;
 }
 
+void System::setCopyToTelegram() {
+  _copyToTelegram = true;
+};
+
+void System::unsetCopyToTelegram() {
+  _copyToTelegram = false;
+};
+
+bool System::isCopyToTelegram() const {
+  return _copyToTelegram;
+};

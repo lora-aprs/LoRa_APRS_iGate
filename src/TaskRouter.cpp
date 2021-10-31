@@ -27,7 +27,7 @@ bool RouterTask::setup(System &system) {
   _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
 
   if (system.getUserConfig()->telegram.active) {
-    _copyToTelegram = true;
+    system.setCopyToTelegram();
   }
 
   return true;
@@ -52,7 +52,7 @@ bool RouterTask::loop(System &system) {
         logPrintD("APRS-IS: ");
         logPrintlnD(aprsIsMsg->toString());
         _toAprsIs.addElement(aprsIsMsg);
-        if (_copyToTelegram) {
+        if (system.isCopyToTelegram()) {
           _telegramMsg = std::shared_ptr<TelegramMessage>(new TelegramMessage());
           _telegramMsg->setTime(now());
           _telegramMsg->getBody()->setData(aprsIsMsg->toString());

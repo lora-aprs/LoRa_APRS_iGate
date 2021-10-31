@@ -23,7 +23,6 @@ private:
   std::shared_ptr<APRSMessage>     _beaconMsg;
   std::shared_ptr<TelegramMessage> _telegramMsg;
   Timer                            _beacon_timer;
-  bool                             _copyToTelegram = false;
 };
 
 #endif
