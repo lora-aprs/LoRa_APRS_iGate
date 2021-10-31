@@ -31,10 +31,6 @@ Display &System::getDisplay() {
   return _display;
 }
 
-PowerManagementADC &System::getPower() {
-  return _powerManagementADC;
-}
-
 bool System::isWifiEthConnected() const {
   return _isWifiEthConnected;
 }
@@ -42,3 +38,12 @@ bool System::isWifiEthConnected() const {
 void System::connectedViaWifiEth(bool status) {
   _isWifiEthConnected = status;
 }
+
+double System::getVoltage() {
+  return _voltage;
+}
+
+void System::setVoltage(double last_voltage) {
+  _voltage = last_voltage;
+}
+

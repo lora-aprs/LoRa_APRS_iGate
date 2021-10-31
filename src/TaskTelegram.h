@@ -5,38 +5,12 @@
 #include <UniversalTelegramBot.h>
 #include <WiFi.h>
 #include <WiFiClientSecure.h>
-
-
-
-class TelegramMessage {
-public:
-	TelegramMessage();
-  virtual ~TelegramMessage();
-
-  UniversalTelegramBot * getBOT();
-  void setBOT(UniversalTelegramBot *bot);
-  unsigned long getTime() const;
-  void setTime(const unsigned long & other_time);
-  String getMessage() const;
-  void setMessage(const String & other_message);
-  void setMessage(const String & other_message, const unsigned long & other_time);
-  void setMessage(UniversalTelegramBot *bot, const String & other_message);
-  void setMessage(UniversalTelegramBot *bot, const String & other_message, const unsigned long & other_time);
-  private:
-  typedef struct {
-        UniversalTelegramBot  *bot;
-        unsigned long         time;
-        String                message;
-  } data;
-  data _body;
-};
-
-#endif
+#include <TelegramMessage.h>
 
 class TelegramTask : public Task {
 
 private:
-  UniversalTelegramBot  *_telegram;
+  UniversalTelegramBot * _telegram;
   String                _chatid;
   String                _bottoken;
   int                   _telegramRequestDelay = 1000;
@@ -53,3 +27,4 @@ public:
   TaskQueue<std::shared_ptr<TelegramMessage>> &_toTelegram;
 };
 
+#endif

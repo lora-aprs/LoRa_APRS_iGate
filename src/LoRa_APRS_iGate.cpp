@@ -44,7 +44,7 @@ NTPTask     ntpTask;
 FTPTask     ftpTask;
 POWERTask   powerTask(fromPower);
 AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toModem, toAprsIs);
+RouterTask  routerTask(fromModem, toModem, toAprsIs, toTelegram);
 TelegramTask  telegramTask(toTelegram);
 
 void setup() {

@@ -1,0 +1,56 @@
+#include <logger.h>
+
+#include "TelegramMessage.h"
+
+TelegramMessage::TelegramMessage() : _body(new TelegramBody()) {
+}
+
+TelegramMessage::TelegramMessage(TelegramMessage &other_msg) : _time(other_msg.getTime()), _body(new TelegramBody()) {
+  _body->setData(other_msg.getBody()->getData());
+}
+
+TelegramMessage &TelegramMessage::operator=(TelegramMessage &other_msg) {
+  if (this != &other_msg) {
+    _time = other_msg.getTime();
+    _body->setData(other_msg.getBody()->getData());
+  }
+  return *this;
+}
+
+TelegramMessage::~TelegramMessage() {
+  delete _body;
+}
+
+unsigned long TelegramMessage::getTime() const {
+  return _time;
+}
+
+void TelegramMessage::setTime(const unsigned long &time) {
+  _time = time;
+}
+
+TelegramBody *const TelegramMessage::getBody() {
+  return _body;
+}
+
+String TelegramMessage::toString() const {
+  return "Time: " + String(_time) + ", " + _body->toString();
+}
+
+TelegramBody::TelegramBody() {
+}
+
+TelegramBody::~TelegramBody() {
+}
+
+String TelegramBody::getData() const {
+  return _data;
+}
+
+void TelegramBody::setData(const String &data) {
+  _data = data;
+}
+
+String TelegramBody::toString() const {
+  return "Data: " + _data;
+}

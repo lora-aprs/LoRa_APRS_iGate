@@ -9,7 +9,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs, TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs), _toTelegram(toTelegram) {
 }
 
 RouterTask::~RouterTask() {
@@ -25,6 +25,10 @@ bool RouterTask::setup(System &system) {
   String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
   String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
   _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
+
+  if (system.getUserConfig()->telegram.active) {
+    _copyToTelegram = true;
+  }
 
   return true;
 }
@@ -48,6 +52,11 @@ bool RouterTask::loop(System &system) {
         logPrintD("APRS-IS: ");
         logPrintlnD(aprsIsMsg->toString());
         _toAprsIs.addElement(aprsIsMsg);
+        if (_copyToTelegram) {
+          _tM = std::shared_ptr<TelegramMessage>(new TelegramMessage());
+          _tM.setMessage(aprsIsMsg->toString());
+          _toTelegram.addElement(_tM);
+        }
       } else {
         logPrintlnD("APRS-IS: no forward => RFonly");
       }

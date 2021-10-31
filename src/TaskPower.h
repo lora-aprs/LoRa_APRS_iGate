@@ -18,6 +18,7 @@ private:
   PowerManagementADC _powerManagementADC;
   int                _powerReadDelay = 30000;
   unsigned long      _lastTimePowerRead;
+  double             _lastVoltage;
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower;
 };

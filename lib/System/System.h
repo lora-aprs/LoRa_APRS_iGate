@@ -6,7 +6,6 @@
 #include "TaskManager.h"
 #include <BoardFinder.h>
 #include <Display.h>
-#include <power_management_adc.h>
 #include <configuration.h>
 
 class System {
@@ -21,17 +20,18 @@ public:
   Configuration const *const getUserConfig() const;
   TaskManager &              getTaskManager();
   Display &                  getDisplay();
-  PowerManagementADC &       getPower();
   bool                       isWifiEthConnected() const;
   void                       connectedViaWifiEth(bool status);
+  double                     getVoltage();
+  void                       setVoltage(double last_voltage);
 
 private:
   BoardConfig const *  _boardConfig;
   Configuration const *_userConfig;
   TaskManager          _taskManager;
   Display              _display;
-  PowerManagementADC   _powerManagementADC;
   bool                 _isWifiEthConnected;
+  double               _voltage = -1.0;
 };
 
 #endif

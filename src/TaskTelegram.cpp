@@ -3,7 +3,7 @@
 #include "Task.h"
 #include "TaskTelegram.h"
 #include "project_configuration.h"
-
+#include <System.h>
 #include <TimeLib.h>
 
 
@@ -56,15 +56,15 @@ bool TelegramTask::loop(System &system) {
         {
           text = "Welcome, " + from + ".\n";
           text += "Use following commands to get current readings.\n\n";
-          text += "/bat - akku voltage\n";
+          text += "/bat - battery voltage\n";
           text += "/last - last heard Telegram Paket\n";
           text += "/millis - arduino millis()\n";
           text += "/time - time and date\n";
           text += "/config - current configuration\n";
         } else if (cmd == "/bat") 
         {
-          text = "Batter Voltage: ";
-          text += "not implemented!";
+          text = "Battery Voltage: ";
+          text += String(system.getVoltage()) + " V";
         } else if (cmd == "/last") 
         {
           text = "Last APRE message: ";
@@ -94,54 +94,5 @@ bool TelegramTask::loop(System &system) {
   _stateInfo = "Telegram: active";
   _state = Okay;
   return true;
-}
-
-
-TelegramMessage::TelegramMessage()
-{
-}
-
-TelegramMessage::~TelegramMessage()
-{
-}
-
-UniversalTelegramBot * TelegramMessage::getBOT() {
-  return _body.bot;
-}
-
-void TelegramMessage::setBOT(UniversalTelegramBot *bot) {
-  _body.bot = bot;
-}
-
-String TelegramMessage::getMessage() const {
-  return _body.message;
-}
-
-void TelegramMessage::setMessage(const String & other_message) {
-  _body.message = other_message;
-}
-
-void TelegramMessage::setMessage(const String & other_message, const unsigned long & other_time) {
-  setMessage(other_message);
-  setTime(other_time);
-}
-
-void TelegramMessage::setMessage(UniversalTelegramBot *bot, const String & other_message) {
-  _body.bot = bot;
-  setMessage(other_message);
-}
-
-void TelegramMessage::setMessage(UniversalTelegramBot *bot, const String & other_message, const unsigned long & other_time) {
-  setBOT(bot);
-  setMessage(other_message);
-  setTime(other_time);
-}
-
-unsigned long TelegramMessage::getTime() const {
-  return _body.time;
-}
-
-void TelegramMessage::setTime(const unsigned long & other_time) {
-  _body.time = other_time;
 }
 

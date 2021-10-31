@@ -14,10 +14,12 @@ public:
 
 private:
   ESP32AnalogRead adc;
-  unsigned long _updateInterval = 60000;  // In ms
   int _pin;
   double  _max_voltage;
   double  _min_voltage;
+  double  _last_voltage = -1.0;
+  double const       _divider = 0.5;
+  double const       _scale = 1 / _divider;
 };
 
 #endif

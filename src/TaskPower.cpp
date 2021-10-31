@@ -20,11 +20,15 @@ bool POWERTask::setup(System &system) {
 
 bool POWERTask::loop(System &system) {
   if (millis() > _lastTimePowerRead + _powerReadDelay) {
-    logPrintI("Voltage: ");
-    logPrintlnI(String(_powerManagementADC.getVoltage()*2.0));
-    _stateInfo = String(_powerManagementADC.getVoltage()*2.0) + "V";
+    _lastVoltage = _powerManagementADC.getVoltage();
+    logPrintI("Battery: ");
+    logPrintlnI(String(_lastVoltage) + " V");
+    _stateInfo = String(_lastVoltage) + " V";
     _lastTimePowerRead = millis();
+    system.setVoltage(_lastVoltage);
   }
   _state     = Okay;
   return true;
 }
+
+

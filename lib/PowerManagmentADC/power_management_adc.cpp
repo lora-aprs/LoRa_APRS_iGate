@@ -1,4 +1,4 @@
-
+#include <logger.h>
 #include "power_management_adc.h"
 
 
@@ -21,6 +21,8 @@ bool PowerManagementADC::begin(int pin, double max, double min) {
 
 // cppcheck-suppress unusedFunction
 double PowerManagementADC::getVoltage() {
-  return adc.readVoltage();
+  _last_voltage = adc.readVoltage() * _scale;
+  logPrintlnI("getVoltage() " + String(_last_voltage));
+  return _last_voltage;
 }
 
