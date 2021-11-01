@@ -22,16 +22,16 @@ bool LoRa_APRS::checkMessage() {
   while (available()) {
     str += (char)read();
   }
-  _LastReceivedMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
+  _LastReceivedMsg = std::shared_ptr<APRSExtMessage>(new APRSExtMessage());
   _LastReceivedMsg->decode(str);
   return true;
 }
 
-std::shared_ptr<APRSMessage> LoRa_APRS::getMessage() {
+std::shared_ptr<APRSExtMessage> LoRa_APRS::getMessage() {
   return _LastReceivedMsg;
 }
 
-void LoRa_APRS::sendMessage(const std::shared_ptr<APRSMessage> msg) {
+void LoRa_APRS::sendMessage(const std::shared_ptr<APRSExtMessage> msg) {
   setFrequency(_TxFrequency);
   String data = msg->encode();
   beginPacket();

@@ -26,10 +26,10 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-TaskQueue<std::shared_ptr<APRSMessage>>     toAprsIs;
-TaskQueue<std::shared_ptr<APRSMessage>>     fromModem;
-TaskQueue<std::shared_ptr<APRSMessage>>     toModem;
-TaskQueue<std::shared_ptr<APRSMessage>>     fromPower;
+TaskQueue<std::shared_ptr<APRSExtMessage>>  toAprsIs;
+TaskQueue<std::shared_ptr<APRSExtMessage>>  fromModem;
+TaskQueue<std::shared_ptr<APRSExtMessage>>  toModem;
+TaskQueue<std::shared_ptr<APRSExtMessage>>  fromPower;
 TaskQueue<std::shared_ptr<TelegramMessage>> toTelegram;
 
 System        LoRaSystem;

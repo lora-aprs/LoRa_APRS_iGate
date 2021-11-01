@@ -4,7 +4,7 @@
 #include "project_configuration.h"
 #include <TimeLib.h>
 
-PowerTask::PowerTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromPower) : Task("PowerTask", 0), _fromPower(fromPower) {
+PowerTask::PowerTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &fromPower) : Task("PowerTask", 0), _fromPower(fromPower) {
 }
 
 PowerTask::~PowerTask() {

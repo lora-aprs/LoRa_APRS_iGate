@@ -4,7 +4,7 @@
 #include "TaskAprsIs.h"
 #include "project_configuration.h"
 
-AprsIsTask::AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_APRS_IS, TaskAprsIs), _toAprsIs(toAprsIs) {
+AprsIsTask::AprsIsTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &toAprsIs) : Task(TASK_APRS_IS, TaskAprsIs), _toAprsIs(toAprsIs) {
 }
 
 AprsIsTask::~AprsIsTask() {
@@ -30,10 +30,10 @@ bool AprsIsTask::loop(System &system) {
     return false;
   }
 
-  _aprs_is.getAPRSMessage();
+  _aprs_is.getAPRSExtMessage();
 
   if (!_toAprsIs.empty()) {
-    std::shared_ptr<APRSMessage> msg = _toAprsIs.getElement();
+    std::shared_ptr<APRSExtMessage> msg = _toAprsIs.getElement();
     _aprs_is.sendMessage(msg);
   }
 

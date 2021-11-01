@@ -9,7 +9,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs, TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs), _toTelegram(toTelegram) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSExtMessage>> &toModem, TaskQueue<std::shared_ptr<APRSExtMessage>> &toAprsIs, TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs), _toTelegram(toTelegram) {
 }
 
 RouterTask::~RouterTask() {
@@ -19,7 +19,7 @@ bool RouterTask::setup(System &system) {
   // setup beacon
   _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
 
-  _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
+  _beaconMsg = std::shared_ptr<APRSExtMessage>(new APRSExtMessage());
   _beaconMsg->setSource(system.getUserConfig()->callsign);
   _beaconMsg->setDestination("APLG01");
   String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
@@ -36,11 +36,11 @@ bool RouterTask::setup(System &system) {
 bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
-    std::shared_ptr<APRSMessage> modemMsg = _fromModem.getElement();
+    std::shared_ptr<APRSExtMessage> modemMsg = _fromModem.getElement();
 
     if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
-      std::shared_ptr<APRSMessage> aprsIsMsg = std::make_shared<APRSMessage>(*modemMsg);
-      String                       path      = aprsIsMsg->getPath();
+      std::shared_ptr<APRSExtMessage> aprsIsMsg = std::make_shared<APRSExtMessage>(*modemMsg);
+      String                          path      = aprsIsMsg->getPath();
 
       if (!(path.indexOf("RFONLY") != -1 || path.indexOf("NOGATE") != -1 || path.indexOf("TCPIP") != -1)) {
         if (!path.isEmpty()) {
@@ -70,8 +70,8 @@ bool RouterTask::loop(System &system) {
     }
 
     if (system.getUserConfig()->digi.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
-      std::shared_ptr<APRSMessage> digiMsg = std::make_shared<APRSMessage>(*modemMsg);
-      String                       path    = digiMsg->getPath();
+      std::shared_ptr<APRSExtMessage> digiMsg = std::make_shared<APRSExtMessage>(*modemMsg);
+      String                          path    = digiMsg->getPath();
 
       // simple loop check
       if (path.indexOf("WIDE1-1") >= 0 && path.indexOf(system.getUserConfig()->callsign) == -1) {

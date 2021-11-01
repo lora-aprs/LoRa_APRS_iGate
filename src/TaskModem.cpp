@@ -7,7 +7,7 @@
 #include "TaskModem.h"
 #include "project_configuration.h"
 
-ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_MODEM, TaskModem), _lora_aprs(), _fromModem(fromModem), _toModem(toModem) {
+ModemTask::ModemTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSExtMessage>> &toModem) : Task(TASK_MODEM, TaskModem), _lora_aprs(), _fromModem(fromModem), _toModem(toModem) {
 }
 
 ModemTask::~ModemTask() {
@@ -37,22 +37,25 @@ bool ModemTask::setup(System &system) {
 
 bool ModemTask::loop(System &system) {
   if (_lora_aprs.checkMessage()) {
-    std::shared_ptr<APRSMessage> msg = _lora_aprs.getMessage();
+    std::shared_ptr<APRSExtMessage> msg = _lora_aprs.getMessage();
     // msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
-    logPrintD("[" + timeString() + "] ");
-    logPrintD("Received packet '");
-    logPrintD(msg->toString());
-    logPrintD("' with RSSI ");
-    logPrintD(String(_lora_aprs.packetRssi()));
-    logPrintD(" and SNR ");
-    logPrintlnD(String(_lora_aprs.packetSnr()));
+    logPrintI("[" + timeString() + "] ");
+    logPrintI("Received packet '");
+    logPrintI(msg->toString());
+    logPrintI("' with RSSI ");
+    logPrintI(String(_lora_aprs.packetRssi()));
+    logPrintI(" and SNR ");
+    logPrintlnI(String(_lora_aprs.packetSnr()));
+
+    msg->setRSSI(_lora_aprs.packetRssi());
+    msg->setSNR(_lora_aprs.packetSnr());
 
     _fromModem.addElement(msg);
     system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString())));
   }
 
   if (!_toModem.empty()) {
-    std::shared_ptr<APRSMessage> msg = _toModem.getElement();
+    std::shared_ptr<APRSExtMessage> msg = _toModem.getElement();
     _lora_aprs.sendMessage(msg);
   }
 
