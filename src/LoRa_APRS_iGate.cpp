@@ -21,11 +21,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-<<<<<<< HEAD
-#define VERSION "21.35.2"
-=======
 #define VERSION "21.35.0-dev"
->>>>>>> origin/python_test_framework
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
