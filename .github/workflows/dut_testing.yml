@@ -1,0 +1,15 @@
+name: DUT Tests
+
+on: [push, pull_request]
+
+jobs:
+  dut_tests:
+    name: DUT testing
+    runs-on: dut-testing
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install python reqirements
+        run: cd testlib && make install
+      - name: Run Tests
+        run: cd testlib && make test
