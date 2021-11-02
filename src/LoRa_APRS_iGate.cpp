@@ -149,7 +149,7 @@ void setup() {
   }
 
   if (userConfig.display.overwritePin != 0) {
-    pinMode(userConfig.display.overwritePin, INPUT);
+    // bug #111 pinMode(userConfig.display.overwritePin, INPUT);
     pinMode(userConfig.display.overwritePin, INPUT_PULLUP);
   }
 
