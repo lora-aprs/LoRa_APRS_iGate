@@ -88,8 +88,10 @@ bool TelegramTask::loop(System &system) {
           text = timeString(now()) + " (UTC), ";
           text += "  " + String(day()) + "." + String(month()) + "." + String(year());
         } else if (cmd == "/config") {
-          text = "Current config: ";
-          text += "not implemented!";
+          serializeJsonPretty(system.getDataConfig(), text);
+        } else if (cmd == "/reboot") {
+          text = "rebooting igate";
+          ESP.restart();
         } else {
           text = "unknwon command, try /start for help!";
         };

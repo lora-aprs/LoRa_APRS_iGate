@@ -23,6 +23,10 @@ Configuration const *const System::getUserConfig() const {
   return _userConfig;
 }
 
+DynamicJsonDocument const *const System::getDataConfig() const {
+  return _dataConfig;
+}
+
 TaskManager &System::getTaskManager() {
   return _taskManager;
 }
