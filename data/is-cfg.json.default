@@ -11,8 +11,12 @@
 	"wifi": {
 		"AP": [
 			{
-				"SSID": "",
-				"password": ""
+				"SSID": "SSID1",
+				"password": "PASS1"
+			},
+			{
+				"SSID": "SSID2",
+				"password": "PASS2"
 			}
 		]
 	},
@@ -54,6 +58,10 @@
 			{
 				"name": "ftp",
 				"password": "ftp"
+			},
+			{
+				"name": "ftp2",
+				"password": "ftp2"
 			}
 		]
 	},
