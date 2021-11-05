@@ -25,6 +25,9 @@ public:
   virtual bool loop(System &system) override;
 
   TaskQueue<std::shared_ptr<TelegramMessage>> &_toTelegram;
+  
+  std::shared_ptr<TelegramMessage> _telegramMsg;
+
 };
 
 #endif

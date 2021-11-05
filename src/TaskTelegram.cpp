@@ -88,14 +88,18 @@ bool TelegramTask::loop(System &system) {
           text = timeString(now()) + " (UTC), ";
           text += "  " + String(day()) + "." + String(month()) + "." + String(year());
         } else if (cmd == "/config") {
-          serializeJsonPretty(system.getDataConfig(), text);
+          // serializeJsonPretty(system.getDataConfig(), text);
         } else if (cmd == "/reboot") {
           text = "rebooting igate";
           ESP.restart();
         } else {
           text = "unknwon command, try /start for help!";
         };
-        _telegram->sendMessage(_chatid, text, "");
+        _telegramMsg = std::shared_ptr<TelegramMessage>(new TelegramMessage());
+        _telegramMsg->setTime(now());
+        _telegramMsg->getBody()->setData(text);
+        _toTelegram.addElement(_telegramMsg);
+        //_telegram->sendMessage(_chatid, text, "");
       }
       numNewMessages = _telegram->getUpdates(_telegram->last_message_received + 1);
     }
