@@ -11,6 +11,7 @@
 	"wifi": {
 		"AP": [
 			{
+		"active": false,
 				"SSID": "YOURSSID",
 				"password": "YOURPASSWORD"
 			}
@@ -36,6 +37,7 @@
 	},
 	"lora": {
 		"frequency_rx": 433775000,
+		"gain_rx": 6;
 		"frequency_tx": 433775000,
 		"power": 20,
 		"spreading_factor": 12,

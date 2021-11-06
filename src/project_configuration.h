@@ -21,13 +21,14 @@ public:
 
   class Wifi {
   public:
+    bool active;
     class AP {
     public:
       String SSID;
       String password;
     };
 
-    Wifi() {
+    Wifi() : active(true) {
     }
 
     std::list<AP> APs;
@@ -70,6 +71,7 @@ public:
     }
 
     long frequencyRx;
+    uint8_t gainRx;
     long frequencyTx;
     int  power;
     int  spreadingFactor;

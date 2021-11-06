@@ -1,6 +1,6 @@
 #include "LoRa_APRS.h"
 
-LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000) {
+LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000), _RxGain(6) {
 }
 
 bool LoRa_APRS::checkMessage() {
@@ -48,6 +48,11 @@ void LoRa_APRS::sendMessage(const std::shared_ptr<APRSMessage> msg) {
 void LoRa_APRS::setRxFrequency(long frequency) {
   _RxFrequency = frequency;
   setFrequency(_RxFrequency);
+}
+
+void LoRa_APRS::setRxGain(uint8_t gain) {
+  _RxGain = gain;
+  setGain(_RxGain);
 }
 
 // cppcheck-suppress unusedFunction
