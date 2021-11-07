@@ -1,30 +1,39 @@
 import os
 import pytest
 import serial
+import logging
 from HIL.common import runProcess
+
+logger = logging.getLogger(__name__)
 
 
 class EspFlash:
     def __init__(self, port):
         self.pio_package_path = "$HOME/.platformio/packages"
         self.port = port
+        logger.info(f"pio package path: {self.pio_package_path}")
+        logger.info(f"port: {self.port}")
 
     def runESPTool(self, cmd):
         runProcess(
             f"/usr/bin/python3 {self.pio_package_path}/tool-esptoolpy/esptool.py --chip esp32 --port {self.port} {cmd}")
 
     def erase(self):
+        logger.info("erase flash")
         self.runESPTool("erase_flash")
 
     def write(self, addr, bin_file):
+        logger.info(f"write flash on addr {addr} with file {bin_file}")
         self.runESPTool(
             f"--baud 460800 --before default_reset --after hard_reset write_flash -z --flash_mode dio --flash_size detect {addr} {bin_file}")
 
     def verify(self, addr, bin_file):
+        logger.info(f"verify flash on addr {addr} with file {bin_file}")
         self.runESPTool(
             f"--baud 460800 --before default_reset --after hard_reset verify_flash --flash_mode dio --flash_size detect {addr} {bin_file}")
 
     def make_spiffs(self, fs_path, fs_bin):
+        logger.info(f"make spiffs, fs_path: {fs_path}, fs_bin: {fs_bin}")
         runProcess(
             f"{self.pio_package_path}/tool-mkspiffs/mkspiffs_espressif32_arduino -c {fs_path} -p 256 -b 4096 -s 1507328 {fs_bin}")
 
@@ -32,10 +41,12 @@ class EspFlash:
 class EspDut:
     def __init__(self, port):
         self.port = port
+        self.baudrate = 115200
         self.serial = None
         self.flash = EspFlash(self.port)
 
     def writeFlash(self, bin_dir):
+        logger.info("write flash")
         self.flash.erase()
         self.flash.write("0x1000",  f"{bin_dir}/bootloader_dio_40m.bin")
         self.flash.write("0x8000",  f"{bin_dir}/partitions.bin")
@@ -43,12 +54,15 @@ class EspDut:
         self.flash.write("0x10000", f"{bin_dir}/firmware.bin")
 
     def writeConfig(self, fs_path):
+        logger.info("write config")
         fs_bin = "spiffs.bin"
         self.flash.make_spiffs(fs_path, fs_bin)
         self.flash.write("0x290000", fs_bin)
 
     def openPort(self):
-        self.serial = serial.Serial(self.port, 115200, timeout=0)
+        logger.info(f"open port: {self.port}, baudrate: {self.baudrate}")
+        self.serial = serial.Serial(
+            self.port, baudrate=self.baudrate, timeout=0)
 
     def getLine(self):
         return self.serial.readline()

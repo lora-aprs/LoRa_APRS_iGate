@@ -1,5 +1,8 @@
 import pytest
 import socket
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class AprsIs:
@@ -14,20 +17,22 @@ class AprsIs:
         if self.socket:
             return False
 
+        logger.debug(f"trying to connect to {self.server}")
         self.socket = socket.create_connection(self.server)
         peer = self.socket.getpeername()
-        print(f"Connected to {str(peer)}")
+        logger.info(f"Connected to {str(peer)}")
         self.socket.setblocking(1)
         self.socket.settimeout(1)
         self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_KEEPALIVE, 1)
         banner = list(self._get_line())
-        print(f"Banner: {banner[0].rstrip()}")
+        logger.info(f"Banner: {banner[0].rstrip()}")
 
-        self.send_line(
-            f"user {self.callsign} pass {self.passwd} vers testlib 0.1\r\n")
+        login_line = f"user {self.callsign} pass {self.passwd} vers testlib 0.1\r\n"
+        logger.debug(login_line)
+        self.send_line(login_line)
 
         login = list(self._get_line())
-        print(f"login line: {login[0]}")
+        logger.info(f"login line: {login[0]}")
         _, _, _, status, _ = login[0].split(' ', 4)
         if status == "verified":
             return True
