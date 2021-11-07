@@ -28,7 +28,6 @@ private:
   std::shared_ptr<APRSMessage> _LastReceivedMsg;
   long                         _RxFrequency;
   long                         _TxFrequency;
-  uint8_t                      _RxGain;
 };
 
 #endif

@@ -40,7 +40,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.digi.active          = data["digi"]["active"] | false;
   conf.digi.beacon          = data["digi"]["beacon"] | false;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
-  conf.lora.gainRx          = data["lora"]["gain_rx"] | 6;
+  conf.lora.gainRx          = data["lora"]["gain_rx"] | 0;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
   conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;

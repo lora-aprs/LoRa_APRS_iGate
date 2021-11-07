@@ -1,6 +1,6 @@
 #include "LoRa_APRS.h"
 
-LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000), _RxGain(6) {
+LoRa_APRS::LoRa_APRS() : _RxFrequency(433775000), _TxFrequency(433775000) {
 }
 
 bool LoRa_APRS::checkMessage() {
@@ -51,8 +51,7 @@ void LoRa_APRS::setRxFrequency(long frequency) {
 }
 
 void LoRa_APRS::setRxGain(uint8_t gain) {
-  _RxGain = gain;
-  setGain(_RxGain);
+  setGain(gain);
 }
 
 // cppcheck-suppress unusedFunction
