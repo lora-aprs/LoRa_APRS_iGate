@@ -3,8 +3,8 @@ name: DUT Tests
 on: [push, pull_request]
 
 jobs:
-  dut_tests:
-    name: DUT testing
+  hil_tests:
+    name: HIL testing
     runs-on: dut-testing
     steps:
       - name: Checkout code
@@ -13,3 +13,15 @@ jobs:
         run: cd HIL && make install
       - name: Run Tests
         run: cd HIL && make test
+
+  dut_tests:
+    name: DUT testing
+    runs-on: dut-testing
+    needs: hil_tests
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Install python reqirements
+        run: make install
+      - name: Run Tests
+        run: make test
