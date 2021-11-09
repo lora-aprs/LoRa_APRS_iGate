@@ -24,6 +24,7 @@ bool ModemTask::setup(System &system) {
       ;
   }
   _lora_aprs.setRxFrequency(system.getUserConfig()->lora.frequencyRx);
+  _lora_aprs.setRxGain(system.getUserConfig()->lora.gainRx);
   _lora_aprs.setTxFrequency(system.getUserConfig()->lora.frequencyTx);
   _lora_aprs.setTxPower(system.getUserConfig()->lora.power);
   _lora_aprs.setSpreadingFactor(system.getUserConfig()->lora.spreadingFactor);

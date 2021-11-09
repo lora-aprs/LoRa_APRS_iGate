@@ -50,6 +50,10 @@ void LoRa_APRS::setRxFrequency(long frequency) {
   setFrequency(_RxFrequency);
 }
 
+void LoRa_APRS::setRxGain(uint8_t gain) {
+  setGain(gain);
+}
+
 // cppcheck-suppress unusedFunction
 long LoRa_APRS::getRxFrequency() const {
   return _RxFrequency;
