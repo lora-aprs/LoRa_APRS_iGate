@@ -18,7 +18,7 @@ private:
 class TelegramMessage {
 public:
   TelegramMessage();
-  TelegramMessage(TelegramMessage &other_msg);
+  explicit TelegramMessage(TelegramMessage &other_msg);
   TelegramMessage &operator=(TelegramMessage &other_msg);
   virtual ~TelegramMessage();
 
@@ -29,7 +29,7 @@ public:
   virtual String toString() const;
 
 private:
-  unsigned long       _time;
+  unsigned long       _time = 0;
   TelegramBody *const _body;
 };
 

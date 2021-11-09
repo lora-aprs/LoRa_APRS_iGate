@@ -6,7 +6,7 @@
 #include <System.h>
 #include <TimeLib.h>
 
-TelegramTask::TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_Telegram, TaskTelegram), _toTelegram(toTelegram) {
+TelegramTask::TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram) : Task(TASK_Telegram, TaskTelegram), _toTelegram(toTelegram), _telegram(0) {
 }
 
 TelegramTask::~TelegramTask() {

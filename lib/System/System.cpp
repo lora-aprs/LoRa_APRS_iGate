@@ -1,7 +1,7 @@
 
 #include "System.h"
 
-System::System() : _boardConfig(0), _userConfig(0), _isWifiEthConnected(false) {
+System::System() : _boardConfig(0), _userConfig(0), _dataConfig(0), _isWifiEthConnected(false) {
 }
 
 System::~System() {

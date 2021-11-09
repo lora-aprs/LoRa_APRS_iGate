@@ -9,16 +9,8 @@
 
 class TelegramTask : public Task {
 
-private:
-  UniversalTelegramBot * _telegram;
-  String                _chatid;
-  String                _bottoken;
-  int                   _telegramRequestDelay = 1000;
-  unsigned long         _lastTimeTelegramRan;
-  WiFiClientSecure      _client;
-
 public:
-  TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram);
+  explicit TelegramTask(TaskQueue<std::shared_ptr<TelegramMessage>> &toTelegram);
   virtual ~TelegramTask();
 
   virtual bool setup(System &system) override;
@@ -27,6 +19,15 @@ public:
   TaskQueue<std::shared_ptr<TelegramMessage>> &_toTelegram;
   
   std::shared_ptr<TelegramMessage> _telegramMsg;
+
+
+private:
+  UniversalTelegramBot * _telegram;
+  String                _chatid = "";
+  String                _bottoken = "";
+  int                   _telegramRequestDelay = 1000;
+  unsigned long         _lastTimeTelegramRan = 0;
+  WiFiClientSecure      _client;
 
 };
 

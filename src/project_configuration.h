@@ -115,7 +115,7 @@ public:
 
   class Telegram {
   public:
-    Telegram() : active(false), chatid(""), bottoken("") {
+    Telegram() : active(false), chatid(""), bottoken(""), monitor("false") {
     }
     bool   active;
     String chatid;

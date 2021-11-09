@@ -37,7 +37,7 @@ private:
   Display                    _display;
   bool                       _isWifiEthConnected;
   bool                       _copyToTelegram = false;
-  double                     _voltage        = -1.0;
+  double                     _voltage        = 0.0;
 };
 
 #endif

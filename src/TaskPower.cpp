@@ -25,9 +25,9 @@ bool PowerTask::loop(System &system) {
     logPrintlnI(timeString(now()) + " (UTC), ");
     logPrintI("Battery: ");
     logPrintlnI(String(_lastVoltage) + " V");
-    logPrintlnI("Free Heap         : " + String(esp_get_free_heap_size()));
+    //logPrintlnI("Free Heap         : " + String(esp_get_free_heap_size()));
     logPrintlnI("Free Minimum Heap : " + String(esp_get_minimum_free_heap_size()));
-    logPrintlnI("Free Internal Heap: " + String(esp_get_free_internal_heap_size()));
+    //logPrintlnI("Free Internal Heap: " + String(esp_get_free_internal_heap_size()));
     _stateInfo         = String(_lastVoltage) + " V";
     _lastTimePowerRead = millis();
     system.setVoltage(_lastVoltage);
