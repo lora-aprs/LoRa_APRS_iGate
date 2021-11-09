@@ -5,12 +5,10 @@
 .vscode/ipch
 report.xml
 output
-<<<<<<< HEAD
 dd6sw*
 is-cfg.json
 *.code-workspace
 src/data/*
-=======
 __pycache__
 .pytest_cache
->>>>>>> origin/python_test_framework
+spiffs.bin
