@@ -27,7 +27,7 @@ public:
   bool isBatteryConnect();
 
 private:
-  AXP20X_Class axp = 0;
+  AXP20X_Class axp;
 };
 
 #endif
