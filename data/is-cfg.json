@@ -1,13 +1,18 @@
 {
 	"callsign": "NOCALL-10",
 	"network": {
-		"hostname": "NOCALL-10",
 		"DHCP": true,
-		"staticIP": "192.0.2.100",
-		"subnet": "255.255.255.0",
-		"gateway": "192.0.2.1",
-		"dns1": "192.0.2.1",
-		"dns2": "192.0.2.2"
+		"static": {
+			"ip": "192.168.0.100",
+			"subnet": "255.255.255.0",
+			"gateway": "192.168.0.1",
+			"dns1": "192.168.0.1",
+			"dns2": "192.168.0.2"
+		},
+		"hostname": {
+			"overwrite": false,
+			"name": "NOCALL-10"
+		}
 	},
 	"wifi": {
 		"active": true,
