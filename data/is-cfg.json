@@ -1,6 +1,7 @@
 {
 	"callsign": "NOCALL-10",
 	"network": {
+		"hostname": "lora-igate",
 		"DHCP": true,
 		"staticIP": "192.0.2.100",
 		"subnet": "255.255.255.0",
