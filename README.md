@@ -125,3 +125,4 @@ A direct mount of the [other display](pics/display-wrong.jpg) is not possible wi
 The 'wrong' display works too but you have to change VCC and GND by wire !
 
 feel free to add hints!
+
