@@ -11,6 +11,7 @@ public:
     Network() : DHCP(true) {
     }
 
+    String    hostname;
     bool      DHCP;
     IPAddress staticIP;
     IPAddress subnet;

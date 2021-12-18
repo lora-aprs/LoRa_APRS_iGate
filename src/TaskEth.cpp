@@ -36,13 +36,15 @@ void WiFiEvent(WiFiEvent_t event) {
     break;
   case SYSTEM_EVENT_ETH_START:
     logPrintlnI("ETH Started");
-    ETH.setHostname("esp32-ethernet");
     break;
   case SYSTEM_EVENT_ETH_CONNECTED:
     logPrintlnI("ETH Connected");
+    ETH.setHostname("esp32-ethernet");
     break;
   case SYSTEM_EVENT_ETH_GOT_IP:
-    logPrintI("ETH MAC: ");
+    logPrintI("Hostname: ");
+    logPrintI(ETH.getHostname());
+    logPrintI(", ETH MAC: ");
     logPrintI(ETH.macAddress());
     logPrintI(", IPv4: ");
     logPrintI(ETH.localIP().toString());
@@ -100,11 +102,12 @@ bool EthTask::setup(System &system) {
   delay(200);
   digitalWrite(ETH_NRST, 1);
 
+  ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
+
   if (!system.getUserConfig()->network.DHCP) {
     ETH.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
   }
-
-  ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
+  ETH.setHostname(system.getUserConfig()->network.hostname.c_str());
   return true;
 }
 
