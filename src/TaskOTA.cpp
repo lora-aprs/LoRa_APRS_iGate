@@ -43,7 +43,11 @@ bool OTATask::setup(System &system) {
         else if (error == OTA_END_ERROR)
           logPrintlnE("End Failed");
       });
-  _ota.setHostname(system.getUserConfig()->callsign.c_str());
+  if (system.getUserConfig()->network.hostname.overwrite) {
+    _ota.setHostname(system.getUserConfig()->network.hostname.name.c_str());
+  } else {
+    _ota.setHostname(system.getUserConfig()->callsign.c_str());
+  }
   _stateInfo = "";
   return true;
 }

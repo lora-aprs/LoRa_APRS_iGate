@@ -19,6 +19,8 @@ public:
   void setRxFrequency(long frequency);
   long getRxFrequency() const;
 
+  void setRxGain(uint8_t gain);
+
   void setTxFrequency(long frequency);
   long getTxFrequency() const;
 

@@ -8,16 +8,29 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   if (data.containsKey("callsign"))
     conf.callsign = data["callsign"].as<String>();
 
-  if (data.containsKey("network") && data["network"].containsKey("DHCP")) {
-    conf.network.DHCP = data["network"]["DHCP"];
-    conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
-    conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
-    conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
-    conf.network.dns1.fromString(data["network"]["dns1"].as<String>());
-    conf.network.dns2.fromString(data["network"]["dns2"].as<String>());
+  if (data.containsKey("network")) {
+    conf.network.DHCP = data["network"]["DHCP"] | false;
+    if (data["network"].containsKey("static")) {
+      if (data["network"]["static"].containsKey("ip"))
+        conf.network.static_.ip.fromString(data["network"]["static"]["ip"].as<String>());
+      if (data["network"]["static"].containsKey("subnet"))
+        conf.network.static_.subnet.fromString(data["network"]["static"]["subnet"].as<String>());
+      if (data["network"]["static"].containsKey("gateway"))
+        conf.network.static_.gateway.fromString(data["network"]["static"]["gateway"].as<String>());
+      if (data["network"]["static"].containsKey("dns1"))
+        conf.network.static_.dns1.fromString(data["network"]["static"]["dns1"].as<String>());
+      if (data["network"]["static"].containsKey("dns2"))
+        conf.network.static_.dns2.fromString(data["network"]["static"]["dns2"].as<String>());
+    }
+    if (data["network"].containsKey("hostname")) {
+      conf.network.hostname.overwrite = data["network"]["hostname"]["overwrite"] | false;
+      if (data["network"]["hostname"].containsKey("name"))
+        conf.network.hostname.name = data["network"]["hostname"]["name"].as<String>();
+    }
   }
 
-  JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
+  conf.wifi.active = data["wifi"]["active"];
+  JsonArray aps    = data["wifi"]["AP"].as<JsonArray>();
   for (JsonVariant v : aps) {
     Configuration::Wifi::AP ap;
     ap.SSID     = v["SSID"].as<String>();
@@ -39,6 +52,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.digi.active          = data["digi"]["active"] | false;
   conf.digi.beacon          = data["digi"]["beacon"] | false;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
+  conf.lora.gainRx          = data["lora"]["gain_rx"] | 0;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
   conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;
@@ -84,15 +98,18 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["callsign"] = conf.callsign;
 
   if (!conf.network.DHCP) {
-    data["network"]["DHCP"]     = conf.network.DHCP;
-    data["network"]["staticIP"] = conf.network.staticIP.toString();
-    data["network"]["subnet"]   = conf.network.subnet.toString();
-    data["network"]["gateway"]  = conf.network.gateway.toString();
-    data["network"]["dns1"]     = conf.network.dns1.toString();
-    data["network"]["dns2"]     = conf.network.dns2.toString();
+    data["network"]["DHCP"]                  = conf.network.DHCP;
+    data["network"]["static"]["ip"]          = conf.network.static_.ip.toString();
+    data["network"]["static"]["subnet"]      = conf.network.static_.subnet.toString();
+    data["network"]["static"]["gateway"]     = conf.network.static_.gateway.toString();
+    data["network"]["static"]["dns1"]        = conf.network.static_.dns1.toString();
+    data["network"]["static"]["dns2"]        = conf.network.static_.dns2.toString();
+    data["network"]["hostname"]["overwrite"] = conf.network.hostname.overwrite;
+    data["network"]["hostname"]["name"]      = conf.network.hostname.name;
   }
 
-  JsonArray aps = data["wifi"].createNestedArray("AP");
+  data["wifi"]["active"] = conf.wifi.active;
+  JsonArray aps          = data["wifi"].createNestedArray("AP");
   for (Configuration::Wifi::AP ap : conf.wifi.APs) {
     JsonObject v  = aps.createNestedObject();
     v["SSID"]     = ap.SSID;
@@ -109,6 +126,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["digi"]["active"]                  = conf.digi.active;
   data["digi"]["beacon"]                  = conf.digi.beacon;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
+  data["lora"]["gain_rx"]                 = conf.lora.gainRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
   data["lora"]["power"]                   = conf.lora.power;
   data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;

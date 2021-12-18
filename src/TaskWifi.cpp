@@ -20,10 +20,14 @@ bool WifiTask::setup(System &system) {
   WiFi.mode(WIFI_STA);
 
   WiFi.onEvent(WiFiEvent);
-  WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+  if (system.getUserConfig()->network.hostname.overwrite) {
+    WiFi.setHostname(system.getUserConfig()->network.hostname.name.c_str());
+  } else {
+    WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+  }
 
   if (!system.getUserConfig()->network.DHCP) {
-    WiFi.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
+    WiFi.config(system.getUserConfig()->network.static_.ip, system.getUserConfig()->network.static_.gateway, system.getUserConfig()->network.static_.subnet, system.getUserConfig()->network.static_.dns1, system.getUserConfig()->network.static_.dns2);
   }
 
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {

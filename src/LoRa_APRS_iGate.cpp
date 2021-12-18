@@ -21,7 +21,11 @@
 #include "TaskTelegram.h"
 #include "project_configuration.h"
 
+<<<<<<< HEAD
 #define VERSION "21.35.2"
+=======
+#define VERSION "21.50.0"
+>>>>>>> e4ac459810c3c8ac33477267dec81f8f37e85942
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
@@ -108,9 +112,10 @@ void setup() {
 
 
   if (userConfig.aprs_is.active) {
-    if (boardConfig->Type == eETH_BOARD) {
+    if (boardConfig->Type == eETH_BOARD && !userConfig.wifi.active) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-    } else {
+    }
+    if (userConfig.wifi.active) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     }
     LoRaSystem.getTaskManager().addTask(&otaTask);
