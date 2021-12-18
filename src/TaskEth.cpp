@@ -39,7 +39,6 @@ void WiFiEvent(WiFiEvent_t event) {
     break;
   case SYSTEM_EVENT_ETH_CONNECTED:
     logPrintlnI("ETH Connected");
-    ETH.setHostname("esp32-ethernet");
     break;
   case SYSTEM_EVENT_ETH_GOT_IP:
     logPrintI("Hostname: ");
@@ -105,9 +104,13 @@ bool EthTask::setup(System &system) {
   ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
 
   if (!system.getUserConfig()->network.DHCP) {
-    ETH.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
+    ETH.config(system.getUserConfig()->network.static_.ip, system.getUserConfig()->network.static_.gateway, system.getUserConfig()->network.static_.subnet, system.getUserConfig()->network.static_.dns1, system.getUserConfig()->network.static_.dns2);
   }
-  ETH.setHostname(system.getUserConfig()->network.hostname.c_str());
+  if (system.getUserConfig()->network.hostname.overwrite) {
+    ETH.setHostname(system.getUserConfig()->network.hostname.name.c_str());
+  } else {
+    ETH.setHostname(system.getUserConfig()->callsign.c_str());
+  }
   return true;
 }
 
