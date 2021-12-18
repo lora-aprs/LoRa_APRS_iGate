@@ -6,17 +6,29 @@
 
 class Configuration {
 public:
+  class Static {
+  public:
+    IPAddress ip;
+    IPAddress subnet;
+    IPAddress gateway;
+    IPAddress dns1;
+    IPAddress dns2;
+  };
+
+  class Hostname {
+  public:
+    bool   overwrite;
+    String name;
+  };
+
   class Network {
   public:
     Network() : DHCP(true) {
     }
 
-    bool      DHCP;
-    IPAddress staticIP;
-    IPAddress subnet;
-    IPAddress gateway;
-    IPAddress dns1;
-    IPAddress dns2;
+    bool     DHCP;
+    Static   static_;
+    Hostname hostname;
   };
 
   class Wifi {

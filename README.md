@@ -69,16 +69,6 @@ The best success is to use PlatformIO (and it is the only platform where I can s
 
 This firmware is developed in a rolling release system: everyday a new release could be created. But there are still rules where new pull requests has to go and and how the version system looks like.
 
-### Branches
-
-There are 2 main branches:
-* *master* and
-* *develop*
-
-The *master* branch has all releases and is the most stable one. With the different tags you can jump to different versions or if you take the most current *master* branch you will just get the latest, stable version. There will be no side releases which are branched of from *master*. If there is a bugfix version it will be done directly on the *master* branch and a tag will be generated with a new version.
-
-The *develop* branch is used for new feature development. It will be also used to stabilize the current development to create a new stable version (pull request to *master* branch). **Again:** all new development (pull requests) has to go directly into the *develop* branch!
-
 ### Version system
 
 If the *develop* branch is stable enough for a new release it will be merged with a pull request to the *master* branch and a new version will be generated.
@@ -125,3 +115,4 @@ A direct mount of the [other display](pics/display-wrong.jpg) is not possible wi
 The 'wrong' display works too but you have to change VCC and GND by wire !
 
 feel free to add hints!
+

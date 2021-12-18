@@ -21,7 +21,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION "21.44.0-dev"
+#define VERSION "21.50.0"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
