@@ -10,7 +10,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
 
   if (data.containsKey("network") && data["network"].containsKey("DHCP")) {
     conf.network.hostname = data["network"]["hostname"].as<String>();
-    conf.network.DHCP = data["network"]["DHCP"];
+    conf.network.DHCP     = data["network"]["DHCP"];
     conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
     conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
     conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
