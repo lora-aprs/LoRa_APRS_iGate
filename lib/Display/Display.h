@@ -37,6 +37,8 @@ public:
   void activateDisplaySaveMode();
   void setDisplaySaveTimeout(uint32_t timeout);
 
+  void activateDistplay();
+
   // functions for update loop
   void update();
   void addFrame(std::shared_ptr<DisplayFrame> frame);

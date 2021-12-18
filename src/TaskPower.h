@@ -1,24 +1,24 @@
 #ifndef TASK_POWER_H_
 #define TASK_POWER_H_
 
-#include <power_management_adc.h>
+#include <APRSExtMessage.h>
 #include <TaskManager.h>
-#include <APRSMessage.h>
+#include <power_management_adc.h>
 
-
-class POWERTask : public Task {
+class PowerTask : public Task {
 public:
-  POWERTask(TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower);
-  virtual ~POWERTask();
+  PowerTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &_fromPower);
+  virtual ~PowerTask();
 
   virtual bool setup(System &system) override;
   virtual bool loop(System &system) override;
 
 private:
   PowerManagementADC _powerManagementADC;
-  int                _powerReadDelay = 30000;
-  unsigned long      _lastTimePowerRead;
+  int                _powerReadDelay    = 30000;
+  unsigned long      _lastTimePowerRead = 0;
+  double             _lastVoltage       = 0.0;
 
-  TaskQueue<std::shared_ptr<APRSMessage>> &_fromPower;
+  TaskQueue<std::shared_ptr<APRSExtMessage>> &_fromPower;
 };
 #endif

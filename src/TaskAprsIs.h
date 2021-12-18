@@ -2,13 +2,13 @@
 #define TASK_APRS_IS_H_
 
 #include <APRS-IS.h>
-#include <APRSMessage.h>
+#include <APRSExtMessage.h>
 #include <TaskManager.h>
 #include <Timer.h>
 
 class AprsIsTask : public Task {
 public:
-  explicit AprsIsTask(TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs);
+  explicit AprsIsTask(TaskQueue<std::shared_ptr<APRSExtMessage>> &toAprsIs);
   virtual ~AprsIsTask();
 
   virtual bool setup(System &system) override;
@@ -17,7 +17,7 @@ public:
 private:
   APRS_IS _aprs_is;
 
-  TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
+  TaskQueue<std::shared_ptr<APRSExtMessage>> &_toAprsIs;
 
   bool connect(const System &system);
 };

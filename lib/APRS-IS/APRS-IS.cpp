@@ -50,7 +50,7 @@ bool APRS_IS::sendMessage(const String &message) {
   return true;
 }
 
-bool APRS_IS::sendMessage(const std::shared_ptr<APRSMessage> message) {
+bool APRS_IS::sendMessage(const std::shared_ptr<APRSExtMessage> message) {
   if (!connected()) {
     return false;
   }
@@ -70,7 +70,7 @@ String APRS_IS::getMessage() {
   return line;
 }
 
-std::shared_ptr<APRSMessage> APRS_IS::getAPRSMessage() {
+std::shared_ptr<APRSExtMessage> APRS_IS::getAPRSExtMessage() {
   String line;
   if (_client.available() > 0) {
     line = _client.readStringUntil('\n');
@@ -82,7 +82,7 @@ std::shared_ptr<APRSMessage> APRS_IS::getAPRSMessage() {
   if (line.length() == 0) {
     return 0;
   }
-  std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
+  std::shared_ptr<APRSExtMessage> msg = std::shared_ptr<APRSExtMessage>(new APRSExtMessage());
   msg->decode(line);
   return msg;
 }

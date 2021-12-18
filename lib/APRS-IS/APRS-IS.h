@@ -3,6 +3,7 @@
 #define APRS_IS_Lib_h_
 
 #include <APRS-Decoder.h>
+#include <APRSExtMessage.h>
 #include <WiFi.h>
 
 class APRS_IS {
@@ -14,12 +15,12 @@ public:
   bool connected();
 
   bool sendMessage(const String &message);
-  bool sendMessage(const std::shared_ptr<APRSMessage> message);
+  bool sendMessage(const std::shared_ptr<APRSExtMessage> message);
 
   int available();
 
-  String                       getMessage();
-  std::shared_ptr<APRSMessage> getAPRSMessage();
+  String                          getMessage();
+  std::shared_ptr<APRSExtMessage> getAPRSExtMessage();
 
 private:
   String     _user;

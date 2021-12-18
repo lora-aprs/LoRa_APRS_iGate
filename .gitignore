@@ -5,6 +5,10 @@
 .vscode/ipch
 report.xml
 output
-data/dd6sw.is-cfg.json
+dd6sw*
+is-cfg.json
 *.code-workspace
-dd6sw-*
+src/data/*
+__pycache__
+.pytest_cache
+spiffs.bin

@@ -21,14 +21,15 @@ public:
 
   class Wifi {
   public:
+    Wifi() : active(true) {
+    }
+
+    bool active;
     class AP {
     public:
       String SSID;
       String password;
     };
-
-    Wifi() {
-    }
 
     std::list<AP> APs;
   };
@@ -69,12 +70,13 @@ public:
     LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {
     }
 
-    long frequencyRx;
-    long frequencyTx;
-    int  power;
-    int  spreadingFactor;
-    long signalBandwidth;
-    int  codingRate4;
+    long    frequencyRx;
+    uint8_t gainRx;
+    long    frequencyTx;
+    int     power;
+    int     spreadingFactor;
+    long    signalBandwidth;
+    int     codingRate4;
   };
 
   class Display {
@@ -104,40 +106,40 @@ public:
   };
 
   class PowerManagmentADC {
-    public:
-      PowerManagmentADC() : active(true), pin(35), max_voltage(4.7), min_voltage(3.0) {
+  public:
+    PowerManagmentADC() : active(true), pin(35), max_voltage(4.7), min_voltage(3.0) {
     }
-    bool            active;
-    int             pin;
-    double          max_voltage;
-    double          min_voltage;
+    bool   active;
+    int    pin;
+    double max_voltage;
+    double min_voltage;
   };
 
   class Telegram {
-    public:
-      Telegram() : active(false), chatid(""), bottoken("") {
-      }
-      bool    active;
-      String  chatid;
-      String  bottoken;
+  public:
+    Telegram() : active(false), chatid(""), bottoken(""), monitor("false") {
+    }
+    bool   active;
+    String chatid;
+    String bottoken;
+    bool   monitor;
   };
-
 
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
-  String  callsign;
-  Network network;
-  Wifi    wifi;
-  Beacon  beacon;
-  APRS_IS aprs_is;
-  Digi    digi;
-  LoRa    lora;
-  Display display;
-  Ftp     ftp;
-  String  board;
-  String  ntpServer;
-  Telegram telegram;
-  PowerManagmentADC  power;
+  String            callsign;
+  Network           network;
+  Wifi              wifi;
+  Beacon            beacon;
+  APRS_IS           aprs_is;
+  Digi              digi;
+  LoRa              lora;
+  Display           display;
+  Ftp               ftp;
+  String            board;
+  String            ntpServer;
+  Telegram          telegram;
+  PowerManagmentADC power;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {

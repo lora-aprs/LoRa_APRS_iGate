@@ -1,7 +1,7 @@
 
 #include "System.h"
 
-System::System() : _boardConfig(0), _userConfig(0), _isWifiEthConnected(false) {
+System::System() : _boardConfig(0), _userConfig(0), _dataConfig(0), _isWifiEthConnected(false) {
 }
 
 System::~System() {
@@ -23,16 +23,16 @@ Configuration const *const System::getUserConfig() const {
   return _userConfig;
 }
 
+DynamicJsonDocument const *const System::getDataConfig() const {
+  return _dataConfig;
+}
+
 TaskManager &System::getTaskManager() {
   return _taskManager;
 }
 
 Display &System::getDisplay() {
   return _display;
-}
-
-PowerManagementADC &System::getPower() {
-  return _powerManagementADC;
 }
 
 bool System::isWifiEthConnected() const {
@@ -42,3 +42,23 @@ bool System::isWifiEthConnected() const {
 void System::connectedViaWifiEth(bool status) {
   _isWifiEthConnected = status;
 }
+
+double System::getVoltage() {
+  return _voltage;
+}
+
+void System::setVoltage(double last_voltage) {
+  _voltage = last_voltage;
+}
+
+void System::setCopyToTelegram() {
+  _copyToTelegram = true;
+};
+
+void System::unsetCopyToTelegram() {
+  _copyToTelegram = false;
+};
+
+bool System::isCopyToTelegram() const {
+  return _copyToTelegram;
+};
