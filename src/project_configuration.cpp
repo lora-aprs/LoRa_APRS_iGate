@@ -9,7 +9,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.callsign = data["callsign"].as<String>();
 
   if (data.containsKey("network") && data["network"].containsKey("DHCP")) {
-    conf.network.DHCP = data["network"]["DHCP"];
+    conf.network.hostname = data["network"]["hostname"].as<String>();
+    conf.network.DHCP     = data["network"]["DHCP"];
     conf.network.staticIP.fromString(data["network"]["staticIP"].as<String>());
     conf.network.subnet.fromString(data["network"]["subnet"].as<String>());
     conf.network.gateway.fromString(data["network"]["gateway"].as<String>());
@@ -74,6 +75,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["callsign"] = conf.callsign;
 
   if (!conf.network.DHCP) {
+    data["network"]["hostname"] = conf.network.hostname;
     data["network"]["DHCP"]     = conf.network.DHCP;
     data["network"]["staticIP"] = conf.network.staticIP.toString();
     data["network"]["subnet"]   = conf.network.subnet.toString();
