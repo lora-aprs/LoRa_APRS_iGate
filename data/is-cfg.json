@@ -10,6 +10,7 @@
 		"dns2": "192.0.2.2"
 	},
 	"wifi": {
+		"active": true,
 		"AP": [
 			{
 				"SSID": "YOURSSID",
@@ -37,6 +38,7 @@
 	},
 	"lora": {
 		"frequency_rx": 433775000,
+		"gain_rx": 0,
 		"frequency_tx": 433775000,
 		"power": 20,
 		"spreading_factor": 12,

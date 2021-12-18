@@ -18,7 +18,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION "21.35.0"
+#define VERSION "21.44.0-dev"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
@@ -100,9 +100,10 @@ void setup() {
   LoRaSystem.getTaskManager().addTask(&routerTask);
 
   if (userConfig.aprs_is.active) {
-    if (boardConfig->Type == eETH_BOARD) {
+    if (boardConfig->Type == eETH_BOARD && !userConfig.wifi.active) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-    } else {
+    }
+    if (userConfig.wifi.active) {
       LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     }
     LoRaSystem.getTaskManager().addTask(&otaTask);

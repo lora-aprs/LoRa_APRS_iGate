@@ -18,7 +18,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.network.dns2.fromString(data["network"]["dns2"].as<String>());
   }
 
-  JsonArray aps = data["wifi"]["AP"].as<JsonArray>();
+  conf.wifi.active = data["wifi"]["active"];
+  JsonArray aps    = data["wifi"]["AP"].as<JsonArray>();
   for (JsonVariant v : aps) {
     Configuration::Wifi::AP ap;
     ap.SSID     = v["SSID"].as<String>();
@@ -40,6 +41,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.digi.active          = data["digi"]["active"] | false;
   conf.digi.beacon          = data["digi"]["beacon"] | false;
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
+  conf.lora.gainRx          = data["lora"]["gain_rx"] | 0;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
   conf.lora.power           = data["lora"]["power"] | 20;
   conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;
@@ -84,7 +86,8 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     data["network"]["dns2"]     = conf.network.dns2.toString();
   }
 
-  JsonArray aps = data["wifi"].createNestedArray("AP");
+  data["wifi"]["active"] = conf.wifi.active;
+  JsonArray aps          = data["wifi"].createNestedArray("AP");
   for (Configuration::Wifi::AP ap : conf.wifi.APs) {
     JsonObject v  = aps.createNestedObject();
     v["SSID"]     = ap.SSID;
@@ -101,6 +104,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["digi"]["active"]                  = conf.digi.active;
   data["digi"]["beacon"]                  = conf.digi.beacon;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
+  data["lora"]["gain_rx"]                 = conf.lora.gainRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
   data["lora"]["power"]                   = conf.lora.power;
   data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
