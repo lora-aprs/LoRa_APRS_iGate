@@ -26,7 +26,7 @@ bool ModemTask::setup(System &system) {
   _lora_aprs.setRxFrequency(system.getUserConfig()->lora.frequencyRx);
   _lora_aprs.setRxGain(system.getUserConfig()->lora.gainRx);
   _lora_aprs.setTxFrequency(system.getUserConfig()->lora.frequencyTx);
-  _lora_aprs.setTxPower(system.getUserConfig()->lora.power);
+  _lora_aprs.setTxPower(system.getUserConfig()->lora.tx_enabled ? system.getUserConfig()->lora.power : 0);
   _lora_aprs.setSpreadingFactor(system.getUserConfig()->lora.spreadingFactor);
   _lora_aprs.setSignalBandwidth(system.getUserConfig()->lora.signalBandwidth);
   _lora_aprs.setCodingRate4(system.getUserConfig()->lora.codingRate4);
@@ -54,7 +54,8 @@ bool ModemTask::loop(System &system) {
 
   if (!_toModem.empty()) {
     std::shared_ptr<APRSMessage> msg = _toModem.getElement();
-    _lora_aprs.sendMessage(msg);
+    if (system.getUserConfig()->lora.tx_enabled)
+      _lora_aprs.sendMessage(msg);
   }
 
   return true;

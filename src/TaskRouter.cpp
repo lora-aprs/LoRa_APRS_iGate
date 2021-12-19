@@ -59,7 +59,7 @@ bool RouterTask::loop(System &system) {
         logPrintlnD("APRS-IS: no forward => own packet received");
     }
 
-    if (system.getUserConfig()->digi.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
+    if (system.getUserConfig()->digi.active && system.getUserConfig()->lora.tx_enabled && modemMsg->getSource() != system.getUserConfig()->callsign) {
       std::shared_ptr<APRSMessage> digiMsg = std::make_shared<APRSMessage>(*modemMsg);
       String                       path    = digiMsg->getPath();
 
@@ -84,7 +84,7 @@ bool RouterTask::loop(System &system) {
     if (system.getUserConfig()->aprs_is.active)
       _toAprsIs.addElement(_beaconMsg);
 
-    if (system.getUserConfig()->digi.beacon) {
+    if (system.getUserConfig()->digi.beacon && system.getUserConfig()->lora.tx_enabled) {
       _toModem.addElement(_beaconMsg);
     }
 

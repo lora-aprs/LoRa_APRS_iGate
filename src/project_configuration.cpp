@@ -58,10 +58,15 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;
   conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"] | 125000;
   conf.lora.codingRate4     = data["lora"]["coding_rate4"] | 5;
+  conf.lora.tx_enabled      = data["lora"]["tx_enabled"] | false;
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
   conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
   conf.display.turn180      = data["display"]["turn180"] | true;
+  if (!conf.lora.tx_enabled) {
+    conf.digi.active = conf.digi.beacon = false;
+    conf.lora.power = 0;
+  }
 
   conf.ftp.active = data["ftp"]["active"] | false;
   JsonArray users = data["ftp"]["user"].as<JsonArray>();
@@ -113,15 +118,16 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["aprs_is"]["passcode"]             = conf.aprs_is.passcode;
   data["aprs_is"]["server"]               = conf.aprs_is.server;
   data["aprs_is"]["port"]                 = conf.aprs_is.port;
-  data["digi"]["active"]                  = conf.digi.active;
-  data["digi"]["beacon"]                  = conf.digi.beacon;
+  data["digi"]["active"]                  = conf.digi.active && conf.lora.tx_enabled;
+  data["digi"]["beacon"]                  = conf.digi.beacon && conf.lora.tx_enabled;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
   data["lora"]["gain_rx"]                 = conf.lora.gainRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;
-  data["lora"]["power"]                   = conf.lora.power;
+  data["lora"]["power"]                   = conf.lora.tx_enabled ? conf.lora.power : 0;
   data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
   data["lora"]["signal_bandwidth"]        = conf.lora.signalBandwidth;
   data["lora"]["coding_rate4"]            = conf.lora.codingRate4;
+  data["lora"]["tx_enabled"]              = conf.lora.tx_enabled;
   data["display"]["always_on"]            = conf.display.alwaysOn;
   data["display"]["timeout"]              = conf.display.timeout;
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
