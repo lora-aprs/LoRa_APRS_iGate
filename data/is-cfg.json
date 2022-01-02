@@ -1,5 +1,5 @@
 {
-	"callsign": "NOCALL-10",
+	"callsign": "OK1FWG-11",
 	"network": {
 		"DHCP": true,
 		"static": {
@@ -11,29 +11,29 @@
 		},
 		"hostname": {
 			"overwrite": false,
-			"name": "NOCALL-10"
+			"name": "OK1FWG-11"
 		}
 	},
 	"wifi": {
 		"active": true,
 		"AP": [
 			{
-				"SSID": "YOURSSID",
-				"password": "YOURPASSWORD"
+				"SSID": "FWG2",
+				"password": "K8I/0N8c"
 			}
 		]
 	},
 	"beacon": {
-		"message": "LoRa iGATE & Digi, Info: github.com/lora-aprs/LoRa_APRS_iGate",
+		"message": "LoRa iGATE & Digi, ",
 		"position": {
-			"latitude": 0.000000,
-			"longitude": 0.000000
+			"latitude": 50.033687,
+			"longitude": 15.798107
 		},
 		"timeout": 15
 	},
 	"aprs_is": {
 		"active": true,
-		"passcode": "",
+		"passcode": "23208",
 		"server": "euro.aprs2.net",
 		"port": 14580
 	},
@@ -48,12 +48,13 @@
 		"power": 20,
 		"spreading_factor": 12,
 		"signal_bandwidth": 125000,
-		"coding_rate4": 5
+		"coding_rate4": 5,
+		"signal_info": true
 	},
 	"display": {
-		"always_on": true,
+		"always_on": false,
 		"timeout": 10,
-		"overwrite_pin": 0,
+		"overwrite_pin": 17,
 		"turn180": true
 	},
 	"ftp": {

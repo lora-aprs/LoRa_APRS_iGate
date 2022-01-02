@@ -89,6 +89,7 @@ public:
     int     spreadingFactor;
     long    signalBandwidth;
     int     codingRate4;
+    bool    signalInfo;
   };
 
   class Display {

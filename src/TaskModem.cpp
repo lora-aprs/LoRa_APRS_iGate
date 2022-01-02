@@ -40,6 +40,17 @@ bool ModemTask::loop(System &system) {
   if (_lora_aprs.checkMessage()) {
     std::shared_ptr<APRSMessage> msg = _lora_aprs.getMessage();
     // msg->getAPRSBody()->setData(msg->getAPRSBody()->getData() + " 123");
+
+    // Added for reporting additional information like RSSI&SNR
+    if (system.getUserConfig()->lora.signalInfo) {
+      String addSigInfo = msg->getBody()->getData();
+      int    lastIndex  = addSigInfo.lastIndexOf("!");
+      int    index      = addSigInfo.substring(0, lastIndex).lastIndexOf("!");
+      addSigInfo.replace("\n", "");
+      String rssi_snr = String(" RSSI: " + String(_lora_aprs.packetRssi()) + " dBm SNR: " + String(_lora_aprs.packetSnr()) + " dB ");
+      addSigInfo      = String(addSigInfo.substring(0, index - 1) + rssi_snr + addSigInfo.substring(index) + "\n");
+      msg->getBody()->setData(addSigInfo);
+    }
     logPrintD("[" + timeString() + "] ");
     logPrintD("Received packet '");
     logPrintD(msg->toString());
