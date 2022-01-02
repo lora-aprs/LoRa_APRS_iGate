@@ -1,5 +1,5 @@
 {
-	"callsign": "OK1FWG-11",
+	"callsign": "NOCALL-10",
 	"network": {
 		"DHCP": true,
 		"static": {
@@ -11,29 +11,29 @@
 		},
 		"hostname": {
 			"overwrite": false,
-			"name": "OK1FWG-11"
+			"name": "NOCALL-10"
 		}
 	},
 	"wifi": {
 		"active": true,
 		"AP": [
 			{
-				"SSID": "FWG2",
-				"password": "K8I/0N8c"
+				"SSID": "",
+				"password": ""
 			}
 		]
 	},
 	"beacon": {
 		"message": "LoRa iGATE & Digi, ",
 		"position": {
-			"latitude": 50.033687,
-			"longitude": 15.798107
+			"latitude": 0.000000,
+			"longitude": 0.000000
 		},
 		"timeout": 15
 	},
 	"aprs_is": {
 		"active": true,
-		"passcode": "23208",
+		"passcode": "",
 		"server": "euro.aprs2.net",
 		"port": 14580
 	},
@@ -54,7 +54,7 @@
 	"display": {
 		"always_on": false,
 		"timeout": 10,
-		"overwrite_pin": 17,
+		"overwrite_pin": 0,
 		"turn180": true
 	},
 	"ftp": {
