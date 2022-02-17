@@ -3,6 +3,17 @@ name: Integreation Tests
 on: [push, pull_request]
 
 jobs:
+  version_check:
+    name: Version Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+      - name: check version
+        run: ./scripts/check_version.py
+
   build:
     name: Compile Firmware
     runs-on: ubuntu-latest
@@ -41,7 +52,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
       - name: Run clang-format style check for C/C++ programs.
-        uses: jidicula/clang-format-action@v3.2.0
+        uses: jidicula/clang-format-action@v4.5.0
         with:
           clang-format-version: '11'
           check-path: ${{ matrix.path }}
