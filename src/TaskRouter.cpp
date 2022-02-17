@@ -43,7 +43,7 @@ bool RouterTask::loop(System &system) {
           path += ",";
         }
 
-        aprsIsMsg->setPath(path + "qAR," + system.getUserConfig()->callsign);
+        aprsIsMsg->setPath(path + "qAO," + system.getUserConfig()->callsign);
 
         logPrintD("APRS-IS: ");
         logPrintlnD(aprsIsMsg->toString());
