@@ -9,7 +9,7 @@
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
 
-RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs) {
+RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs, TaskQueue<std::shared_ptr<APRSMessage>> &toMQTT) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs), _toMQTT(toMQTT) {
 }
 
 RouterTask::~RouterTask() {
@@ -33,6 +33,11 @@ bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
     std::shared_ptr<APRSMessage> modemMsg = _fromModem.getElement();
+    std::shared_ptr<APRSMessage> DataMQTT = modemMsg;
+
+    if (system.getUserConfig()->mqtt.active) {
+      _toMQTT.addElement(DataMQTT);
+    }
 
     if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
       std::shared_ptr<APRSMessage> aprsIsMsg = std::make_shared<APRSMessage>(*modemMsg);

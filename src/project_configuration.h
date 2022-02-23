@@ -117,6 +117,16 @@ public:
     std::list<User> users;
   };
 
+  class MQTT {
+  public:
+    bool active;
+    String server;
+    uint16_t port;
+    String name;
+    String password;
+    String topic;
+  };
+
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
 
   String  callsign;
@@ -128,6 +138,7 @@ public:
   LoRa    lora;
   Display display;
   Ftp     ftp;
+  MQTT    mqtt;
   String  board;
   String  ntpServer;
 };
