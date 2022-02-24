@@ -11,8 +11,8 @@ enum TaskNames
   TaskOta,
   TaskWifi,
   TaskRouter,
-  TaskSize,
   TaskMQTT,
+  TaskSize
 };
 
 #define TASK_APRS_IS "AprsIsTask"
