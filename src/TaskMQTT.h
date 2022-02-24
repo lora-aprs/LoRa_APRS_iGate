@@ -2,8 +2,8 @@
 #define TASK_MQTT_H_
 
 #include <APRSMessage.h>
-#include <TaskManager.h>
 #include <PubSubClient.h>
+#include <TaskManager.h>
 
 class MQTTTask : public Task {
 public:
@@ -12,11 +12,14 @@ public:
 
   virtual bool setup(System &system) override;
   virtual bool loop(System &system) override;
-  
+
 private:
-  bool      _beginCalled;
-  TaskQueue<std::shared_ptr<APRSMessage>> &_toMQTT;  
-  bool connect(const System &system);  
+  TaskQueue<std::shared_ptr<APRSMessage>> &_toMQTT;
+
+  WiFiClient   _client;
+  PubSubClient _MQTT;
+
+  bool connect(const System &system);
 };
 
 #endif
