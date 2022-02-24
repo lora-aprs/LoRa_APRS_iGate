@@ -33,10 +33,9 @@ bool RouterTask::loop(System &system) {
   // do routing
   if (!_fromModem.empty()) {
     std::shared_ptr<APRSMessage> modemMsg = _fromModem.getElement();
-    std::shared_ptr<APRSMessage> DataMQTT = modemMsg;
 
     if (system.getUserConfig()->mqtt.active) {
-      _toMQTT.addElement(DataMQTT);
+      _toMQTT.addElement(modemMsg);
     }
 
     if (system.getUserConfig()->aprs_is.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
