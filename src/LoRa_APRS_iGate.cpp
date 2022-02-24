@@ -19,7 +19,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION "22.7.0_zj"
+#define VERSION "22.8.0"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
