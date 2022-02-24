@@ -4,6 +4,7 @@
 #include <APRSMessage.h>
 #include <PubSubClient.h>
 #include <TaskManager.h>
+#include <WiFi.h>
 
 class MQTTTask : public Task {
 public:
