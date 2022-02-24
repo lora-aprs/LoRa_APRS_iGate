@@ -12,6 +12,7 @@ enum TaskNames
   TaskWifi,
   TaskRouter,
   TaskSize,
+  TaskMQTT,
 };
 
 #define TASK_APRS_IS "AprsIsTask"
@@ -22,5 +23,6 @@ enum TaskNames
 #define TASK_OTA     "OTATask"
 #define TASK_WIFI    "WifiTask"
 #define TASK_ROUTER  "RouterTask"
+#define TASK_MQTT    "MQTTTask"
 
 #endif

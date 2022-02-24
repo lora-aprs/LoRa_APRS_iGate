@@ -11,6 +11,7 @@
 #include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
+#include "TaskMQTT.h"
 #include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
@@ -18,7 +19,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION "22.7.0"
+#define VERSION "22.8.0"
 
 String create_lat_aprs(double lat);
 String create_long_aprs(double lng);
@@ -26,6 +27,7 @@ String create_long_aprs(double lng);
 TaskQueue<std::shared_ptr<APRSMessage>> toAprsIs;
 TaskQueue<std::shared_ptr<APRSMessage>> fromModem;
 TaskQueue<std::shared_ptr<APRSMessage>> toModem;
+TaskQueue<std::shared_ptr<APRSMessage>> toMQTT;
 
 System        LoRaSystem;
 Configuration userConfig;
@@ -37,8 +39,9 @@ WifiTask    wifiTask;
 OTATask     otaTask;
 NTPTask     ntpTask;
 FTPTask     ftpTask;
+MQTTTask    mqttTask(toMQTT);
 AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toModem, toAprsIs);
+RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
 
 void setup() {
   Serial.begin(115200);
@@ -112,6 +115,10 @@ void setup() {
       LoRaSystem.getTaskManager().addTask(&ftpTask);
     }
     LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+  }
+
+  if (userConfig.mqtt.active) {
+    LoRaSystem.getTaskManager().addTask(&mqttTask);
   }
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
