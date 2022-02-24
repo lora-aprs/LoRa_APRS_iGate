@@ -30,13 +30,13 @@ bool MQTTTask::loop(System &system) {
     std::shared_ptr<APRSMessage> msg = _toMQTT.getElement();
 
     DynamicJsonDocument data(1024);
-    data["Source"]      = msg->getSource();
-    data["Destination"] = msg->getDestination();
-    data["Path"]        = msg->getPath();
-    data["Type"]        = msg->getType().toString();
+    data["source"]      = msg->getSource();
+    data["destination"] = msg->getDestination();
+    data["path"]        = msg->getPath();
+    data["type"]        = msg->getType().toString();
     String body         = msg->getBody()->encode();
     body.replace("\n", "");
-    data["Data"] = body;
+    data["data"] = body;
 
     String r;
     serializeJson(data, r);
