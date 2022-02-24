@@ -119,12 +119,12 @@ public:
 
   class MQTT {
   public:
-    bool active;
-    String server;
+    bool     active;
+    String   server;
     uint16_t port;
-    String name;
-    String password;
-    String topic;
+    String   name;
+    String   password;
+    String   topic;
   };
 
   Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};

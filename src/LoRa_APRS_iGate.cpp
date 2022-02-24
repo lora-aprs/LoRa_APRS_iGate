@@ -11,12 +11,12 @@
 #include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
+#include "TaskMQTT.h"
 #include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
 #include "TaskRouter.h"
 #include "TaskWifi.h"
-#include "TaskMQTT.h"
 #include "project_configuration.h"
 
 #define VERSION "22.7.0_zj"

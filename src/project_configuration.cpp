@@ -78,12 +78,12 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.ftp.users.push_back(us);
   }
   if (data.containsKey("mqtt")) {
-    conf.mqtt.active = data["mqtt"]["active"] | false;
-    conf.mqtt.server = data["mqtt"]["server"].as<String>();
-    conf.mqtt.port = data["mqtt"]["port"].as<uint16_t>();
-    conf.mqtt.name = data["mqtt"]["name"].as<String>();
+    conf.mqtt.active   = data["mqtt"]["active"] | false;
+    conf.mqtt.server   = data["mqtt"]["server"].as<String>();
+    conf.mqtt.port     = data["mqtt"]["port"].as<uint16_t>();
+    conf.mqtt.name     = data["mqtt"]["name"].as<String>();
     conf.mqtt.password = data["mqtt"]["password"].as<String>();
-    conf.mqtt.topic = data["mqtt"]["topic"].as<String>();
+    conf.mqtt.topic    = data["mqtt"]["topic"].as<String>();
   }
   if (data.containsKey("ntp_server"))
     conf.ntpServer = data["ntp_server"].as<String>();
@@ -141,13 +141,13 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     v["name"]     = u.name;
     v["password"] = u.password;
   }
-  data["mqtt"]["active"]                   = conf.mqtt.active;
-  data["mqtt"]["server"]                   = conf.mqtt.server;
-  data["mqtt"]["port"]                     = conf.mqtt.port;
-  data["mqtt"]["name"]                     = conf.mqtt.name;
-  data["mqtt"]["password"]                 = conf.mqtt.password;
-  data["mqtt"]["topic"]                    = conf.mqtt.topic;  
-  data["ntp_server"] = conf.ntpServer;
+  data["mqtt"]["active"]   = conf.mqtt.active;
+  data["mqtt"]["server"]   = conf.mqtt.server;
+  data["mqtt"]["port"]     = conf.mqtt.port;
+  data["mqtt"]["name"]     = conf.mqtt.name;
+  data["mqtt"]["password"] = conf.mqtt.password;
+  data["mqtt"]["topic"]    = conf.mqtt.topic;
+  data["ntp_server"]       = conf.ntpServer;
 
   data["board"] = conf.board;
 }
