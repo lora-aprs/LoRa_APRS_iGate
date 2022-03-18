@@ -4,8 +4,5 @@
     "recommendations": [
         "platformio.platformio-ide",
         "xaver.clang-format"
-    ],
-    "unwantedRecommendations": [
-        "ms-vscode.cpptools-extension-pack"
     ]
 }
