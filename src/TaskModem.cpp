@@ -54,13 +54,15 @@ bool ModemTask::loop(System &system) {
 
   if (!_toModem.empty()) {
     std::shared_ptr<APRSMessage> msg = _toModem.getElement();
-    logPrintlnD(msg->toString());
     if (system.getUserConfig()->lora.txok) {
-      logPrintD(String("-- TXOK"));
+      logPrintD("Transmitting packet '");
+      logPrintD(msg->toString());
       _lora_aprs.sendMessage(msg);
-      logPrintlnD(String(" -- TXDone"));
+      logPrintlnD(String(" TXDone"));
     } else {
-      logPrintlnD(String("-- TXNG"));
+      logPrintD("NOT Transmitting packet '");
+      logPrintD(msg->toString());
+      logPrintlnD(String(" TXNG"));
     }
   }
 
