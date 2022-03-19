@@ -146,7 +146,7 @@ public:
 
 class ProjectConfigurationManagement : public ConfigurationManagement {
 public:
-  explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {
+  explicit ProjectConfigurationManagement(logging::Logger &logger) : ConfigurationManagement(logger, "/is-cfg.json") {
   }
   virtual ~ProjectConfigurationManagement() {
   }

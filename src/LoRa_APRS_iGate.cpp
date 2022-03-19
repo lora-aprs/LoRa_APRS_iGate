@@ -61,8 +61,8 @@ void setup() {
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
 
-  ProjectConfigurationManagement confmg;
-  confmg.readConfiguration(userConfig);
+  ProjectConfigurationManagement confmg(LoRaSystem.getLogger());
+  confmg.readConfiguration(LoRaSystem.getLogger(), userConfig);
 
   BoardFinder        finder(boardConfigs);
   BoardConfig const *boardConfig = finder.getBoardConfig(userConfig.board);
@@ -74,7 +74,7 @@ void setup() {
         ;
     } else {
       userConfig.board = boardConfig->Name;
-      confmg.writeConfiguration(userConfig);
+      confmg.writeConfiguration(LoRaSystem.getLogger(), userConfig);
       LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "will restart board now!");
       ESP.restart();
     }

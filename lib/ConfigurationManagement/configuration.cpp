@@ -2,12 +2,14 @@
 #include <SPIFFS.h>
 #include <logger.h>
 
-ConfigurationManagement::ConfigurationManagement(String FilePath) : mFilePath(FilePath) {
+#define MODULE_NAME "ConfigurationManagement"
+
+ConfigurationManagement::ConfigurationManagement(logging::Logger &logger, String FilePath) : mFilePath(FilePath) {
   if (!SPIFFS.begin(true)) {
-    logPrintlnI("Mounting SPIFFS was not possible. Trying to format SPIFFS...");
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Mounting SPIFFS was not possible. Trying to format SPIFFS...");
     SPIFFS.format();
     if (!SPIFFS.begin()) {
-      logPrintlnE("Formating SPIFFS was not okay!");
+      logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Formating SPIFFS was not okay!");
     }
   }
 }
@@ -15,16 +17,16 @@ ConfigurationManagement::ConfigurationManagement(String FilePath) : mFilePath(Fi
 ConfigurationManagement::~ConfigurationManagement() {
 }
 
-void ConfigurationManagement::readConfiguration(Configuration &conf) {
+void ConfigurationManagement::readConfiguration(logging::Logger &logger, Configuration &conf) {
   File file = SPIFFS.open(mFilePath);
   if (!file) {
-    logPrintlnE("Failed to open file for reading, using default configuration.");
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Failed to open file for reading, using default configuration.");
     return;
   }
   DynamicJsonDocument  data(2048);
   DeserializationError error = deserializeJson(data, file);
   if (error) {
-    logPrintlnW("Failed to read file, using default configuration.");
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Failed to read file, using default configuration.");
   }
   // serializeJson(data, Serial);
   // Serial.println();
@@ -33,13 +35,13 @@ void ConfigurationManagement::readConfiguration(Configuration &conf) {
   readProjectConfiguration(data, conf);
 
   // update config in memory to get the new fields:
-  writeConfiguration(conf);
+  writeConfiguration(logger, conf);
 }
 
-void ConfigurationManagement::writeConfiguration(Configuration &conf) {
+void ConfigurationManagement::writeConfiguration(logging::Logger &logger, Configuration &conf) {
   File file = SPIFFS.open(mFilePath, "w");
   if (!file) {
-    logPrintlnE("Failed to open file for writing...");
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Failed to open file for writing...");
     return;
   }
   DynamicJsonDocument data(2048);
