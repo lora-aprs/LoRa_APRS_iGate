@@ -131,6 +131,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
   data["lora"]["signal_bandwidth"]        = conf.lora.signalBandwidth;
   data["lora"]["coding_rate4"]            = conf.lora.codingRate4;
+  data["lora"]["txok"]                    = conf.lora.txok;
   data["display"]["always_on"]            = conf.display.alwaysOn;
   data["display"]["timeout"]              = conf.display.timeout;
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
