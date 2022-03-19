@@ -40,15 +40,12 @@ bool AprsIsTask::loop(System &system) {
   return true;
 }
 
-bool AprsIsTask::connect(const System &system) {
-  logPrintI("connecting to APRS-IS server: ");
-  logPrintI(system.getUserConfig()->aprs_is.server);
-  logPrintI(" on port: ");
-  logPrintlnI(String(system.getUserConfig()->aprs_is.port));
+bool AprsIsTask::connect(System &system) {
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d", system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
   if (!_aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port)) {
-    logPrintlnE("Connection failed.");
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Connection failed.");
     return false;
   }
-  logPrintlnI("Connected to APRS-IS server!");
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connected to APRS-IS server!");
   return true;
 }
