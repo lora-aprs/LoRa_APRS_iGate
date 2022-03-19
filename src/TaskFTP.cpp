@@ -14,8 +14,7 @@ FTPTask::~FTPTask() {
 
 bool FTPTask::setup(System &system) {
   for (Configuration::Ftp::User user : system.getUserConfig()->ftp.users) {
-    logPrintD("Adding user to FTP Server: ");
-    logPrintlnD(user.name);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Adding user to FTP Server: %s", user.name);
     _ftpServer.addUser(user.name, user.password);
   }
   _ftpServer.addFilesystem("SPIFFS", &SPIFFS);
@@ -31,8 +30,7 @@ bool FTPTask::loop(System &system) {
   _ftpServer.handle();
   static bool configWasOpen = false;
   if (configWasOpen && _ftpServer.countConnections() == 0) {
-    logPrintlnW("Maybe the config has been changed via FTP, lets restart now to get the new config...");
-    logPrintlnW("");
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, getName(), "Maybe the config has been changed via FTP, lets restart now to get the new config...");
     ESP.restart();
   }
   if (_ftpServer.countConnections() > 0) {
