@@ -20,7 +20,7 @@ private:
   WiFiClient   _client;
   PubSubClient _MQTT;
 
-  bool connect(const System &system);
+  bool connect(System &system);
 };
 
 #endif

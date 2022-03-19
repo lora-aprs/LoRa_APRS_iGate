@@ -46,29 +46,19 @@ bool MQTTTask::loop(System &system) {
       topic = topic + "/";
     }
     topic = topic + system.getUserConfig()->callsign;
-
-    logPrintD("Send MQTT with topic: \"");
-    logPrintD(topic);
-    logPrintD("\", data: ");
-    logPrintlnD(r);
-
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Send MQTT with topic: '%s', data: %s", topic, r);
     _MQTT.publish(topic.c_str(), r.c_str());
   }
   _MQTT.loop();
   return true;
 }
 
-bool MQTTTask::connect(const System &system) {
-  logPrintI("Connecting to MQTT broker: ");
-  logPrintI(system.getUserConfig()->mqtt.server);
-  logPrintI(" on port ");
-  logPrintlnI(String(system.getUserConfig()->mqtt.port));
-
+bool MQTTTask::connect(System &system) {
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connecting to MQTT broker: %s on port %d", system.getUserConfig()->mqtt.server, system.getUserConfig()->mqtt.port);
   if (_MQTT.connect(system.getUserConfig()->callsign.c_str(), system.getUserConfig()->mqtt.name.c_str(), system.getUserConfig()->mqtt.password.c_str())) {
-    logPrintI("Connected to MQTT broker as: ");
-    logPrintlnI(system.getUserConfig()->callsign);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connected to MQTT broker as: %s", system.getUserConfig()->callsign);
     return true;
   }
-  logPrintlnI("Connecting to MQTT broker faild. Try again later.");
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connecting to MQTT broker failed. Try again later.");
   return false;
 }
