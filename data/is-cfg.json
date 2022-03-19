@@ -49,7 +49,7 @@
 		"spreading_factor": 12,
 		"signal_bandwidth": 125000,
 		"coding_rate4": 5,
-		"txok": true
+		"tx_enable": true
 	},
 	"display": {
 		"always_on": true,
