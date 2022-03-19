@@ -48,7 +48,8 @@
 		"power": 20,
 		"spreading_factor": 12,
 		"signal_bandwidth": 125000,
-		"coding_rate4": 5
+		"coding_rate4": 5,
+		"tx_enable": true
 	},
 	"display": {
 		"always_on": true,

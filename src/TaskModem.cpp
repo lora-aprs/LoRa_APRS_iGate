@@ -54,7 +54,18 @@ bool ModemTask::loop(System &system) {
 
   if (!_toModem.empty()) {
     std::shared_ptr<APRSMessage> msg = _toModem.getElement();
-    _lora_aprs.sendMessage(msg);
+    logPrintD("[" + timeString() + "] ");
+    if (system.getUserConfig()->lora.tx_enable) {
+      logPrintD("Transmitting packet '");
+      logPrintD(msg->toString());
+      logPrintlnD("'");
+      _lora_aprs.sendMessage(msg);
+      logPrintlnD("TX done");
+    } else {
+      logPrintD("NOT transmitting packet as TX is not enabled '");
+      logPrintD(msg->toString());
+      logPrintlnD("'");
+    }
   }
 
   return true;
