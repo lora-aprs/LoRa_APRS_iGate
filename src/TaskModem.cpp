@@ -54,6 +54,7 @@ bool ModemTask::loop(System &system) {
 
   if (!_toModem.empty()) {
     std::shared_ptr<APRSMessage> msg = _toModem.getElement();
+    logPrintD("[" + timeString() + "] ");
     if (system.getUserConfig()->lora.txok) {
       logPrintD("Transmitting packet '");
       logPrintD(msg->toString());
