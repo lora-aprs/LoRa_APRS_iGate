@@ -8,6 +8,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
+#include <logger.h>
+
 enum BoardType
 {
   eHELTEC_WIFI_LORA_32_V1,
@@ -47,16 +49,16 @@ class BoardFinder {
 public:
   explicit BoardFinder(const std::list<BoardConfig const *> &boardConfigs);
 
-  BoardConfig const *searchBoardConfig();
+  BoardConfig const *searchBoardConfig(logging::Logger &logger);
 
   BoardConfig const *getBoardConfig(String name);
 
 private:
   const std::list<BoardConfig const *> &_boardConfigs;
 
-  bool checkOledConfig(BoardConfig const *boardConfig);
+  bool checkOledConfig(BoardConfig const *boardConfig, logging::Logger &logger);
   bool checkModemConfig(BoardConfig const *boardConfig);
-  bool checkPowerConfig(BoardConfig const *boardConfig);
+  bool checkPowerConfig(BoardConfig const *boardConfig, logging::Logger &logger);
 };
 
 extern BoardConfig TTGO_LORA32_V1;

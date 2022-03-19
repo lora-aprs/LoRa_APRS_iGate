@@ -67,7 +67,7 @@ void setup() {
   BoardFinder        finder(boardConfigs);
   BoardConfig const *boardConfig = finder.getBoardConfig(userConfig.board);
   if (!boardConfig) {
-    boardConfig = finder.searchBoardConfig();
+    boardConfig = finder.searchBoardConfig(LoRaSystem.getLogger());
     if (!boardConfig) {
       LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Board config not set and search failed!");
       while (true)
