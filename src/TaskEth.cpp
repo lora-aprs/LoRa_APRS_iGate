@@ -24,11 +24,11 @@ void WiFiEvent(WiFiEvent_t event) {
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Connected");
     break;
   case SYSTEM_EVENT_STA_GOT_IP:
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi MAC: %s", WiFi.macAddress());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", WiFi.localIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", WiFi.gatewayIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", WiFi.dnsIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", WiFi.dnsIP(1).toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi MAC: %s", WiFi.macAddress().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", WiFi.localIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", WiFi.gatewayIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", WiFi.dnsIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", WiFi.dnsIP(1).toString().c_str());
     break;
   case SYSTEM_EVENT_STA_DISCONNECTED:
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Disconnected");
@@ -44,11 +44,11 @@ void WiFiEvent(WiFiEvent_t event) {
     break;
   case SYSTEM_EVENT_ETH_GOT_IP:
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Hostname: %s", ETH.getHostname());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH MAC: %s", ETH.macAddress());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", ETH.localIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", ETH.gatewayIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", ETH.dnsIP().toString());
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", ETH.dnsIP(1).toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH MAC: %s", ETH.macAddress().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", ETH.localIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", ETH.gatewayIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", ETH.dnsIP().toString().c_str());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", ETH.dnsIP(1).toString().c_str());
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Hostname: %s", ETH.getHostname());
     if (ETH.fullDuplex()) {
       _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "FULL_DUPLEX");

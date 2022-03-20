@@ -31,7 +31,7 @@ bool WifiTask::setup(System &system) {
   }
 
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Looking for AP: %s", ap.SSID);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Looking for AP: %s", ap.SSID.c_str());
     _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
   }
   return true;
@@ -47,7 +47,7 @@ bool WifiTask::loop(System &system) {
     _state         = Error;
     return false;
   } else if (wifi_status != _oldWifiStatus) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "IP address: %s", WiFi.localIP().toString());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "IP address: %s", WiFi.localIP().toString().c_str());
     _oldWifiStatus = wifi_status;
     return false;
   }

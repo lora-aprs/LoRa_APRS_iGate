@@ -41,7 +41,7 @@ bool AprsIsTask::loop(System &system) {
 }
 
 bool AprsIsTask::connect(System &system) {
-  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d", system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port);
   APRS_IS::ConnectionStatus status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
   if (status == APRS_IS::ERROR_CONNECTION) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Something went wrong on connecting! Is the server reachable?");

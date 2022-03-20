@@ -25,7 +25,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
       continue;
     }
     if (checkOledConfig(boardconf, logger)) {
-      logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "found a board config: %s", boardconf->Name);
+      logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "found a board config: %s", boardconf->Name.c_str());
       return boardconf;
     }
   }
@@ -40,7 +40,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
       powerManagement.activateLoRa();
     }
     if (checkModemConfig(boardconf)) {
-      logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "found a board config: %s", boardconf->Name);
+      logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "found a board config: %s", boardconf->Name.c_str());
       return boardconf;
     }
   }

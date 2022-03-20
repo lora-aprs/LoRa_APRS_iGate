@@ -18,7 +18,7 @@ bool OTATask::setup(System &system) {
         } else { // U_SPIFFS
           type = "filesystem";
         }
-        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Start updating %s", type);
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Start updating %s", type.c_str());
       })
       .onEnd([&]() {
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "OTA End");
@@ -39,7 +39,7 @@ bool OTATask::setup(System &system) {
         } else if (error == OTA_END_ERROR) {
           error_str = "End Failed";
         }
-        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Error[%d]: %s", error, error_str);
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Error[%d]: %s", error, error_str.c_str());
       });
   if (system.getUserConfig()->network.hostname.overwrite) {
     _ota.setHostname(system.getUserConfig()->network.hostname.name.c_str());

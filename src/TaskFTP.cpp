@@ -14,7 +14,7 @@ FTPTask::~FTPTask() {
 
 bool FTPTask::setup(System &system) {
   for (Configuration::Ftp::User user : system.getUserConfig()->ftp.users) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Adding user to FTP Server: %s", user.name);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Adding user to FTP Server: %s", user.name.c_str());
     _ftpServer.addUser(user.name, user.password);
   }
   _ftpServer.addFilesystem("SPIFFS", &SPIFFS);
