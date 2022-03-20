@@ -147,12 +147,14 @@ void setup() {
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "setup done...");
 }
 
+volatile bool syslogSet = false;
+
 void loop() {
   LoRaSystem.getTaskManager().loop(LoRaSystem);
-  if (LoRaSystem.isWifiEthConnected()) {
-    if (LoRaSystem.getUserConfig()->syslog.active) {
-      LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
-    }
+  if (LoRaSystem.isWifiEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
+    LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "System connected after a restart to the network, syslog server set");
+    syslogSet = true;
   }
 }
 
