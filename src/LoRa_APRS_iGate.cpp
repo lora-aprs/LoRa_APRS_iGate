@@ -47,6 +47,7 @@ RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
 void setup() {
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
+  setWiFiLogger(&LoRaSystem.getLogger());
   delay(500);
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "LoRa APRS iGate by OE5BPA (Peter Buchegger)");
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Version: %s", VERSION);
