@@ -11,7 +11,7 @@ version = None
 with open("src/LoRa_APRS_iGate.cpp") as f:
     for line in f:
         if line.startswith("#define VERSION"):
-            version = line.strip().split(" ")[2].replace('"', "")
+            version = line.strip().split(" ")[-1].replace('"', "")
 
 version_split = version.split(".")
 version_year = int(version_split[0])

@@ -9,9 +9,16 @@ class APRS_IS {
 public:
   void setup(const String &user, const String &passcode, const String &tool_name, const String &version);
 
-  bool connect(const String &server, const int port);
-  bool connect(const String &server, const int port, const String &filter);
-  bool connected();
+  enum ConnectionStatus
+  {
+    SUCCESS,
+    ERROR_CONNECTION,
+    ERROR_PASSCODE,
+  };
+
+  ConnectionStatus connect(const String &server, const int port);
+  ConnectionStatus connect(const String &server, const int port, const String &filter);
+  bool             connected();
 
   bool sendMessage(const String &message);
   bool sendMessage(const std::shared_ptr<APRSMessage> message);
@@ -28,7 +35,7 @@ private:
   String     _version;
   WiFiClient _client;
 
-  bool _connect(const String &server, const int port, const String &login_line);
+  ConnectionStatus _connect(const String &server, const int port, const String &login_line);
 };
 
 #endif

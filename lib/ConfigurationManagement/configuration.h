@@ -9,15 +9,17 @@
 #include <ArduinoJson.h>
 #endif
 
+#include <logger.h>
+
 class Configuration;
 
 class ConfigurationManagement {
 public:
-  explicit ConfigurationManagement(String FilePath);
+  explicit ConfigurationManagement(logging::Logger &logger, String FilePath);
   virtual ~ConfigurationManagement();
 
-  void readConfiguration(Configuration &conf);
-  void writeConfiguration(Configuration &conf);
+  void readConfiguration(logging::Logger &logger, Configuration &conf);
+  void writeConfiguration(logging::Logger &logger, Configuration &conf);
 
 private:
   virtual void readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf)  = 0;

@@ -38,3 +38,7 @@ bool System::isWifiEthConnected() const {
 void System::connectedViaWifiEth(bool status) {
   _isWifiEthConnected = status;
 }
+
+logging::Logger &System::getLogger() {
+  return _logger;
+}

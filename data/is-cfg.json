@@ -49,7 +49,7 @@
 		"spreading_factor": 12,
 		"signal_bandwidth": 125000,
 		"coding_rate4": 5,
-		"tx_enable": true
+		"tx_enable": false
 	},
 	"display": {
 		"always_on": true,
@@ -73,6 +73,11 @@
 		"name": "",
 		"password": "",
 		"topic": "LoraAPRS/Data"
+	},
+	"syslog": {
+		"active": true,
+		"server": "syslog.lora-aprs.info",
+		"port": 514
 	},
 	"ntp_server": "pool.ntp.org"
 }
