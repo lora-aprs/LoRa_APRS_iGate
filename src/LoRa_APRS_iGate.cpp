@@ -149,6 +149,11 @@ void setup() {
 
 void loop() {
   LoRaSystem.getTaskManager().loop(LoRaSystem);
+  if (LoRaSystem.isWifiEthConnected()) {
+    if (LoRaSystem.getUserConfig()->syslog.active) {
+      LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
+    }
+  }
 }
 
 String create_lat_aprs(double lat) {
