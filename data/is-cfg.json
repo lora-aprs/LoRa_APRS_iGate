@@ -29,6 +29,7 @@
 			"latitude": 0.000000,
 			"longitude": 0.000000
 		},
+		"gps": true,
 		"timeout": 15
 	},
 	"aprs_is": {

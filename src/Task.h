@@ -12,6 +12,7 @@ enum TaskNames
   TaskWifi,
   TaskRouter,
   TaskMQTT,
+  TaskBeacon,
   TaskSize
 };
 
@@ -24,5 +25,6 @@ enum TaskNames
 #define TASK_WIFI    "WifiTask"
 #define TASK_ROUTER  "RouterTask"
 #define TASK_MQTT    "MQTTTask"
+#define TASK_BEACON  "BeaconTask"
 
 #endif
