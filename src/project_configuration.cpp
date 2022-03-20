@@ -59,7 +59,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.lora.spreadingFactor = data["lora"]["spreading_factor"] | 12;
   conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"] | 125000;
   conf.lora.codingRate4     = data["lora"]["coding_rate4"] | 5;
-  conf.lora.txok            = data["lora"]["txok"] | false;
+  conf.lora.tx_enable       = data["lora"]["tx_enable"] | true;
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
   conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
@@ -86,6 +86,11 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.mqtt.name     = data["mqtt"]["name"].as<String>();
     conf.mqtt.password = data["mqtt"]["password"].as<String>();
     conf.mqtt.topic    = data["mqtt"]["topic"].as<String>();
+  }
+  if (data.containsKey("syslog")) {
+    conf.syslog.active = data["syslog"]["active"] | true;
+    conf.syslog.server = data["syslog"]["server"].as<String>();
+    conf.syslog.port   = data["syslog"]["port"] | 514;
   }
   if (data.containsKey("ntp_server"))
     conf.ntpServer = data["ntp_server"].as<String>();
@@ -133,7 +138,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["lora"]["spreading_factor"]        = conf.lora.spreadingFactor;
   data["lora"]["signal_bandwidth"]        = conf.lora.signalBandwidth;
   data["lora"]["coding_rate4"]            = conf.lora.codingRate4;
-  data["lora"]["txok"]                    = conf.lora.txok;
+  data["lora"]["tx_enable"]               = conf.lora.tx_enable;
   data["display"]["always_on"]            = conf.display.alwaysOn;
   data["display"]["timeout"]              = conf.display.timeout;
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
@@ -151,6 +156,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["mqtt"]["name"]     = conf.mqtt.name;
   data["mqtt"]["password"] = conf.mqtt.password;
   data["mqtt"]["topic"]    = conf.mqtt.topic;
+  data["syslog"]["active"] = conf.syslog.active;
+  data["syslog"]["server"] = conf.syslog.server;
+  data["syslog"]["port"]   = conf.syslog.port;
   data["ntp_server"]       = conf.ntpServer;
 
   data["board"] = conf.board;

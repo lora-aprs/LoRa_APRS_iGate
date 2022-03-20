@@ -31,8 +31,7 @@ bool WifiTask::setup(System &system) {
   }
 
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
-    logPrintD("Looking for AP: ");
-    logPrintlnD(ap.SSID);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Looking for AP: %s", ap.SSID.c_str());
     _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
   }
   return true;
@@ -42,14 +41,13 @@ bool WifiTask::loop(System &system) {
   const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
     system.connectedViaWifiEth(false);
-    logPrintlnE("WiFi not connected!");
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
     _state         = Error;
     return false;
   } else if (wifi_status != _oldWifiStatus) {
-    logPrintD("IP address: ");
-    logPrintlnD(WiFi.localIP().toString());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "IP address: %s", WiFi.localIP().toString().c_str());
     _oldWifiStatus = wifi_status;
     return false;
   }

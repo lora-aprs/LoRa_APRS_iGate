@@ -3,6 +3,7 @@
 
 #include <TaskManager.h>
 
+void setWiFiLogger(logging::Logger *logger);
 void WiFiEvent(WiFiEvent_t event);
 
 class EthTask : public Task {

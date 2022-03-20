@@ -80,7 +80,7 @@ public:
 
   class LoRa {
   public:
-    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), txok(false) {
+    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
     }
 
     long    frequencyRx;
@@ -90,7 +90,7 @@ public:
     int     spreadingFactor;
     long    signalBandwidth;
     int     codingRate4;
-    bool    txok;
+    bool    tx_enable;
   };
 
   class Display {
@@ -121,6 +121,9 @@ public:
 
   class MQTT {
   public:
+    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data") {
+    }
+
     bool     active;
     String   server;
     uint16_t port;
@@ -129,7 +132,18 @@ public:
     String   topic;
   };
 
-  Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
+  class Syslog {
+  public:
+    Syslog() : active(true), server("syslog.lora-aprs.info"), port(514) {
+    }
+
+    bool   active;
+    String server;
+    int    port;
+  };
+
+  Configuration() : callsign("NOCALL-10"), ntpServer("pool.ntp.org"), board("") {
+  }
 
   String  callsign;
   Network network;
@@ -141,13 +155,14 @@ public:
   Display display;
   Ftp     ftp;
   MQTT    mqtt;
-  String  board;
+  Syslog  syslog;
   String  ntpServer;
+  String  board;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {
 public:
-  explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {
+  explicit ProjectConfigurationManagement(logging::Logger &logger) : ConfigurationManagement(logger, "/is-cfg.json") {
   }
   virtual ~ProjectConfigurationManagement() {
   }

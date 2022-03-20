@@ -19,7 +19,7 @@ private:
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
 
-  bool connect(const System &system);
+  bool connect(System &system);
 };
 
 #endif

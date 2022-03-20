@@ -17,7 +17,6 @@ bool RouterTask::setup(System &system) {
 }
 
 bool RouterTask::loop(System &system) {
-  // do routing
   if (!_fromModem.empty()) {
     std::shared_ptr<APRSMessage> modemMsg = _fromModem.getElement();
 
@@ -36,18 +35,19 @@ bool RouterTask::loop(System &system) {
 
         aprsIsMsg->setPath(path + "qAO," + system.getUserConfig()->callsign);
 
-        logPrintD("APRS-IS: ");
-        logPrintlnD(aprsIsMsg->toString());
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "APRS-IS: %s", aprsIsMsg->toString().c_str());
         _toAprsIs.addElement(aprsIsMsg);
       } else {
-        logPrintlnD("APRS-IS: no forward => RFonly");
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "APRS-IS: no forward => RFonly");
       }
     } else {
-      if (!system.getUserConfig()->aprs_is.active)
-        logPrintlnD("APRS-IS: disabled");
+      if (!system.getUserConfig()->aprs_is.active) {
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "APRS-IS: disabled");
+      }
 
-      if (modemMsg->getSource() == system.getUserConfig()->callsign)
-        logPrintlnD("APRS-IS: no forward => own packet received");
+      if (modemMsg->getSource() == system.getUserConfig()->callsign) {
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "APRS-IS: no forward => own packet received");
+      }
     }
 
     if (system.getUserConfig()->digi.active && modemMsg->getSource() != system.getUserConfig()->callsign) {
@@ -59,8 +59,7 @@ bool RouterTask::loop(System &system) {
         // fixme
         digiMsg->setPath(system.getUserConfig()->callsign + "*");
 
-        logPrintD("DIGI: ");
-        logPrintlnD(digiMsg->toString());
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "DIGI: %s", digiMsg->toString().c_str());
 
         _toModem.addElement(digiMsg);
       }
