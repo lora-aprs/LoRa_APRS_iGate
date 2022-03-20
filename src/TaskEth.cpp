@@ -6,67 +6,62 @@
 #include "TaskEth.h"
 #include "project_configuration.h"
 
-volatile bool eth_connected = false;
+#define WIFI_EVENT "WiFiEvent"
+
+volatile bool    eth_connected = false;
+logging::Logger *_logger;
+
+void setWiFiLogger(logging::Logger *logger) {
+  _logger = logger;
+}
 
 void WiFiEvent(WiFiEvent_t event) {
   switch (event) {
   case SYSTEM_EVENT_STA_START:
-    logPrintlnI("WiFi Started");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Started");
     break;
   case SYSTEM_EVENT_STA_CONNECTED:
-    logPrintlnI("WiFi Connected");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Connected");
     break;
   case SYSTEM_EVENT_STA_GOT_IP:
-    logPrintI("WiFi MAC: ");
-    logPrintI(WiFi.macAddress());
-    logPrintI(", IPv4: ");
-    logPrintI(WiFi.localIP().toString());
-    logPrintI(", Gateway: ");
-    logPrintI(WiFi.gatewayIP().toString());
-    logPrintI(", DNS1: ");
-    logPrintI(WiFi.dnsIP().toString());
-    logPrintI(", DNS2: ");
-    logPrintlnI(WiFi.dnsIP(1).toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi MAC: %s", WiFi.macAddress());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", WiFi.localIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", WiFi.gatewayIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", WiFi.dnsIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", WiFi.dnsIP(1).toString());
     break;
   case SYSTEM_EVENT_STA_DISCONNECTED:
-    logPrintlnW("WiFi Disconnected");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Disconnected");
     break;
   case SYSTEM_EVENT_STA_STOP:
-    logPrintlnW("WiFi Stopped");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Stopped");
     break;
   case SYSTEM_EVENT_ETH_START:
-    logPrintlnI("ETH Started");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Started");
     break;
   case SYSTEM_EVENT_ETH_CONNECTED:
-    logPrintlnI("ETH Connected");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH Connected");
     break;
   case SYSTEM_EVENT_ETH_GOT_IP:
-    logPrintI("Hostname: ");
-    logPrintI(ETH.getHostname());
-    logPrintI(", ETH MAC: ");
-    logPrintI(ETH.macAddress());
-    logPrintI(", IPv4: ");
-    logPrintI(ETH.localIP().toString());
-    logPrintI(", Gateway: ");
-    logPrintI(ETH.gatewayIP().toString());
-    logPrintI(", DNS1: ");
-    logPrintI(ETH.dnsIP().toString());
-    logPrintI(", DNS2: ");
-    logPrintI(ETH.dnsIP(1).toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Hostname: %s", ETH.getHostname());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH MAC: %s", ETH.macAddress());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "IPv4: %s", ETH.localIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Gateway: %s", ETH.gatewayIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS1: %s", ETH.dnsIP().toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "DNS2: %s", ETH.dnsIP(1).toString());
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "Hostname: %s", ETH.getHostname());
     if (ETH.fullDuplex()) {
-      logPrintI(", FULL_DUPLEX");
+      _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "FULL_DUPLEX");
     }
-    logPrintI(", ");
-    logPrintI(String(ETH.linkSpeed()));
-    logPrintlnI("Mbps");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "%dMbps", ETH.linkSpeed());
     eth_connected = true;
     break;
   case SYSTEM_EVENT_ETH_DISCONNECTED:
-    logPrintlnW("ETH Disconnected");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_WARN, WIFI_EVENT, "ETH Disconnected");
     eth_connected = false;
     break;
   case SYSTEM_EVENT_ETH_STOP:
-    logPrintlnW("ETH Stopped");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_WARN, WIFI_EVENT, "ETH Stopped");
     eth_connected = false;
     break;
   default:
