@@ -20,7 +20,7 @@ bool BeaconTask::setup(System &system) {
     if (system.getBoardConfig()->GpsRx != 0) {
       ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->GpsTx, system.getBoardConfig()->GpsRx);
     } else {
-      logPrintlnD("NO GPS found.");
+      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "NO GPS found.");
       gpsok = false;
     }
   }
@@ -44,12 +44,11 @@ bool BeaconTask::loop(System &system) {
   }
 
   setBeacon(system);
-}
 
-uint32_t diff = _beacon_timer.getTriggerTimeInSec();
-_stateInfo    = "beacon " + String(uint32_t(diff / 600)) + String(uint32_t(diff / 60) % 10) + ":" + String(uint32_t(diff / 10) % 6) + String(uint32_t(diff % 10));
+  uint32_t diff = _beacon_timer.getTriggerTimeInSec();
+  _stateInfo    = "beacon " + String(uint32_t(diff / 600)) + String(uint32_t(diff / 60) % 10) + ":" + String(uint32_t(diff / 10) % 6) + String(uint32_t(diff % 10));
 
-return true;
+  return true;
 }
 
 String create_lat_aprs(double lat) {
@@ -96,8 +95,7 @@ void BeaconTask::setBeacon(System &system) {
     }
     _beaconMsg->getBody()->setData(String("=") + create_lat_aprs(lat) + "L" + create_long_aprs(lng) + "&" + system.getUserConfig()->beacon.message);
 
-    logPrintD("[" + timeString() + "] ");
-    logPrintlnD(_beaconMsg->encode());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s]%s", timeString(), _beaconMsg->encode());
 
     if (system.getUserConfig()->aprs_is.active)
       _toAprsIs.addElement(_beaconMsg);
