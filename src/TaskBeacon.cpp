@@ -43,7 +43,12 @@ bool BeaconTask::loop(System &system) {
     }
   }
 
-  setBeacon(system);
+  // check for beacon
+  if (_beacon_timer.check()) {
+    if setBeacon (system) {
+      _beacon_timer.start();
+    }
+  }
 
   uint32_t diff = _beacon_timer.getTriggerTimeInSec();
   _stateInfo    = "beacon " + String(uint32_t(diff / 600)) + String(uint32_t(diff / 60) % 10) + ":" + String(uint32_t(diff / 10) % 6) + String(uint32_t(diff % 10));
@@ -75,37 +80,33 @@ String create_long_aprs(double lng) {
   return lng_str;
 }
 
-void BeaconTask::setBeacon(System &system) {
-  // check for beacon
-  if (_beacon_timer.check()) {
-    double lat, lng;
+bool BeaconTask::setBeacon(System &system) {
 
-    if (gpsok) {
-      // bool gps_time_update = gps.time.isUpdated();
-      bool gps_loc_update = gps.location.isUpdated();
+  double lat, lng;
 
-      if (!gps_loc_update) {
-        return;
-      }
+  if (gpsok) {
+    if (gps.location.isUpdated()) {
       lat = gps.location.lat();
       lng = gps.location.lng();
     } else {
-      lat = system.getUserConfig()->beacon.positionLatitude;
-      lng = system.getUserConfig()->beacon.positionLongitude;
+      return false;
     }
-    _beaconMsg->getBody()->setData(String("=") + create_lat_aprs(lat) + "L" + create_long_aprs(lng) + "&" + system.getUserConfig()->beacon.message);
-
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s]%s", timeString().c_str(), _beaconMsg->encode().c_str());
-
-    if (system.getUserConfig()->aprs_is.active)
-      _toAprsIs.addElement(_beaconMsg);
-
-    if (system.getUserConfig()->digi.beacon) {
-      _toModem.addElement(_beaconMsg);
-    }
-
-    system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
-
-    _beacon_timer.start();
+  } else {
+    lat = system.getUserConfig()->beacon.positionLatitude;
+    lng = system.getUserConfig()->beacon.positionLongitude;
   }
+  _beaconMsg->getBody()->setData(String("=") + create_lat_aprs(lat) + "L" + create_long_aprs(lng) + "&" + system.getUserConfig()->beacon.message);
+
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s]%s", timeString().c_str(), _beaconMsg->encode().c_str());
+
+  if (system.getUserConfig()->aprs_is.active)
+    _toAprsIs.addElement(_beaconMsg);
+
+  if (system.getUserConfig()->digi.beacon) {
+    _toModem.addElement(_beaconMsg);
+  }
+
+  system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
+
+  return true;
 }

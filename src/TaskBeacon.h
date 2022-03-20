@@ -14,7 +14,7 @@ public:
 
   virtual bool setup(System &system) override;
   virtual bool loop(System &system) override;
-  void         setBeacon(System &system);
+  bool         setBeacon(System &system);
 
 private:
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
