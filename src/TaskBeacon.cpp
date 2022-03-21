@@ -44,6 +44,7 @@ bool BeaconTask::loop(System &system) {
   }
 
   // check for beacon
+  if (_beacon_timer.check()) {
     if (setBeacon(system)) {
       _beacon_timer.start();
     }
