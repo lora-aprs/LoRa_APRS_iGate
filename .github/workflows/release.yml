@@ -1,46 +1,25 @@
+name: Upload Release Assets
+
 on:
   push:
-    tags:
-      - 'v*'
-
-name: Upload Release Assets
+    branches:
+      - 'master'
 
 jobs:
   build:
     name: Upload Release Assets
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
-      - uses: actions/checkout@v2
-        with:
-          submodules: 'recursive'
       - run: platformio run
-      - id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: echo "VERSION=$(echo ./scripts/create_version_tag.py)" >> $GITHUB_ENV
+      - uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-      # upload firmware bin
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .pio/build/lora_board/firmware.bin
-          asset_name: lora_board.bin
-          asset_content_type: application/bin
-      # upload json file
-      - uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: data/is-cfg.json
-          asset_name: is-cfg.json
-          asset_content_type: application/json
+          tag: ${{ env.VERSION }}
+          commit: Release ${{ env.VERSION }}
+          generateReleaseNotes: true
+          artifacts: ".pio/build/lora_board/firmware.bin,data/is-cfg.json"
+          token: ${{ secrets.GITHUB_TOKEN }}
