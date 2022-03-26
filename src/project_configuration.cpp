@@ -41,7 +41,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.beacon.message = data["beacon"]["message"].as<String>();
   conf.beacon.positionLatitude  = data["beacon"]["position"]["latitude"] | 0.0;
   conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"] | 0.0;
-  conf.beacon.gps               = data["beacon"]["gps"] | false;
+  conf.beacon.use_gps           = data["beacon"]["use_gps"] | false;
   conf.beacon.timeout           = data["beacon"]["timeout"] | 15;
   conf.aprs_is.active           = data["aprs_is"]["active"] | true;
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("passcode"))
@@ -123,7 +123,7 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["beacon"]["message"]               = conf.beacon.message;
   data["beacon"]["position"]["latitude"]  = conf.beacon.positionLatitude;
   data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
-  data["beacon"]["gps"]                   = conf.beacon.gps;
+  data["beacon"]["use_gps"]               = conf.beacon.use_gps;
   data["beacon"]["timeout"]               = conf.beacon.timeout;
   data["aprs_is"]["active"]               = conf.aprs_is.active;
   data["aprs_is"]["passcode"]             = conf.aprs_is.passcode;

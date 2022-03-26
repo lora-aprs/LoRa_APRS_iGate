@@ -14,7 +14,7 @@ public:
 
   virtual bool setup(System &system) override;
   virtual bool loop(System &system) override;
-  bool         setBeacon(System &system);
+  bool         sendBeacon(System &system);
 
 private:
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
@@ -23,9 +23,9 @@ private:
   std::shared_ptr<APRSMessage> _beaconMsg;
   Timer                        _beacon_timer;
 
-  HardwareSerial ss;
-  TinyGPSPlus    gps;
-  bool           gpsok;
+  HardwareSerial _ss;
+  TinyGPSPlus    _gps;
+  bool           _useGps;
 };
 
 #endif
