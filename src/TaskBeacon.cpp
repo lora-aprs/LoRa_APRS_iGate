@@ -6,22 +6,21 @@
 #include "TaskBeacon.h"
 #include "project_configuration.h"
 
-BeaconTask::BeaconTask(TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_BEACON, TaskBeacon), _toModem(toModem), _toAprsIs(toAprsIs), ss(1), gpsok(false) {
+BeaconTask::BeaconTask(TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs) : Task(TASK_BEACON, TaskBeacon), _toModem(toModem), _toAprsIs(toAprsIs), _ss(1), _useGps(false) {
 }
 
 BeaconTask::~BeaconTask() {
 }
 
 bool BeaconTask::setup(System &system) {
-  gpsok = system.getUserConfig()->beacon.gps;
+  _useGps = system.getUserConfig()->beacon.use_gps;
 
-  // Setup GPS
-  if (gpsok) {
+  if (_useGps) {
     if (system.getBoardConfig()->GpsRx != 0) {
-      ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->GpsTx, system.getBoardConfig()->GpsRx);
+      _ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->GpsTx, system.getBoardConfig()->GpsRx);
     } else {
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "NO GPS found.");
-      gpsok = false;
+      _useGps = false;
     }
   }
   // setup beacon
@@ -35,17 +34,16 @@ bool BeaconTask::setup(System &system) {
 }
 
 bool BeaconTask::loop(System &system) {
-
-  if (gpsok) {
-    while (ss.available() > 0) {
-      char c = ss.read();
-      gps.encode(c);
+  if (_useGps) {
+    while (_ss.available() > 0) {
+      char c = _ss.read();
+      _gps.encode(c);
     }
   }
 
   // check for beacon
   if (_beacon_timer.check()) {
-    if (setBeacon(system)) {
+    if (sendBeacon(system)) {
       _beacon_timer.start();
     }
   }
@@ -80,27 +78,25 @@ String create_long_aprs(double lng) {
   return lng_str;
 }
 
-bool BeaconTask::setBeacon(System &system) {
+bool BeaconTask::sendBeacon(System &system) {
+  double lat = system.getUserConfig()->beacon.positionLatitude;
+  double lng = system.getUserConfig()->beacon.positionLongitude;
 
-  double lat, lng;
-
-  if (gpsok) {
-    if (gps.location.isUpdated()) {
-      lat = gps.location.lat();
-      lng = gps.location.lng();
+  if (_useGps) {
+    if (_gps.location.isUpdated()) {
+      lat = _gps.location.lat();
+      lng = _gps.location.lng();
     } else {
       return false;
     }
-  } else {
-    lat = system.getUserConfig()->beacon.positionLatitude;
-    lng = system.getUserConfig()->beacon.positionLongitude;
   }
   _beaconMsg->getBody()->setData(String("=") + create_lat_aprs(lat) + "L" + create_long_aprs(lng) + "&" + system.getUserConfig()->beacon.message);
 
-  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s]%s", timeString().c_str(), _beaconMsg->encode().c_str());
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s] %s", timeString().c_str(), _beaconMsg->encode().c_str());
 
-  if (system.getUserConfig()->aprs_is.active)
+  if (system.getUserConfig()->aprs_is.active) {
     _toAprsIs.addElement(_beaconMsg);
+  }
 
   if (system.getUserConfig()->digi.beacon) {
     _toModem.addElement(_beaconMsg);

@@ -95,7 +95,7 @@ void setup() {
     }
     powerManagement.activateLoRa();
     powerManagement.activateOLED();
-    if (userConfig.beacon.gps) {
+    if (userConfig.beacon.use_gps) {
       powerManagement.activateGPS();
     } else {
       powerManagement.deactivateGPS();
