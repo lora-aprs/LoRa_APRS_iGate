@@ -1,4 +1,4 @@
-name: Upload Release Assets
+name: Create new release
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    name: Upload Release Assets
+    name: Create new release
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,7 +15,7 @@ jobs:
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
       - run: platformio run
-      - run: echo "VERSION=$(echo ./scripts/create_version_tag.py)" >> $GITHUB_ENV
+      - run: echo "VERSION=$(./scripts/create_version_tag.py)" >> $GITHUB_ENV
       - uses: ncipollo/release-action@v1
         with:
           tag: ${{ env.VERSION }}
