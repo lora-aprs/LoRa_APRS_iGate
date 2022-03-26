@@ -6,9 +6,6 @@
 #include "TaskRouter.h"
 #include "project_configuration.h"
 
-String create_lat_aprs(double lat);
-String create_long_aprs(double lng);
-
 RouterTask::RouterTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQueue<std::shared_ptr<APRSMessage>> &toAprsIs, TaskQueue<std::shared_ptr<APRSMessage>> &toMQTT) : Task(TASK_ROUTER, TaskRouter), _fromModem(fromModem), _toModem(toModem), _toAprsIs(toAprsIs), _toMQTT(toMQTT) {
 }
 
@@ -16,15 +13,6 @@ RouterTask::~RouterTask() {
 }
 
 bool RouterTask::setup(System &system) {
-  _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
-
-  _beaconMsg = std::shared_ptr<APRSMessage>(new APRSMessage());
-  _beaconMsg->setSource(system.getUserConfig()->callsign);
-  _beaconMsg->setDestination("APLG01");
-  String lat = create_lat_aprs(system.getUserConfig()->beacon.positionLatitude);
-  String lng = create_long_aprs(system.getUserConfig()->beacon.positionLongitude);
-  _beaconMsg->getBody()->setData(String("=") + lat + "L" + lng + "&" + system.getUserConfig()->beacon.message);
-
   return true;
 }
 
@@ -78,23 +66,7 @@ bool RouterTask::loop(System &system) {
     }
   }
 
-  // check for beacon
-  if (_beacon_timer.check()) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "[%s] %s", timeString().c_str(), _beaconMsg->encode().c_str());
-
-    if (system.getUserConfig()->aprs_is.active)
-      _toAprsIs.addElement(_beaconMsg);
-
-    if (system.getUserConfig()->digi.beacon) {
-      _toModem.addElement(_beaconMsg);
-    }
-
-    system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("BEACON", _beaconMsg->toString())));
-    _beacon_timer.start();
-  }
-
-  uint32_t diff = _beacon_timer.getTriggerTimeInSec();
-  _stateInfo    = "beacon " + String(uint32_t(diff / 600)) + String(uint32_t(diff / 60) % 10) + ":" + String(uint32_t(diff / 10) % 6) + String(uint32_t(diff % 10));
+  _stateInfo = "Router done ";
 
   return true;
 }

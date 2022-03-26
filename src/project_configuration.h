@@ -48,12 +48,13 @@ public:
 
   class Beacon {
   public:
-    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), gps(false), timeout(15) {
     }
 
     String message;
     double positionLatitude;
     double positionLongitude;
+    bool   gps;
     int    timeout;
   };
 

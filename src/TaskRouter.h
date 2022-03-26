@@ -18,9 +18,6 @@ private:
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
   TaskQueue<std::shared_ptr<APRSMessage>> &_toAprsIs;
   TaskQueue<std::shared_ptr<APRSMessage>> &_toMQTT;
-
-  std::shared_ptr<APRSMessage> _beaconMsg;
-  Timer                        _beacon_timer;
 };
 
 #endif
