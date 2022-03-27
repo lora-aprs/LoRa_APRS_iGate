@@ -38,6 +38,7 @@ if version_week != current_week:
     error = True
 
 repo = git.Repo('.')
+print(f"[INFO] found {len(repo.tags)} tags in repo")
 if f"v{version}" in repo.tags:
     print("[ERROR] tag with this version is already existing")
     error = True
