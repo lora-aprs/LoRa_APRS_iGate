@@ -1,5 +1,6 @@
 #include <logger.h>
 
+#include <OneButton.h>
 #include <TimeLib.h>
 
 #include "Task.h"
@@ -12,7 +13,21 @@ BeaconTask::BeaconTask(TaskQueue<std::shared_ptr<APRSMessage>> &toModem, TaskQue
 BeaconTask::~BeaconTask() {
 }
 
+OneButton BeaconTask::_userButton;
+bool      BeaconTask::_send_update;
+uint      BeaconTask::_instances;
+
+void BeaconTask::pushButton() {
+  _send_update = true;
+}
+
 bool BeaconTask::setup(System &system) {
+  if (_instances++ == 0 && system.getBoardConfig()->Button > 0) {
+    _userButton = OneButton(system.getBoardConfig()->Button, true, true);
+    _userButton.attachClick(pushButton);
+    _send_update = false;
+  }
+
   _useGps = system.getUserConfig()->beacon.use_gps;
 
   if (_useGps) {
@@ -41,9 +56,12 @@ bool BeaconTask::loop(System &system) {
     }
   }
 
+  _userButton.tick();
+
   // check for beacon
-  if (_beacon_timer.check()) {
+  if (_beacon_timer.check() || _send_update) {
     if (sendBeacon(system)) {
+      _send_update = false;
       _beacon_timer.start();
     }
   }
