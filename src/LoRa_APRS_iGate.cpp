@@ -109,23 +109,30 @@ void setup() {
   LoRaSystem.getTaskManager().addTask(&routerTask);
   LoRaSystem.getTaskManager().addTask(&beaconTask);
 
-  if (userConfig.aprs_is.active) {
-    if (boardConfig->Type == eETH_BOARD && !userConfig.wifi.active) {
-      LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-    }
-    if (userConfig.wifi.active) {
-      LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
-    }
+  bool tcpip = false;
+
+  if (userConfig.wifi.active) {
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     LoRaSystem.getTaskManager().addTask(&otaTask);
+    tcpip = true;
+  } else if (boardConfig->Type == eETH_BOARD) {
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
+    tcpip = true;
+  }
+
+  if (tcpip) {
     LoRaSystem.getTaskManager().addTask(&ntpTask);
     if (userConfig.ftp.active) {
       LoRaSystem.getTaskManager().addTask(&ftpTask);
     }
-    LoRaSystem.getTaskManager().addTask(&aprsIsTask);
-  }
 
-  if (userConfig.mqtt.active) {
-    LoRaSystem.getTaskManager().addTask(&mqttTask);
+    if (userConfig.aprs_is.active) {
+      LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+    }
+
+    if (userConfig.mqtt.active) {
+      LoRaSystem.getTaskManager().addTask(&mqttTask);
+    }
   }
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
