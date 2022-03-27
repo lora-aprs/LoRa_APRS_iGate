@@ -1,6 +1,7 @@
 #ifndef TASK_BEACON_H_
 #define TASK_BEACON_H_
 
+#include <OneButton.h>
 #include <TinyGPS++.h>
 
 #include <APRSMessage.h>
@@ -26,6 +27,11 @@ private:
   HardwareSerial _ss;
   TinyGPSPlus    _gps;
   bool           _useGps;
+
+  static uint      _instances;
+  static OneButton _userButton;
+  static bool      _send_update;
+  static void      pushButton();
 };
 
 #endif
