@@ -22,4 +22,5 @@ jobs:
           commit: master
           generateReleaseNotes: true
           artifacts: ".pio/build/lora_board/firmware.bin,data/is-cfg.json"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          owner: ${{ secrets.OWNER }}
+          token: ${{ secrets.PAT }}
