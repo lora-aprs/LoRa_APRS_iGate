@@ -45,13 +45,18 @@ bool ModemTask::loop(System &system) {
   }
 
   if (!_toModem.empty()) {
-    std::shared_ptr<APRSMessage> msg = _toModem.getElement();
-    if (system.getUserConfig()->lora.tx_enable) {
-      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Transmitting packet '%s'", timeString().c_str(), msg->toString().c_str());
-      _lora_aprs.sendMessage(msg);
-      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX done", timeString().c_str());
+    if (_lora_aprs.rxSignalDetected()) {
+      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] RX signal detected. Waiting TX", timeString().c_str());
+      delay(1000);
     } else {
-      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] NOT transmitting packet as TX is not enabled '%s'", timeString().c_str(), msg->toString().c_str());
+      std::shared_ptr<APRSMessage> msg = _toModem.getElement();
+      if (system.getUserConfig()->lora.tx_enable) {
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Transmitting packet '%s'", timeString().c_str(), msg->toString().c_str());
+        _lora_aprs.sendMessage(msg);
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX done", timeString().c_str());
+      } else {
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] NOT transmitting packet as TX is not enabled '%s'", timeString().c_str(), msg->toString().c_str());
+      }
     }
   }
 

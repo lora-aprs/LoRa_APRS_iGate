@@ -18,6 +18,7 @@
 #define REG_FIFO_RX_CURRENT_ADDR 0x10
 #define REG_IRQ_FLAGS            0x12
 #define REG_RX_NB_BYTES          0x13
+#define REG_MODEM_STAT           0x18
 #define REG_PKT_SNR_VALUE        0x19
 #define REG_PKT_RSSI_VALUE       0x1a
 #define REG_RSSI_VALUE           0x1b
@@ -249,6 +250,10 @@ int LoRaClass::packetRssi() {
 
 float LoRaClass::packetSnr() {
   return ((int8_t)readRegister(REG_PKT_SNR_VALUE)) * 0.25;
+}
+
+bool LoRaClass::rxSignalDetected() {
+  return (readRegister(REG_MODEM_STAT) & 0x01) == 0x01;
 }
 
 long LoRaClass::packetFrequencyError() {
