@@ -33,8 +33,10 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   JsonArray aps    = data["wifi"]["AP"].as<JsonArray>();
   for (JsonVariant v : aps) {
     Configuration::Wifi::AP ap;
-    ap.SSID     = v["SSID"].as<String>();
-    ap.password = v["password"].as<String>();
+    if (v.containsKey("SSID"))
+      ap.SSID = v["SSID"].as<String>();
+    if (v.containsKey("password"))
+      ap.password = v["password"].as<String>();
     conf.wifi.APs.push_back(ap);
   }
   if (data.containsKey("beacon") && data["beacon"].containsKey("message"))
@@ -44,14 +46,16 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.beacon.use_gps           = data["beacon"]["use_gps"] | false;
   conf.beacon.timeout           = data["beacon"]["timeout"] | 15;
   conf.aprs_is.active           = data["aprs_is"]["active"] | true;
+
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("passcode"))
     conf.aprs_is.passcode = data["aprs_is"]["passcode"].as<String>();
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
     conf.aprs_is.server = data["aprs_is"]["server"].as<String>();
   conf.aprs_is.port = data["aprs_is"]["port"] | 14580;
 
-  conf.digi.active          = data["digi"]["active"] | false;
-  conf.digi.beacon          = data["digi"]["beacon"] | false;
+  conf.digi.active = data["digi"]["active"] | false;
+  conf.digi.beacon = data["digi"]["beacon"] | false;
+
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
   conf.lora.gainRx          = data["lora"]["gain_rx"] | 0;
   conf.lora.frequencyTx     = data["lora"]["frequency_tx"] | 433775000;
@@ -60,6 +64,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.lora.signalBandwidth = data["lora"]["signal_bandwidth"] | 125000;
   conf.lora.codingRate4     = data["lora"]["coding_rate4"] | 5;
   conf.lora.tx_enable       = data["lora"]["tx_enable"] | true;
+
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
   conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
@@ -69,8 +74,10 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   JsonArray users = data["ftp"]["user"].as<JsonArray>();
   for (JsonVariant u : users) {
     Configuration::Ftp::User us;
-    us.name     = u["name"].as<String>();
-    us.password = u["password"].as<String>();
+    if (u.containsKey("name"))
+      us.name = u["name"].as<String>();
+    if (u.containsKey("password"))
+      us.password = u["password"].as<String>();
     conf.ftp.users.push_back(us);
   }
   if (conf.ftp.users.empty()) {
@@ -79,21 +86,23 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     us.password = "ftp";
     conf.ftp.users.push_back(us);
   }
-  if (data.containsKey("mqtt")) {
-    conf.mqtt.active   = data["mqtt"]["active"] | false;
-    conf.mqtt.server   = data["mqtt"]["server"].as<String>();
-    conf.mqtt.port     = data["mqtt"]["port"].as<uint16_t>();
-    conf.mqtt.name     = data["mqtt"]["name"].as<String>();
+
+  conf.mqtt.active = data["mqtt"]["active"] | false;
+  if (data["mqtt"].containsKey("server"))
+    conf.mqtt.server = data["mqtt"]["server"].as<String>();
+  conf.mqtt.port = data["mqtt"]["port"] | 1883;
+  if (data["mqtt"].containsKey("name"))
+    conf.mqtt.name = data["mqtt"]["name"].as<String>();
+  if (data["mqtt"].containsKey("password"))
     conf.mqtt.password = data["mqtt"]["password"].as<String>();
-    conf.mqtt.topic    = data["mqtt"]["topic"].as<String>();
-  }
-  if (data.containsKey("syslog")) {
-    conf.syslog.active = data["syslog"]["active"] | true;
-    if (data["syslog"].containsKey("server")) {
-      conf.syslog.server = data["syslog"]["server"].as<String>();
-    }
-    conf.syslog.port = data["syslog"]["port"] | 514;
-  }
+  if (data["mqtt"].containsKey("topic"))
+    conf.mqtt.topic = data["mqtt"]["topic"].as<String>();
+
+  conf.syslog.active = data["syslog"]["active"] | true;
+  if (data["syslog"].containsKey("server"))
+    conf.syslog.server = data["syslog"]["server"].as<String>();
+  conf.syslog.port = data["syslog"]["port"] | 514;
+
   if (data.containsKey("ntp_server"))
     conf.ntpServer = data["ntp_server"].as<String>();
 
