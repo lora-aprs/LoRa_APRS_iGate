@@ -124,12 +124,12 @@ public:
     MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data") {
     }
 
-    bool     active;
-    String   server;
-    uint16_t port;
-    String   name;
-    String   password;
-    String   topic;
+    bool   active;
+    String server;
+    int    port;
+    String name;
+    String password;
+    String topic;
   };
 
   class Syslog {
