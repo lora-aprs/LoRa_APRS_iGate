@@ -13,9 +13,10 @@
 #include "TaskEth.h"
 #include "TaskFTP.h"
 #include "TaskMQTT.h"
-#include "TaskModem.h"
+//#include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
+#include "TaskRadioLib.h"
 #include "TaskRouter.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
@@ -35,16 +36,17 @@ System        LoRaSystem;
 Configuration userConfig;
 
 DisplayTask displayTask;
-ModemTask   modemTask(fromModem, toModem);
-EthTask     ethTask;
-WifiTask    wifiTask;
-OTATask     otaTask;
-NTPTask     ntpTask;
-FTPTask     ftpTask;
-MQTTTask    mqttTask(toMQTT);
-AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
-BeaconTask  beaconTask(toModem, toAprsIs);
+// ModemTask   modemTask(fromModem, toModem);
+RadiolibTask modemTask(fromModem, toModem);
+EthTask      ethTask;
+WifiTask     wifiTask;
+OTATask      otaTask;
+NTPTask      ntpTask;
+FTPTask      ftpTask;
+MQTTTask     mqttTask(toMQTT);
+AprsIsTask   aprsIsTask(toAprsIs);
+RouterTask   routerTask(fromModem, toModem, toAprsIs, toMQTT);
+BeaconTask   beaconTask(toModem, toAprsIs);
 
 void setup() {
   Serial.begin(115200);
