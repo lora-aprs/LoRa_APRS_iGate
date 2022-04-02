@@ -38,7 +38,9 @@ bool RadiolibTask::setup(System &system) {
   float freqMHz = (float)config.frequencyRx / 1000000;
   float BWkHz   = (float)config.signalBandwidth / 1000;
 
-  int16_t state = radio->begin(freqMHz, BWkHz, config.spreadingFactor, config.codingRate4, RADIOLIB_SX127X_SYNC_WORD, config.power /* 2-17 */, 8, config.gainRx);
+  const uint16_t preambleLength = 8;
+
+  int16_t state = radio->begin(freqMHz, BWkHz, config.spreadingFactor, config.codingRate4, RADIOLIB_SX127X_SYNC_WORD, config.power, preambleLength, config.gainRx);
   if (state != RADIOLIB_ERR_NONE) {
     switch (state) {
     case RADIOLIB_ERR_INVALID_FREQUENCY:
@@ -97,6 +99,8 @@ bool RadiolibTask::setup(System &system) {
     }
   }
 
+  preambleDurationMilliSec = ((uint64_t)(preambleLength + 4) << (config.spreadingFactor + 10 /* to milli-sec */)) / config.signalBandwidth;
+
   return true;
 }
 
@@ -116,6 +120,9 @@ bool RadiolibTask::loop(System &system) {
       }
       operationDone = false;
       transmitFlag  = false;
+
+      txWaitTimer.setTimeout(preambleDurationMilliSec * 2);
+      txWaitTimer.start();
 
     } else { // received.
       String str;
@@ -147,24 +154,27 @@ bool RadiolibTask::loop(System &system) {
 
     enableInterrupt = true;
   } else { // not interrupt.
-    if (!txEnable) {
-      // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX is not enabled", timeString().c_str());
+    if (!txWaitTimer.check()) {
     } else {
-      if (transmitFlag) {
-        // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX signal detected. Waiting TX", timeString().c_str());
+      if (!txEnable) {
+        // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX is not enabled", timeString().c_str());
       } else {
-        if (!_toModem.empty()) {
-          if (config.frequencyRx == config.frequencyTx && (radio->getModemStatus() & 0x01) == 0x01) {
-            // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] RX signal detected. Waiting TX", timeString().c_str());
-          } else {
-            std::shared_ptr<APRSMessage> msg = _toModem.getElement();
-            system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Transmitting packet '%s'", timeString().c_str(), msg->toString().c_str());
+        if (transmitFlag) {
+          // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX signal detected. Waiting TX", timeString().c_str());
+        } else {
+          if (!_toModem.empty()) {
+            if (config.frequencyRx == config.frequencyTx && (radio->getModemStatus() & 0x01) == 0x01) {
+              // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] RX signal detected. Waiting TX", timeString().c_str());
+            } else {
+              std::shared_ptr<APRSMessage> msg = _toModem.getElement();
+              system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Transmitting packet '%s'", timeString().c_str(), msg->toString().c_str());
 
-            int16_t state = startTX("<\xff\x01" + msg->encode());
-            if (state != RADIOLIB_ERR_NONE) {
-              system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startTX failed, code %d", timeString().c_str(), state);
-              txEnable = false;
-              return true;
+              int16_t state = startTX("<\xff\x01" + msg->encode());
+              if (state != RADIOLIB_ERR_NONE) {
+                system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startTX failed, code %d", timeString().c_str(), state);
+                txEnable = false;
+                return true;
+              }
             }
           }
         }
