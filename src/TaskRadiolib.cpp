@@ -7,7 +7,7 @@
 #include "TaskAprsIs.h"
 #include "TaskRadiolib.h"
 
-RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskModem), _fromModem(fromModem), _toModem(toModem) {
+RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _fromModem(fromModem), _toModem(toModem) {
 }
 
 RadiolibTask::~RadiolibTask() {
