@@ -11,6 +11,7 @@ RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, T
 }
 
 RadiolibTask::~RadiolibTask() {
+  radio->clearDio0Action();
 }
 
 volatile bool RadiolibTask::enableInterrupt = true;  // Need to catch interrupt or not.
@@ -37,9 +38,7 @@ bool RadiolibTask::setup(System &system) {
   float freqMHz = (float)config.frequencyRx / 1000000;
   float BWkHz   = (float)config.signalBandwidth / 1000;
 
-  int16_t begin(float freq = 434.0, float bw = 125.0, uint8_t sf = 9, uint8_t cr = 7, uint8_t syncWord = RADIOLIB_SX127X_SYNC_WORD, int8_t power = 10, uint16_t preambleLength = 8, uint8_t gain = 0);
-
-  int state = radio->begin(freqMHz, BWkHz, config.spreadingFactor, config.codingRate4, RADIOLIB_SX127X_SYNC_WORD, config.power /* 2-17 */, 8, config.gainRx);
+  int16_t state = radio->begin(freqMHz, BWkHz, config.spreadingFactor, config.codingRate4, RADIOLIB_SX127X_SYNC_WORD, config.power /* 2-17 */, 8, config.gainRx);
   if (state != RADIOLIB_ERR_NONE) {
     switch (state) {
     case RADIOLIB_ERR_INVALID_FREQUENCY:
