@@ -10,20 +10,6 @@ on:
       - master
 
 jobs:
-  version_check:
-    name: Version Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Set up Python
-        uses: actions/setup-python@v2
-      - run: pip install GitPython
-      - name: check version
-        run: ./scripts/check_version.py
-
   build:
     name: Compile Firmware
     runs-on: ubuntu-latest
