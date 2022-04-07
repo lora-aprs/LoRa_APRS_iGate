@@ -20,7 +20,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION     "22.13.3"
+#define VERSION     "22.14.0"
 #define MODULE_NAME "Main"
 
 String create_lat_aprs(double lat);
@@ -113,14 +113,15 @@ void setup() {
 
   if (userConfig.wifi.active) {
     LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
-    LoRaSystem.getTaskManager().addTask(&otaTask);
     tcpip = true;
-  } else if (boardConfig->Type == eETH_BOARD) {
+  }
+  if (boardConfig->Type == eETH_BOARD) {
     LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
     tcpip = true;
   }
 
   if (tcpip) {
+    LoRaSystem.getTaskManager().addTask(&otaTask);
     LoRaSystem.getTaskManager().addTask(&ntpTask);
     if (userConfig.ftp.active) {
       LoRaSystem.getTaskManager().addTask(&ftpTask);
