@@ -130,12 +130,14 @@ bool BoardFinder::checkPowerConfig(BoardConfig const *boardConfig, logging::Logg
 }
 
 // clang-format off
-BoardConfig TTGO_LORA32_V1        ("TTGO_LORA32_V1",         eTTGO_LORA32_V1,          4, 15, 0x3C,  0,  5, 19, 27, 18, 14, 26);
-BoardConfig TTGO_LORA32_V2        ("TTGO_LORA32_V2",         eTTGO_LORA32_V2,         21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
-BoardConfig TTGO_T_Beam_V0_7      ("TTGO_T_Beam_V0_7",       eTTGO_T_Beam_V0_7,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
-BoardConfig TTGO_T_Beam_V1_0      ("TTGO_T_Beam_V1_0",       eTTGO_T_Beam_V1_0,       21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true, true);
-BoardConfig ETH_BOARD             ("ETH_BOARD",              eETH_BOARD,              33, 32, 0x3C,  0, 14,  2, 15, 12,  4, 36);
-BoardConfig TRACKERD              ("TRACKERD",               eTRACKERD,                5,  4, 0x3C,  0, 18, 19, 23, 16, 14, 26);
-BoardConfig HELTEC_WIFI_LORA_32_V1("HELTEC_WIFI_LORA_32_V1", eHELTEC_WIFI_LORA_32_V1,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
-BoardConfig HELTEC_WIFI_LORA_32_V2("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
+BoardConfig TTGO_LORA32_V1        ("TTGO_LORA32_V1",         eTTGO_LORA32_V1,                4, 15, 0x3C,  0,  5, 19, 27, 18, 14, 26);
+BoardConfig TTGO_LORA32_V2        ("TTGO_LORA32_V2",         eTTGO_LORA32_V2,               21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
+BoardConfig TTGO_T_Beam_V0_7      ("TTGO_T_Beam_V0_7",       eTTGO_T_Beam_V0_7,             21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true);
+BoardConfig TTGO_T_Beam_V1_0      ("TTGO_T_Beam_V1_0",       eTTGO_T_Beam_V1_0,             21, 22, 0x3C,  0,  5, 19, 27, 18, 14, 26, true, true);
+BoardConfig ETH_BOARD             ("ETH_BOARD",              eETH_BOARD,                    33, 32, 0x3C,  0, 14,  2, 15, 12,  4, 36);
+BoardConfig TRACKERD              ("TRACKERD",               eTRACKERD,                      5,  4, 0x3C,  0, 18, 19, 23, 16, 14, 26);
+BoardConfig HELTEC_WIFI_LORA_32_V1("HELTEC_WIFI_LORA_32_V1", eHELTEC_WIFI_LORA_32_V1,        4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
+BoardConfig HELTEC_WIFI_LORA_32_V2("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,        4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26);
+BoardConfig GUALTHERIUS_LORAHAM_v100("GUALTHERIUS_LORAHAM_v100", eGUALTHERIUS_LORAHAM_v100, 17, 16, 0x3C,  0, 18, 19, 23,  5, 13, 35);
+BoardConfig GUALTHERIUS_LORAHAM_v106("GUALTHERIUS_LORAHAM_v106", eGUALTHERIUS_LORAHAM_v100, 17, 16, 0x3C,  0, 18, 19, 23,  2, 13, 35);
 // clang-format on
