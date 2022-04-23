@@ -100,6 +100,15 @@ void setup() {
 
   LoRaSystem.setBoardConfig(boardConfig);
   LoRaSystem.setUserConfig(&userConfig);
+  
+  if (userConfig.display.vccPin != 0 && userConfig.display.gndPin != 0) {
+    pinMode(userConfig.display.vccPin, OUTPUT);
+    digitalWrite(userConfig.display.vccPin, HIGH);
+    pinMode(userConfig.display.gndPin, OUTPUT);
+    digitalWrite(userConfig.display.gndPin, LOW);
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "Using GPIO to power display: VCC %d , GND %d", userConfig.display.vccPin, userConfig.display.gndPin);
+  }
+  
   LoRaSystem.getTaskManager().addTask(&displayTask);
   LoRaSystem.getTaskManager().addTask(&modemTask);
   LoRaSystem.getTaskManager().addTask(&routerTask);
@@ -143,6 +152,14 @@ void setup() {
   if (userConfig.display.overwritePin != 0) {
     pinMode(userConfig.display.overwritePin, INPUT);
     pinMode(userConfig.display.overwritePin, INPUT_PULLUP);
+  }
+
+  if (userConfig.display.vccPin != 0 && userConfig.display.gndPin != 0) {
+    pinMode(userConfig.display.vccPin, OUTPUT);
+    digitalWrite(userConfig.display.vccPin, HIGH);
+    pinMode(userConfig.display.gndPin, OUTPUT);
+    digitalWrite(userConfig.display.gndPin, LOW);
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "Using GPIO to power display: VCC %d , GND %d", userConfig.display.vccPin, userConfig.display.gndPin);
   }
 
   delay(5000);

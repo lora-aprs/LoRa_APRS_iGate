@@ -94,12 +94,14 @@ public:
 
   class Display {
   public:
-    Display() : alwaysOn(true), timeout(10), overwritePin(0), turn180(true) {
+    Display() : alwaysOn(true), timeout(10), overwritePin(0), vccPin(0), gndPin(0), turn180(true) {
     }
 
     bool alwaysOn;
     int  timeout;
     int  overwritePin;
+    int  vccPin;
+    int  gndPin;
     bool turn180;
   };
 

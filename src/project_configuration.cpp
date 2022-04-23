@@ -62,6 +62,8 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
   conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
+  conf.display.vccPin       = data["display"]["pin_vcc"] | 0;
+  conf.display.gndPin       = data["display"]["pin_gnd"] | 0;
   conf.display.turn180      = data["display"]["turn180"] | true;
 
   conf.ftp.active = data["ftp"]["active"] | false;
@@ -140,6 +142,8 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["display"]["always_on"]            = conf.display.alwaysOn;
   data["display"]["timeout"]              = conf.display.timeout;
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
+  data["display"]["pin_vcc"]              = conf.display.vccPin;
+  data["display"]["pin_gnd"]              = conf.display.gndPin;
   data["display"]["turn180"]              = conf.display.turn180;
   data["ftp"]["active"]                   = conf.ftp.active;
   JsonArray users                         = data["ftp"].createNestedArray("user");
