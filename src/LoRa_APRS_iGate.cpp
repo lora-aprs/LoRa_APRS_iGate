@@ -13,14 +13,14 @@
 #include "TaskEth.h"
 #include "TaskFTP.h"
 #include "TaskMQTT.h"
-#include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
+#include "TaskRadiolib.h"
 #include "TaskRouter.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION     "22.14.0"
+#define VERSION     "22.20.0"
 #define MODULE_NAME "Main"
 
 String create_lat_aprs(double lat);
@@ -35,16 +35,17 @@ System        LoRaSystem;
 Configuration userConfig;
 
 DisplayTask displayTask;
-ModemTask   modemTask(fromModem, toModem);
-EthTask     ethTask;
-WifiTask    wifiTask;
-OTATask     otaTask;
-NTPTask     ntpTask;
-FTPTask     ftpTask;
-MQTTTask    mqttTask(toMQTT);
-AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
-BeaconTask  beaconTask(toModem, toAprsIs);
+// ModemTask   modemTask(fromModem, toModem);
+RadiolibTask modemTask(fromModem, toModem);
+EthTask      ethTask;
+WifiTask     wifiTask;
+OTATask      otaTask;
+NTPTask      ntpTask;
+FTPTask      ftpTask;
+MQTTTask     mqttTask(toMQTT);
+AprsIsTask   aprsIsTask(toAprsIs);
+RouterTask   routerTask(fromModem, toModem, toAprsIs, toMQTT);
+BeaconTask   beaconTask(toModem, toAprsIs);
 
 void setup() {
   Serial.begin(115200);
