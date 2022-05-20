@@ -1,10 +1,7 @@
+#include <Task.h>
+#include <TimeLib.h>
 #include <logger.h>
 
-#include <RadioLib.h>
-#include <TimeLib.h>
-
-#include "Task.h"
-#include "TaskAprsIs.h"
 #include "TaskRadiolib.h"
 
 RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _fromModem(fromModem), _toModem(toModem) {
@@ -80,13 +77,15 @@ bool RadiolibTask::setup(System &system) {
       rxEnable = false;
       txEnable = false;
     }
+    _stateInfo = "LoRa-Modem failed";
+    _state     = Error;
   }
 
   state = radio->setCRC(true);
   if (state != RADIOLIB_ERR_NONE) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] setCRC failed, code %d", timeString().c_str(), state);
-    while (true)
-      ;
+    _stateInfo = "LoRa-Modem failed";
+    _state     = Error;
   }
 
   radio->setDio0Action(setFlag);
@@ -95,12 +94,15 @@ bool RadiolibTask::setup(System &system) {
     int state = startRX(RADIOLIB_SX127X_RXCONTINUOUS);
     if (state != RADIOLIB_ERR_NONE) {
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startRX failed, code %d", timeString().c_str(), state);
-      rxEnable = false;
+      rxEnable   = false;
+      _stateInfo = "LoRa-Modem failed";
+      _state     = Error;
     }
   }
 
   preambleDurationMilliSec = ((uint64_t)(preambleLength + 4) << (config.spreadingFactor + 10 /* to milli-sec */)) / config.signalBandwidth;
 
+  _stateInfo = "";
   return true;
 }
 

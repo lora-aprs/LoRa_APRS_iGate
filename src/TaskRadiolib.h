@@ -2,8 +2,8 @@
 #define TASK_LORA_H_
 
 #include "project_configuration.h"
+#include <APRS-Decoder.h>
 #include <BoardFinder.h>
-#include <LoRa_APRS.h>
 #include <RadioLib.h>
 #include <TaskManager.h>
 
