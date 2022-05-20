@@ -35,7 +35,7 @@ void ConfigurationManagement::readConfiguration(logging::Logger &logger, Configu
   readProjectConfiguration(data, conf);
 
   // update config in memory to get the new fields:
-  writeConfiguration(logger, conf);
+  // writeConfiguration(logger, conf);
 }
 
 void ConfigurationManagement::writeConfiguration(logging::Logger &logger, Configuration &conf) {
