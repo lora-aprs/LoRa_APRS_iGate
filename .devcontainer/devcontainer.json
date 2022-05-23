@@ -27,5 +27,5 @@
 		"platformio.platformio-ide"
 	],
 	"postCreateCommand": "pip3 install --user platformio",
-	"remoteUser": "vscode"
+	//"remoteUser": "vscode"
 }
