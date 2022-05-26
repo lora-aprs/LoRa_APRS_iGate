@@ -19,12 +19,14 @@
 		"python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
 		"python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
 		"python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint"
+		"python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
+		"clang-format.executable": "clang-format-11"
 	},
 	"extensions": [
 		"ms-python.python",
 		"ms-python.vscode-pylance",
-		"platformio.platformio-ide"
+		"platformio.platformio-ide",
+		"xaver.clang-format"
 	],
 	"postCreateCommand": "pip3 install --user platformio",
 	//"remoteUser": "vscode"
