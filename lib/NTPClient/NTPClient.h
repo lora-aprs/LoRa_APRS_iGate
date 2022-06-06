@@ -17,7 +17,7 @@ class NTPClient {
     unsigned int  _port           = NTP_DEFAULT_LOCAL_PORT;
     long          _timeOffset     = 0;
 
-    unsigned long _updateInterval = 60000;  // In ms
+    unsigned long _updateInterval = 3600000;  // In ms
 
     unsigned long _currentEpoc    = 0;      // In s
     unsigned long _lastUpdate     = 0;      // In ms
