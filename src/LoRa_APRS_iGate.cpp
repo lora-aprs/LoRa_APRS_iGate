@@ -167,7 +167,7 @@ volatile bool syslogSet = false;
 
 void loop() {
   LoRaSystem.getTaskManager().loop(LoRaSystem);
-  if (LoRaSystem.isWifiEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
+  if (LoRaSystem.isWifiOrEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
     LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "System connected after a restart to the network, syslog server set");
     syslogSet = true;

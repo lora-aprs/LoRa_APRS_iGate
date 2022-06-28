@@ -21,8 +21,9 @@ public:
   Configuration const *const getUserConfig() const;
   TaskManager &              getTaskManager();
   Display &                  getDisplay();
-  bool                       isWifiEthConnected() const;
-  void                       connectedViaWifiEth(bool status);
+  bool                       isWifiOrEthConnected() const;
+  void                       connectedViaEth(bool status);
+  void                       connectedViaWifi(bool status);
   logging::Logger &          getLogger();
 
 private:
@@ -30,7 +31,8 @@ private:
   Configuration const *_userConfig;
   TaskManager          _taskManager;
   Display              _display;
-  bool                 _isWifiEthConnected;
+  bool                 _isEthConnected;
+  bool                 _isWifiConnected;
   logging::Logger      _logger;
 };
 

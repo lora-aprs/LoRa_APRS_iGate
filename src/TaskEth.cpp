@@ -111,12 +111,12 @@ bool EthTask::setup(System &system) {
 
 bool EthTask::loop(System &system) {
   if (!eth_connected) {
-    system.connectedViaWifiEth(false);
+    system.connectedViaEth(false);
     _stateInfo = "Ethernet not connected";
     _state     = Error;
     return false;
   }
-  system.connectedViaWifiEth(true);
+  system.connectedViaEth(true);
   _stateInfo = ETH.localIP().toString();
   _state     = Okay;
   return true;

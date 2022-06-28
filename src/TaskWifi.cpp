@@ -40,7 +40,7 @@ bool WifiTask::setup(System &system) {
 bool WifiTask::loop(System &system) {
   const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
-    system.connectedViaWifiEth(false);
+    system.connectedViaWifi(false);
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
@@ -51,7 +51,7 @@ bool WifiTask::loop(System &system) {
     _oldWifiStatus = wifi_status;
     return false;
   }
-  system.connectedViaWifiEth(true);
+  system.connectedViaWifi(true);
   _stateInfo = WiFi.localIP().toString();
   _state     = Okay;
   return true;
