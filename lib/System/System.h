@@ -31,7 +31,8 @@ private:
   Configuration const *_userConfig;
   TaskManager          _taskManager;
   Display              _display;
-  bool                 _isEthConnected, _isWifiConnected;
+  bool                 _isEthConnected; 
+  bool                 _isWifiConnected;
   logging::Logger      _logger;
 };
 
