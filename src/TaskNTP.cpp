@@ -18,7 +18,7 @@ bool NTPTask::setup(System &system) {
 }
 
 bool NTPTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) {
+  if (!system.isWifiOrEthConnected()) {
     return false;
   }
   if (!_beginCalled) {
