@@ -47,7 +47,7 @@ bool WifiTask::loop(System &system) {
     _state         = Error;
     return false;
   } else if (wifi_status != _oldWifiStatus) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "IP address: %s", WiFi.localIP().toString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "WiFi IP address: %s", WiFi.localIP().toString().c_str());
     _oldWifiStatus = wifi_status;
     return false;
   }
