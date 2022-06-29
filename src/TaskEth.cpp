@@ -37,7 +37,7 @@ void WiFiEvent(WiFiEvent_t event) {
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Stopped");
     break;
   case SYSTEM_EVENT_ETH_START:
-    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "WiFi Started");
+    _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH Started");
     break;
   case SYSTEM_EVENT_ETH_CONNECTED:
     _logger->log(logging::LoggerLevel::LOGGER_LEVEL_INFO, WIFI_EVENT, "ETH Connected");
