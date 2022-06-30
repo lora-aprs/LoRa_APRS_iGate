@@ -52,7 +52,7 @@ bool WifiTask::loop(System &system) {
     return false;
   }
   system.connectedViaWifi(true);
-  _stateInfo = WiFi.localIP().toString();
+  _stateInfo = String("IP .") + String(WiFi.localIP()[3]) + String(" @ ") + String(WiFi.RSSI()) + String("dBm");
   _state     = Okay;
   return true;
 }
