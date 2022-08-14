@@ -18,11 +18,11 @@ Try it out and be part of the APRS network.
 * [Manuel Lausmann - Tracker](https://www.youtube.com/watch?v=clIlTEFbWLk) (youtube - german - OLD) 02.11.2020
 * [OE1ROT](https://www.aronaut.at/2019/12/lora-aprs-tracker-mit-ttgo-t-beam-433mhz/) (blog post - german) 09.12.2019
 
-feel free  to add yours or create a ticket if you want to be added.
+Feel free to add yours or create a ticket if you want to be added.
 
 ## Supported boards
 
-You can use one of the Lora32 boards without changings:
+You can use one of the Lora32 boards without changes:
 
 * Heltec WiFi LoRa 32 V1 (433MHz SX1278)
 * Heltec WiFi LoRa 32 V2 (433MHz SX1278)
@@ -42,7 +42,7 @@ Here are some amazon-de links for some example boards:
 * [T-Beam V1.0](https://www.amazon.de/dp/B07RT9FKPL)
 
 This boards cost around 20 Euros, they are very cheap and perfect for an LoRa iGate.
-Keep in minde: you need a 433MHz version!
+Keep in mind: you need a 433MHz version!
 
 ## Compiling and configuration
 
@@ -63,7 +63,7 @@ The best success is to use PlatformIO (and it is the only platform where I can s
 
 * You can find all nessesary settings to change for your configuration in **data/is-cfg.json**.
 * To upload it to your board you have to do this via **Upload File System image** in PlatformIO!
-* To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choos your configuration, click on 'Platform' and search for 'Upload File System image'.
+* To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choose your configuration, click on 'Platform' and search for 'Upload File System image'.
 
 ## Branches in this repository and version system
 
@@ -106,13 +106,15 @@ Look at my other project: a [LoRa Tracker](https://github.com/peterus/LoRa_APRS_
 
 ### Here are some peculiarities of the different boards
 
-* TTGO T-Beam V1
+* TTGO T-Beam V1.0 and V1.1 and SSD1306 OLED display
 
-When adding a 0,96" OLED display direct to the board you have to be careful, there are two different pinout
+When adding an SSD1306 0,96" OLED display direct to the board you have to be careful, there are two different pinout
 versions on the market. 
 For direct mount you need a display with this Pinout -> [VCC - GND - SCL - SDA](pics/display-right.jpg).
 A direct mount of the [other display](pics/display-wrong.jpg) is not possible without damage the display!
 The 'wrong' display works too but you have to change VCC and GND by wire !
 
-feel free to add hints!
+The [LoRa APRS WiKi Displays](https://github.com/lora-aprs/LoRa_APRS_Tracker/wiki/Displays) page has more details.
+
+Feel free to add hints!
 
