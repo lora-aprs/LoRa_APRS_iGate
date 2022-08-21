@@ -134,7 +134,7 @@ bool RadiolibTask::loop(System &system) {
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] readData failed, code %d", timeString().c_str(), state);
       } else {
         if (str.substring(0, 3) != "<\xff\x01") {
-          system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Unknown packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %dHz", timeString().c_str(), radio->getRSSI(), radio->getSNR(), -radio->getFrequencyError());
+          system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Unknown packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %fHz", timeString().c_str(), radio->getRSSI(), radio->getSNR(), -radio->getFrequencyError());
         } else {
           std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
           msg->decode(str.substring(3));
