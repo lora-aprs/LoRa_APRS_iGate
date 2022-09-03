@@ -1,5 +1,5 @@
 {
-	"callsign": "NOCALL-10",
+	"callsign": "DL9BDI-10",
 	"network": {
 		"DHCP": true,
 		"static": {
@@ -18,23 +18,23 @@
 		"active": true,
 		"AP": [
 			{
-				"SSID": "YOURSSID",
-				"password": "YOURPASSWORD"
+				"SSID": "SpdBt",
+				"password": "DPifRWaBS50i28357B."
 			}
 		]
 	},
 	"beacon": {
-		"message": "LoRa iGATE & Digi, Info: github.com/lora-aprs/LoRa_APRS_iGate",
+		"message": "LoRa iGATE",
 		"position": {
-			"latitude": 0.000000,
-			"longitude": 0.000000
+			"latitude": 53.12623,
+			"longitude": 8.89622
 		},
 		"use_gps": false,
 		"timeout": 15
 	},
 	"aprs_is": {
 		"active": true,
-		"passcode": "",
+		"passcode": "19109",
 		"server": "euro.aprs2.net",
 		"port": 14580
 	},
@@ -53,7 +53,7 @@
 		"tx_enable": false
 	},
 	"display": {
-		"always_on": true,
+		"always_on": false,
 		"timeout": 10,
 		"overwrite_pin": 0,
 		"turn180": true
