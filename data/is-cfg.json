@@ -18,8 +18,8 @@
 		"active": true,
 		"AP": [
 			{
-				"SSID": "...",
-				"password": "..."
+				"SSID": "xxx",
+				"password": "xxx"
 			}
 		]
 	},
