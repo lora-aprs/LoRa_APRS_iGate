@@ -21,6 +21,9 @@ bool RfBeaconTask::setup(System &system) {
 
 bool RfBeaconTask::loop(System &system) {
   //system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Bin in RfBeaconTask");
+  int port = system.getUserConfig()->telemetry.voltagePin;
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Messport für Spannung aus Config ist %d", port);
+
   int v=0;
   for (int i=0;i<5;i++){
     v+=analogRead(35);
@@ -28,7 +31,6 @@ bool RfBeaconTask::loop(System &system) {
   double vf=v/5.0/4096.0*3.3;
   //f=v/3;
   system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Wert an Port 35: %f Volt", vf);
-  int db = radio.transmit("Etwas Text");
   /*
   LoRa.beginPacket();
     // Header:

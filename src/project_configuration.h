@@ -93,6 +93,15 @@ public:
     bool    tx_enable;
   };
 
+  class Telemetry {
+  public:
+    Telemetry() : voltagePin(0), telemetry_beacon_time(0) {
+    }
+
+    int    voltagePin;
+    int    telemetry_beacon_time;
+  };
+
   class Display {
   public:
     Display() : alwaysOn(true), timeout(10), overwritePin(0), turn180(true) {
@@ -152,6 +161,7 @@ public:
   APRS_IS aprs_is;
   Digi    digi;
   LoRa    lora;
+  Telemetry telemetry;
   Display display;
   Ftp     ftp;
   MQTT    mqtt;
