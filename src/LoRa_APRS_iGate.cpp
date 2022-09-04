@@ -1,6 +1,7 @@
 #include <map>
 
 #include <APRS-IS.h>
+#include <LoRa.h>
 #include <BoardFinder.h>
 #include <System.h>
 #include <TaskManager.h>

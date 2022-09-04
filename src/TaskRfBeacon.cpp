@@ -5,6 +5,8 @@
 #include "Task.h"
 #include "TaskRfBeacon.h"
 #include "project_configuration.h"
+#include "LoRa.h"
+#include "TaskRadiolib.h"
 
 RfBeaconTask::RfBeaconTask() : Task(TASK_RFBEACON, TaskRfBeacon), _beginCalled(false) {
 }
@@ -26,15 +28,19 @@ bool RfBeaconTask::loop(System &system) {
   double vf=v/5.0/4096.0*3.3;
   //f=v/3;
   system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Wert an Port 35: %f Volt", vf);
-  system.beginPacket();
+  int db = radio.transmit("Etwas Text");
+  /*
+  LoRa.beginPacket();
     // Header:
-    system.write('<');
-    system.write(0xFF);
-    system.write(0x01);
+    LoRa.write('<');
+    LoRa.write(0xFF);
+    LoRa.write(0x01);
     // APRS Data:
-    system.write("Just a test");
-    system.endPacket();
+    //LoRa.write("Just a test");
+    LoRa.endPacket();
   delay(500);
+  */
+  
   /*
   if (!system.isWifiOrEthConnected()) {
     return false;
