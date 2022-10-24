@@ -8,6 +8,7 @@
 #include <power_management.h>
 
 #include "TaskAprsIs.h"
+#include "TaskBeacon.h"
 #include "TaskDisplay.h"
 #include "TaskEth.h"
 #include "TaskFTP.h"
@@ -19,7 +20,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION     "22.11.2"
+#define VERSION     "22.14.0"
 #define MODULE_NAME "Main"
 
 String create_lat_aprs(double lat);
@@ -43,6 +44,7 @@ FTPTask     ftpTask;
 MQTTTask    mqttTask(toMQTT);
 AprsIsTask  aprsIsTask(toAprsIs);
 RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
+BeaconTask  beaconTask(toModem, toAprsIs);
 
 void setup() {
   Serial.begin(115200);
@@ -95,7 +97,11 @@ void setup() {
     }
     powerManagement.activateLoRa();
     powerManagement.activateOLED();
-    powerManagement.deactivateGPS();
+    if (userConfig.beacon.use_gps) {
+      powerManagement.activateGPS();
+    } else {
+      powerManagement.deactivateGPS();
+    }
   }
 
   LoRaSystem.setBoardConfig(boardConfig);
@@ -112,24 +118,33 @@ void setup() {
   LoRaSystem.getTaskManager().addTask(&displayTask);
   LoRaSystem.getTaskManager().addTask(&modemTask);
   LoRaSystem.getTaskManager().addTask(&routerTask);
+  LoRaSystem.getTaskManager().addTask(&beaconTask);
 
-  if (userConfig.aprs_is.active) {
-    if (boardConfig->Type == eETH_BOARD && !userConfig.wifi.active) {
-      LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-    }
-    if (userConfig.wifi.active) {
-      LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
-    }
+  bool tcpip = false;
+
+  if (userConfig.wifi.active) {
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
+    tcpip = true;
+  }
+  if (boardConfig->Type == eETH_BOARD) {
+    LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
+    tcpip = true;
+  }
+
+  if (tcpip) {
     LoRaSystem.getTaskManager().addTask(&otaTask);
     LoRaSystem.getTaskManager().addTask(&ntpTask);
     if (userConfig.ftp.active) {
       LoRaSystem.getTaskManager().addTask(&ftpTask);
     }
-    LoRaSystem.getTaskManager().addTask(&aprsIsTask);
-  }
 
-  if (userConfig.mqtt.active) {
-    LoRaSystem.getTaskManager().addTask(&mqttTask);
+    if (userConfig.aprs_is.active) {
+      LoRaSystem.getTaskManager().addTask(&aprsIsTask);
+    }
+
+    if (userConfig.mqtt.active) {
+      LoRaSystem.getTaskManager().addTask(&mqttTask);
+    }
   }
 
   LoRaSystem.getTaskManager().setup(LoRaSystem);
@@ -175,28 +190,4 @@ void loop() {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "System connected after a restart to the network, syslog server set");
     syslogSet = true;
   }
-}
-
-String create_lat_aprs(double lat) {
-  char str[20];
-  char n_s = 'N';
-  if (lat < 0) {
-    n_s = 'S';
-  }
-  lat = std::abs(lat);
-  sprintf(str, "%02d%05.2f%c", (int)lat, (lat - (double)((int)lat)) * 60.0, n_s);
-  String lat_str(str);
-  return lat_str;
-}
-
-String create_long_aprs(double lng) {
-  char str[20];
-  char e_w = 'E';
-  if (lng < 0) {
-    e_w = 'W';
-  }
-  lng = std::abs(lng);
-  sprintf(str, "%03d%05.2f%c", (int)lng, (lng - (double)((int)lng)) * 60.0, e_w);
-  String lng_str(str);
-  return lng_str;
 }

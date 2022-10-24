@@ -1,19 +1,15 @@
 name: Integreation Tests
 
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - '*'
+      - '!master'
+  pull_request:
+    branches:
+      - master
 
 jobs:
-  version_check:
-    name: Version Check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
-      - name: check version
-        run: ./scripts/check_version.py
-
   build:
     name: Compile Firmware
     runs-on: ubuntu-latest

@@ -48,12 +48,13 @@ public:
 
   class Beacon {
   public:
-    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15) {
     }
 
     String message;
     double positionLatitude;
     double positionLongitude;
+    bool   use_gps;
     int    timeout;
   };
 
@@ -125,12 +126,12 @@ public:
     MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data") {
     }
 
-    bool     active;
-    String   server;
-    uint16_t port;
-    String   name;
-    String   password;
-    String   topic;
+    bool   active;
+    String server;
+    int    port;
+    String name;
+    String password;
+    String topic;
   };
 
   class Syslog {
