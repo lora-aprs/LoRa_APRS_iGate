@@ -76,8 +76,8 @@
 		"topic": "LoraAPRS/Data"
 	},
 	"syslog": {
-		"active": true,
-		"server": "syslog.lora-aprs.info",
+		"active": false,
+		"server": "",
 		"port": 514
 	},
 	"ntp_server": "pool.ntp.org"
