@@ -1,4 +1,5 @@
 #include <logger.h>
+#include <esp_task_wdt.h>
 
 #include "Task.h"
 #include "TaskOTA.h"
@@ -37,6 +38,9 @@ bool OTATask::setup(System &system) {
           error_str = "End Failed";
         }
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Error[%d]: %s", error, error_str.c_str());
+      })
+      .onProgress([&](unsigned int received, unsigned int total_size){
+        esp_task_wdt_reset();
       });
   if (system.getUserConfig()->network.hostname.overwrite) {
     _ota.setHostname(system.getUserConfig()->network.hostname.name.c_str());
