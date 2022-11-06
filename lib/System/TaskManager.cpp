@@ -2,6 +2,8 @@
 #include <FontConfig.h>
 #include <logger.h>
 
+#define MODULE_NAME "TaskManager"
+
 TaskManager::TaskManager() {
 }
 
@@ -20,15 +22,13 @@ std::list<Task *> TaskManager::getTasks() {
 }
 
 bool TaskManager::setup(System &system) {
-  logPrintlnV("will setup all tasks...");
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "will setup all tasks...");
   for (Task *elem : _alwaysRunTasks) {
-    logPrintD("call setup from ");
-    logPrintlnD(elem->getName());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "call setup for %s", elem->getName().c_str());
     elem->setup(system);
   }
   for (Task *elem : _tasks) {
-    logPrintD("call setup from ");
-    logPrintlnD(elem->getName());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "call setup for %s", elem->getName().c_str());
     elem->setup(system);
   }
   _nextTask = _tasks.begin();
@@ -36,10 +36,7 @@ bool TaskManager::setup(System &system) {
 }
 
 bool TaskManager::loop(System &system) {
-  // logPrintlnD("will loop all tasks...");
   for (Task *elem : _alwaysRunTasks) {
-    // logPrintD("call loop from ");
-    // logPrintlnD(elem->getName());
     elem->loop(system);
   }
 

@@ -8,6 +8,8 @@
 #include <SPI.h>
 #include <Wire.h>
 
+#include <logger.h>
+
 enum BoardType
 {
   eHELTEC_WIFI_LORA_32_V1,
@@ -22,7 +24,7 @@ enum BoardType
 
 class BoardConfig {
 public:
-  explicit BoardConfig(String name, BoardType type, uint8_t oledsda, uint8_t oledscl, uint8_t oledaddr, uint8_t oledreset, uint8_t lorasck, uint8_t loramiso, uint8_t loramosi, uint8_t loracs, uint8_t lorareset, uint8_t lorairq, bool needcheckpowerchip = false, bool powercheckstatus = false);
+  explicit BoardConfig(String name, BoardType type, uint8_t oledsda, uint8_t oledscl, uint8_t oledaddr, uint8_t oledreset, uint8_t lorasck, uint8_t loramiso, uint8_t loramosi, uint8_t loracs, uint8_t lorareset, uint8_t lorairq, uint8_t gpsrx, uint8_t gpstx, uint8_t button, bool needcheckpowerchip = false, bool powercheckstatus = false);
 
   String    Name;
   BoardType Type;
@@ -38,6 +40,9 @@ public:
   uint8_t LoraCS;
   uint8_t LoraReset;
   uint8_t LoraIRQ;
+  uint8_t GpsRx;
+  uint8_t GpsTx;
+  uint8_t Button;
 
   bool needCheckPowerChip;
   bool powerCheckStatus;
@@ -47,16 +52,16 @@ class BoardFinder {
 public:
   explicit BoardFinder(const std::list<BoardConfig const *> &boardConfigs);
 
-  BoardConfig const *searchBoardConfig();
+  BoardConfig const *searchBoardConfig(logging::Logger &logger);
 
   BoardConfig const *getBoardConfig(String name);
 
 private:
   const std::list<BoardConfig const *> &_boardConfigs;
 
-  bool checkOledConfig(BoardConfig const *boardConfig);
+  bool checkOledConfig(BoardConfig const *boardConfig, logging::Logger &logger);
   bool checkModemConfig(BoardConfig const *boardConfig);
-  bool checkPowerConfig(BoardConfig const *boardConfig);
+  bool checkPowerConfig(BoardConfig const *boardConfig, logging::Logger &logger);
 };
 
 extern BoardConfig TTGO_LORA32_V1;

@@ -13,37 +13,36 @@ OTATask::~OTATask() {
 bool OTATask::setup(System &system) {
   _ota.onStart([&]() {
         String type;
-        if (_ota.getCommand() == U_FLASH)
+        if (_ota.getCommand() == U_FLASH) {
           type = "sketch";
-        else // U_SPIFFS
+        } else { // U_SPIFFS
           type = "filesystem";
-        logPrintlnI("Start updating " + type);
+        }
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Start updating %s. please wait, this prozess is taking some time!", type.c_str());
       })
-      .onEnd([]() {
-        logPrintlnI("");
-        logPrintlnI("OTA End");
+      .onEnd([&]() {
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "OTA End");
       })
-      .onProgress([](unsigned int progress, unsigned int total) {
-        logPrintI("Progress: ");
-        logPrintI(String(progress / (total / 100)));
-        logPrintlnI("%");
-      })
-      .onError([](ota_error_t error) {
-        logPrintE("Error[");
-        logPrintE(String(error));
-        logPrintE("]: ");
-        if (error == OTA_AUTH_ERROR)
-          logPrintlnE("Auth Failed");
-        else if (error == OTA_BEGIN_ERROR)
-          logPrintlnE("Begin Failed");
-        else if (error == OTA_CONNECT_ERROR)
-          logPrintlnE("Connect Failed");
-        else if (error == OTA_RECEIVE_ERROR)
-          logPrintlnE("Receive Failed");
-        else if (error == OTA_END_ERROR)
-          logPrintlnE("End Failed");
+      .onError([&](ota_error_t error) {
+        String error_str;
+        if (error == OTA_AUTH_ERROR) {
+          error_str = "Auth Failed";
+        } else if (error == OTA_BEGIN_ERROR) {
+          error_str = "Begin Failed";
+        } else if (error == OTA_CONNECT_ERROR) {
+          error_str = "Connect Failed";
+        } else if (error == OTA_RECEIVE_ERROR) {
+          error_str = "Receive Failed";
+        } else if (error == OTA_END_ERROR) {
+          error_str = "End Failed";
+        }
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Error[%d]: %s", error, error_str.c_str());
       });
-  _ota.setHostname(system.getUserConfig()->callsign.c_str());
+  if (system.getUserConfig()->network.hostname.overwrite) {
+    _ota.setHostname(system.getUserConfig()->network.hostname.name.c_str());
+  } else {
+    _ota.setHostname(system.getUserConfig()->callsign.c_str());
+  }
   _stateInfo = "";
   return true;
 }

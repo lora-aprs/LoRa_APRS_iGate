@@ -20,15 +20,18 @@ bool WifiTask::setup(System &system) {
   WiFi.mode(WIFI_STA);
 
   WiFi.onEvent(WiFiEvent);
-  WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+  if (system.getUserConfig()->network.hostname.overwrite) {
+    WiFi.setHostname(system.getUserConfig()->network.hostname.name.c_str());
+  } else {
+    WiFi.setHostname(system.getUserConfig()->callsign.c_str());
+  }
 
   if (!system.getUserConfig()->network.DHCP) {
-    WiFi.config(system.getUserConfig()->network.staticIP, system.getUserConfig()->network.gateway, system.getUserConfig()->network.subnet, system.getUserConfig()->network.dns1, system.getUserConfig()->network.dns2);
+    WiFi.config(system.getUserConfig()->network.static_.ip, system.getUserConfig()->network.static_.gateway, system.getUserConfig()->network.static_.subnet, system.getUserConfig()->network.static_.dns1, system.getUserConfig()->network.static_.dns2);
   }
 
   for (Configuration::Wifi::AP ap : system.getUserConfig()->wifi.APs) {
-    logPrintD("Looking for AP: ");
-    logPrintlnD(ap.SSID);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "Looking for AP: %s", ap.SSID.c_str());
     _wiFiMulti.addAP(ap.SSID.c_str(), ap.password.c_str());
   }
   return true;
@@ -37,20 +40,19 @@ bool WifiTask::setup(System &system) {
 bool WifiTask::loop(System &system) {
   const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
-    system.connectedViaWifiEth(false);
-    logPrintlnE("WiFi not connected!");
+    system.connectedViaWifi(false);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
     _state         = Error;
     return false;
   } else if (wifi_status != _oldWifiStatus) {
-    logPrintD("IP address: ");
-    logPrintlnD(WiFi.localIP().toString());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "WiFi IP address: %s", WiFi.localIP().toString().c_str());
     _oldWifiStatus = wifi_status;
     return false;
   }
-  system.connectedViaWifiEth(true);
-  _stateInfo = WiFi.localIP().toString();
+  system.connectedViaWifi(true);
+  _stateInfo = String("IP .") + String(WiFi.localIP()[3]) + String(" @ ") + String(WiFi.RSSI()) + String("dBm");
   _state     = Okay;
   return true;
 }

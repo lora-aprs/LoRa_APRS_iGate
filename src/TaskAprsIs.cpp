@@ -16,7 +16,7 @@ bool AprsIsTask::setup(System &system) {
 }
 
 bool AprsIsTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) {
+  if (!system.isWifiOrEthConnected()) {
     return false;
   }
   if (!_aprs_is.connected()) {
@@ -40,15 +40,18 @@ bool AprsIsTask::loop(System &system) {
   return true;
 }
 
-bool AprsIsTask::connect(const System &system) {
-  logPrintI("connecting to APRS-IS server: ");
-  logPrintI(system.getUserConfig()->aprs_is.server);
-  logPrintI(" on port: ");
-  logPrintlnI(String(system.getUserConfig()->aprs_is.port));
-  if (!_aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port)) {
-    logPrintlnE("Connection failed.");
+bool AprsIsTask::connect(System &system) {
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port);
+  APRS_IS::ConnectionStatus status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
+  if (status == APRS_IS::ERROR_CONNECTION) {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Something went wrong on connecting! Is the server reachable?");
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Connection failed.");
+    return false;
+  } else if (status == APRS_IS::ERROR_PASSCODE) {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "User can not be verified with passcode!");
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Connection failed.");
     return false;
   }
-  logPrintlnI("Connected to APRS-IS server!");
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connected to APRS-IS server!");
   return true;
 }

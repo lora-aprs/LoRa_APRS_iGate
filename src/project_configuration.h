@@ -6,41 +6,55 @@
 
 class Configuration {
 public:
-  class Network {
+  class Static {
   public:
-    Network() : DHCP(true) {
-    }
-
-    bool      DHCP;
-    IPAddress staticIP;
+    IPAddress ip;
     IPAddress subnet;
     IPAddress gateway;
     IPAddress dns1;
     IPAddress dns2;
   };
 
+  class Hostname {
+  public:
+    bool   overwrite;
+    String name;
+  };
+
+  class Network {
+  public:
+    Network() : DHCP(true) {
+    }
+
+    bool     DHCP;
+    Static   static_;
+    Hostname hostname;
+  };
+
   class Wifi {
   public:
+    Wifi() : active(true) {
+    }
+
+    bool active;
     class AP {
     public:
       String SSID;
       String password;
     };
 
-    Wifi() {
-    }
-
     std::list<AP> APs;
   };
 
   class Beacon {
   public:
-    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), timeout(15) {
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15) {
     }
 
     String message;
     double positionLatitude;
     double positionLongitude;
+    bool   use_gps;
     int    timeout;
   };
 
@@ -66,15 +80,17 @@ public:
 
   class LoRa {
   public:
-    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5) {
+    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
     }
 
-    long frequencyRx;
-    long frequencyTx;
-    int  power;
-    int  spreadingFactor;
-    long signalBandwidth;
-    int  codingRate4;
+    long    frequencyRx;
+    uint8_t gainRx;
+    long    frequencyTx;
+    int     power;
+    int     spreadingFactor;
+    long    signalBandwidth;
+    int     codingRate4;
+    bool    tx_enable;
   };
 
   class Display {
@@ -103,7 +119,31 @@ public:
     std::list<User> users;
   };
 
-  Configuration() : callsign("NOCALL-10"), board(""), ntpServer("pool.ntp.org"){};
+  class MQTT {
+  public:
+    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data") {
+    }
+
+    bool   active;
+    String server;
+    int    port;
+    String name;
+    String password;
+    String topic;
+  };
+
+  class Syslog {
+  public:
+    Syslog() : active(true), server("syslog.lora-aprs.info"), port(514) {
+    }
+
+    bool   active;
+    String server;
+    int    port;
+  };
+
+  Configuration() : callsign("NOCALL-10"), ntpServer("pool.ntp.org"), board("") {
+  }
 
   String  callsign;
   Network network;
@@ -114,13 +154,15 @@ public:
   LoRa    lora;
   Display display;
   Ftp     ftp;
-  String  board;
+  MQTT    mqtt;
+  Syslog  syslog;
   String  ntpServer;
+  String  board;
 };
 
 class ProjectConfigurationManagement : public ConfigurationManagement {
 public:
-  explicit ProjectConfigurationManagement() : ConfigurationManagement("/is-cfg.json") {
+  explicit ProjectConfigurationManagement(logging::Logger &logger) : ConfigurationManagement(logger, "/is-cfg.json") {
   }
   virtual ~ProjectConfigurationManagement() {
   }
