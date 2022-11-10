@@ -5,6 +5,7 @@ import logging
 import json
 import tempfile
 import pigpio
+import time
 
 from pathlib import Path
 from HIL.common import runProcess
@@ -75,9 +76,11 @@ class EspDut:
 
     def begin(self):
         self.pigpio.write(self.powerPin, 1)
+        time.sleep(1)
 
     def stop(self):
         self.pigpio.write(self.powerPin, 0)
+        time.sleep(1)
 
     def writeFlash(self, bin_dir):
         logger.info("write flash")
