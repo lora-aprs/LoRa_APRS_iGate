@@ -39,8 +39,6 @@ def test_aprs_msg(APRSIS):
     for i in range(5):
         line = APRSIS.get_line()
         for l in line:
-            if l == "OE5BPA-2>APLG01,TCPIP*,qAC,OE5BPA:=4819.82NL01418.68E&Testing":
+            if l == "OE5BPA-2>APLG01,TCPIP*,qAC,AT0EST:=4819.82NL01418.68E&Testing":
                 return
-            else:
-                print(l)
     raise
