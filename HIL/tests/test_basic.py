@@ -36,9 +36,11 @@ def test_aprs_msg(APRSIS):
                   host="localhost", port=10152)
     aprs.connect()
     aprs.send_line("OE5BPA-2>APLG01:=4819.82NL01418.68E&Testing")
-    for i in range(2):
+    for i in range(5):
         line = APRSIS.get_line()
         for l in line:
             if l == "OE5BPA-2>APLG01,TCPIP*,qAC,OE5BPA:=4819.82NL01418.68E&Testing":
                 return
+            else:
+                print(l)
     raise
