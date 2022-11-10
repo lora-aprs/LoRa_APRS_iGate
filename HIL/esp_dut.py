@@ -4,6 +4,7 @@ import serial
 import logging
 import json
 import tempfile
+import pigpio
 
 from pathlib import Path
 from HIL.common import runProcess
@@ -62,12 +63,21 @@ class EspConfig:
 
 
 class EspDut:
-    def __init__(self, port, configPath, configFile):
+    def __init__(self, port, configPath, configFile, powerPin):
         self.port = port
         self.baudrate = 115200
         self.serial = None
         self.flash = EspFlash(self.port)
         self.config = EspConfig(configPath, configFile)
+        self.pigpio = pigpio.pi()
+        self.powerPin = powerPin
+        self.pigpio.set_mode(self.powerPin, pigpio.OUTPUT)
+
+    def begin():
+        self.pigpio.pi.write(self.powerPin, 1)
+
+    def stop():
+        self.pigpio.pi.write(self.powerPin, 0)
 
     def writeFlash(self, bin_dir):
         logger.info("write flash")
@@ -100,4 +110,4 @@ class EspDut:
 
 @pytest.fixture
 def ESP():
-    return EspDut(os.environ["ESP_PORT"], Path(os.environ["ESP_CONFIG_PATH"]), Path(os.environ["ESP_CONFIG_FILE"]))
+    return EspDut(os.environ["ESP_PORT"], Path(os.environ["ESP_CONFIG_PATH"]), Path(os.environ["ESP_CONFIG_FILE"]), 13)

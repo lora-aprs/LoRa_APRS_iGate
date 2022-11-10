@@ -4,27 +4,35 @@ from pathlib import Path
 
 
 def test_basic_port(ESP):
+    ESP.begin()
     ESP.openPort()
     ESP.closePort()
+    ESP.end()
 
 
 def test_flash(ESP):
+    ESP.begin()
     bin_dir = Path("testbinary")
     ESP.writeFlash(bin_dir)
     ESP.flash.verify("0x1000",  bin_dir / 'bootloader_dio_40m.bin')
     ESP.flash.verify("0x8000",  bin_dir / 'partitions.bin')
     ESP.flash.verify("0xe000",  bin_dir / 'boot_app0.bin')
     ESP.flash.verify("0x10000", bin_dir / 'firmware.bin')
+    ESP.end()
 
 
 def test_flash_config(ESP):
+    ESP.begin()
     ESP.config.data["bar"] = "foo"
     ESP.config.data["number"] = 123
     ESP.writeConfig()
+    ESP.end()
 
 
 def test_erase(ESP):
+    ESP.begin()
     ESP.flash.erase()
+    ESP.end()
 
 
 def test_aprs_login(APRSIS):
