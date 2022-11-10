@@ -73,10 +73,10 @@ class EspDut:
         self.powerPin = powerPin
         self.pigpio.set_mode(self.powerPin, pigpio.OUTPUT)
 
-    def begin():
+    def begin(self):
         self.pigpio.pi.write(self.powerPin, 1)
 
-    def stop():
+    def stop(self):
         self.pigpio.pi.write(self.powerPin, 0)
 
     def writeFlash(self, bin_dir):
