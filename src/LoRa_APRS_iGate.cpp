@@ -2,9 +2,9 @@
 
 #include <APRS-IS.h>
 #include <BoardFinder.h>
-#include <esp_task_wdt.h>
 #include <System.h>
 #include <TaskManager.h>
+#include <esp_task_wdt.h>
 #include <logger.h>
 #include <power_management.h>
 
