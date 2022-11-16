@@ -19,7 +19,9 @@ enum BoardType
   eTTGO_T_Beam_V0_7,
   eTTGO_T_Beam_V1_0,
   eETH_BOARD,
-  eTRACKERD
+  eTRACKERD,
+  eGUALTHERIUS_LORAHAM_v100,
+  eGUALTHERIUS_LORAHAM_v106
 };
 
 class BoardConfig {
@@ -72,5 +74,7 @@ extern BoardConfig ETH_BOARD;
 extern BoardConfig TRACKERD;
 extern BoardConfig HELTEC_WIFI_LORA_32_V1;
 extern BoardConfig HELTEC_WIFI_LORA_32_V2;
+extern BoardConfig GUALTHERIUS_LORAHAM_v100;
+extern BoardConfig GUALTHERIUS_LORAHAM_v106;
 
 #endif

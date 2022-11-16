@@ -138,4 +138,6 @@ BoardConfig ETH_BOARD             ("ETH_BOARD",              eETH_BOARD,        
 BoardConfig TRACKERD              ("TRACKERD",               eTRACKERD,                5,  4, 0x3C,  0, 18, 19, 23, 16, 14, 26,  0,  0,  0);
 BoardConfig HELTEC_WIFI_LORA_32_V1("HELTEC_WIFI_LORA_32_V1", eHELTEC_WIFI_LORA_32_V1,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26,  0,  0,  0);
 BoardConfig HELTEC_WIFI_LORA_32_V2("HELTEC_WIFI_LORA_32_V2", eHELTEC_WIFI_LORA_32_V2,  4, 15, 0x3C, 16,  5, 19, 27, 18, 14, 26,  0,  0,  0);
+BoardConfig GUALTHERIUS_LORAHAM_v100("GUALTHERIUS_LORAHAM_v100", eGUALTHERIUS_LORAHAM_v100, 17, 16, 0x3C,  0, 18, 19, 23,  5, 13, 35, 0, 0, 0);
+BoardConfig GUALTHERIUS_LORAHAM_v106("GUALTHERIUS_LORAHAM_v106", eGUALTHERIUS_LORAHAM_v106, 17, 16, 0x3C,  0, 18, 19, 23,  2, 13, 35, 0, 0, 0);
 // clang-format on

@@ -67,6 +67,8 @@ void setup() {
   boardConfigs.push_back(&TRACKERD);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
+  boardConfigs.push_back(&GUALTHERIUS_LORAHAM_v100);
+  boardConfigs.push_back(&GUALTHERIUS_LORAHAM_v106);
 
   ProjectConfigurationManagement confmg(LoRaSystem.getLogger());
   confmg.readConfiguration(LoRaSystem.getLogger(), userConfig);
