@@ -77,7 +77,7 @@
 	},
 	"syslog": {
 		"active": false,
-		"server": "syslog.lora-aprs.info",
+		"server": "",
 		"port": 514
 	},
 	"ntp_server": "pool.ntp.org"
