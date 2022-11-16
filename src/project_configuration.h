@@ -101,8 +101,6 @@ public:
     bool alwaysOn;
     int  timeout;
     int  overwritePin;
-    int  vccPin;
-    int  gndPin;
     bool turn180;
   };
 
