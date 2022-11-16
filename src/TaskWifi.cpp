@@ -40,19 +40,19 @@ bool WifiTask::setup(System &system) {
 bool WifiTask::loop(System &system) {
   const uint8_t wifi_status = _wiFiMulti.run();
   if (wifi_status != WL_CONNECTED) {
-    system.connectedViaWifiEth(false);
+    system.connectedViaWifi(false);
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "WiFi not connected!");
     _oldWifiStatus = wifi_status;
     _stateInfo     = "WiFi not connected";
     _state         = Error;
     return false;
   } else if (wifi_status != _oldWifiStatus) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "IP address: %s", WiFi.localIP().toString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "WiFi IP address: %s", WiFi.localIP().toString().c_str());
     _oldWifiStatus = wifi_status;
     return false;
   }
-  system.connectedViaWifiEth(true);
-  _stateInfo = WiFi.localIP().toString();
+  system.connectedViaWifi(true);
+  _stateInfo = String("IP .") + String(WiFi.localIP()[3]) + String(" @ ") + String(WiFi.RSSI()) + String("dBm");
   _state     = Okay;
   return true;
 }

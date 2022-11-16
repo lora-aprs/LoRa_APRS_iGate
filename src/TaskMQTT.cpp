@@ -18,7 +18,7 @@ bool MQTTTask::setup(System &system) {
 }
 
 bool MQTTTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) {
+  if (!system.isWifiOrEthConnected()) {
     return false;
   }
 

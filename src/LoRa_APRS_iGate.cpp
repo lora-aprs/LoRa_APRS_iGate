@@ -4,6 +4,7 @@
 #include <BoardFinder.h>
 #include <System.h>
 #include <TaskManager.h>
+#include <esp_task_wdt.h>
 #include <logger.h>
 #include <power_management.h>
 
@@ -13,14 +14,14 @@
 #include "TaskEth.h"
 #include "TaskFTP.h"
 #include "TaskMQTT.h"
-#include "TaskModem.h"
 #include "TaskNTP.h"
 #include "TaskOTA.h"
+#include "TaskRadiolib.h"
 #include "TaskRouter.h"
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION     "22.14.0"
+#define VERSION     "22.20.0"
 #define MODULE_NAME "Main"
 
 String create_lat_aprs(double lat);
@@ -35,18 +36,21 @@ System        LoRaSystem;
 Configuration userConfig;
 
 DisplayTask displayTask;
-ModemTask   modemTask(fromModem, toModem);
-EthTask     ethTask;
-WifiTask    wifiTask;
-OTATask     otaTask;
-NTPTask     ntpTask;
-FTPTask     ftpTask;
-MQTTTask    mqttTask(toMQTT);
-AprsIsTask  aprsIsTask(toAprsIs);
-RouterTask  routerTask(fromModem, toModem, toAprsIs, toMQTT);
-BeaconTask  beaconTask(toModem, toAprsIs);
+// ModemTask   modemTask(fromModem, toModem);
+RadiolibTask modemTask(fromModem, toModem);
+EthTask      ethTask;
+WifiTask     wifiTask;
+OTATask      otaTask;
+NTPTask      ntpTask;
+FTPTask      ftpTask;
+MQTTTask     mqttTask(toMQTT);
+AprsIsTask   aprsIsTask(toAprsIs);
+RouterTask   routerTask(fromModem, toModem, toAprsIs, toMQTT);
+BeaconTask   beaconTask(toModem, toAprsIs);
 
 void setup() {
+  esp_task_wdt_init(10, true);
+  esp_task_wdt_add(NULL);
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
   setWiFiLogger(&LoRaSystem.getLogger());
@@ -138,6 +142,7 @@ void setup() {
     }
   }
 
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
   LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
@@ -167,8 +172,9 @@ void setup() {
 volatile bool syslogSet = false;
 
 void loop() {
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().loop(LoRaSystem);
-  if (LoRaSystem.isWifiEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
+  if (LoRaSystem.isWifiOrEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
     LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "System connected after a restart to the network, syslog server set");
     syslogSet = true;

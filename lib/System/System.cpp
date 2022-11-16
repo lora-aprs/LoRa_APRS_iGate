@@ -1,7 +1,7 @@
 
 #include "System.h"
 
-System::System() : _boardConfig(0), _userConfig(0), _isWifiEthConnected(false) {
+System::System() : _boardConfig(0), _userConfig(0), _isEthConnected(false), _isWifiConnected(false) {
 }
 
 System::~System() {
@@ -31,12 +31,16 @@ Display &System::getDisplay() {
   return _display;
 }
 
-bool System::isWifiEthConnected() const {
-  return _isWifiEthConnected;
+bool System::isWifiOrEthConnected() const {
+  return _isEthConnected || _isWifiConnected;
 }
 
-void System::connectedViaWifiEth(bool status) {
-  _isWifiEthConnected = status;
+void System::connectedViaEth(bool status) {
+  _isEthConnected = status;
+}
+
+void System::connectedViaWifi(bool status) {
+  _isWifiConnected = status;
 }
 
 logging::Logger &System::getLogger() {

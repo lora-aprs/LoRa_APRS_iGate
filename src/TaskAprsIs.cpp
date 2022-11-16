@@ -16,7 +16,7 @@ bool AprsIsTask::setup(System &system) {
 }
 
 bool AprsIsTask::loop(System &system) {
-  if (!system.isWifiEthConnected()) {
+  if (!system.isWifiOrEthConnected()) {
     return false;
   }
   if (!_aprs_is.connected()) {
