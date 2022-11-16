@@ -2,11 +2,11 @@
 
 #include <APRS-IS.h>
 #include <BoardFinder.h>
+#include <esp_task_wdt.h>
 #include <System.h>
 #include <TaskManager.h>
 #include <logger.h>
 #include <power_management.h>
-#include <esp_task_wdt.h>
 
 #include "TaskAprsIs.h"
 #include "TaskBeacon.h"
