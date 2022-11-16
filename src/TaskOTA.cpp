@@ -1,5 +1,5 @@
-#include <logger.h>
 #include <esp_task_wdt.h>
+#include <logger.h>
 
 #include "Task.h"
 #include "TaskOTA.h"
