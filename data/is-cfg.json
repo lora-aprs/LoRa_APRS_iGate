@@ -76,7 +76,7 @@
 		"topic": "LoraAPRS/Data"
 	},
 	"syslog": {
-		"active": true,
+		"active": false,
 		"server": "syslog.lora-aprs.info",
 		"port": 514
 	},

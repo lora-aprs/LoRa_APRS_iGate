@@ -4,6 +4,7 @@
 #include <BoardFinder.h>
 #include <System.h>
 #include <TaskManager.h>
+#include <esp_task_wdt.h>
 #include <logger.h>
 #include <power_management.h>
 
@@ -48,6 +49,8 @@ RouterTask   routerTask(fromModem, toModem, toAprsIs, toMQTT);
 BeaconTask   beaconTask(toModem, toAprsIs);
 
 void setup() {
+  esp_task_wdt_init(10, true);
+  esp_task_wdt_add(NULL);
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
   setWiFiLogger(&LoRaSystem.getLogger());
@@ -137,6 +140,7 @@ void setup() {
     }
   }
 
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
   LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
@@ -166,6 +170,7 @@ void setup() {
 volatile bool syslogSet = false;
 
 void loop() {
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().loop(LoRaSystem);
   if (LoRaSystem.isWifiOrEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
     LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);
