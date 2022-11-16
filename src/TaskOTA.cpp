@@ -39,7 +39,7 @@ bool OTATask::setup(System &system) {
         }
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Error[%d]: %s", error, error_str.c_str());
       })
-      .onProgress([&](unsigned int received, unsigned int total_size){
+      .onProgress([&](unsigned int received, unsigned int total_size) {
         esp_task_wdt_reset();
       });
   if (system.getUserConfig()->network.hostname.overwrite) {
