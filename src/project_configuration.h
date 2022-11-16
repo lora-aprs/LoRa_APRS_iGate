@@ -134,7 +134,7 @@ public:
 
   class Syslog {
   public:
-    Syslog() : active(true), server("syslog.lora-aprs.info"), port(514) {
+    Syslog() : active(true), server(""), port(514) {
     }
 
     bool   active;
