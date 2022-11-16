@@ -19,7 +19,7 @@ bool OTATask::setup(System &system) {
         } else { // U_SPIFFS
           type = "filesystem";
         }
-        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Start updating %s. please wait, this prozess is taking some time!", type.c_str());
+        system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Start updating %s. please wait, this process is taking some time!", type.c_str());
       })
       .onEnd([&]() {
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "OTA End");

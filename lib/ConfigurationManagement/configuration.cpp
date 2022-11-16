@@ -9,7 +9,7 @@ ConfigurationManagement::ConfigurationManagement(logging::Logger &logger, String
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Mounting SPIFFS was not possible. Trying to format SPIFFS...");
     SPIFFS.format();
     if (!SPIFFS.begin()) {
-      logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Formating SPIFFS was not okay!");
+      logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Formatting SPIFFS was not okay!");
     }
   }
 }
