@@ -100,6 +100,10 @@ bool RadiolibTask::setup(System &system) {
     }
   }
 
+  if (config.power > 17 && config.tx_enable) {
+    radio->setCurrentLimit(140);
+  }
+
   preambleDurationMilliSec = ((uint64_t)(preambleLength + 4) << (config.spreadingFactor + 10 /* to milli-sec */)) / config.signalBandwidth;
 
   _stateInfo = "";
