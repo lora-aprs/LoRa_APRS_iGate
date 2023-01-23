@@ -49,8 +49,6 @@ RouterTask   routerTask(fromModem, toModem, toAprsIs, toMQTT);
 BeaconTask   beaconTask(toModem, toAprsIs);
 
 void setup() {
-  esp_task_wdt_init(10, true);
-  esp_task_wdt_add(NULL);
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
   setWiFiLogger(&LoRaSystem.getLogger());
@@ -90,6 +88,15 @@ void setup() {
   }
 
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Board %s loaded.", boardConfig->Name.c_str());
+
+  LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Will start watchdog now...");
+  if (esp_task_wdt_init(10, true) != ESP_OK) {
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog init failed!");
+  } else {
+    if (esp_task_wdt_add(NULL) != ESP_OK) {
+      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog add failed!");
+    }
+  }
 
   if (boardConfig->Type == eTTGO_T_Beam_V1_0) {
     Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
@@ -150,8 +157,9 @@ void setup() {
   if (userConfig.callsign == "NOCALL-10") {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "You have to change your settings in 'data/is-cfg.json' and upload it via 'Upload File System image'!");
     LoRaSystem.getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
-    while (true)
-      ;
+    while (true) {
+      esp_task_wdt_reset();
+    }
   }
   if ((!userConfig.aprs_is.active) && !(userConfig.digi.active)) {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "No mode selected (iGate or Digi)! You have to activate one of iGate or Digi.");
