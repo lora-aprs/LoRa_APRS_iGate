@@ -21,6 +21,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
       Wire.begin(boardconf->OledSda, boardconf->OledScl);
       powerManagement.begin(Wire);
       powerManagement.activateOLED();
+      Wire.end();
     } else if (boardconf->needCheckPowerChip) {
       continue;
     }
@@ -38,6 +39,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
       Wire.begin(boardconf->OledSda, boardconf->OledScl);
       powerManagement.begin(Wire);
       powerManagement.activateLoRa();
+      Wire.end();
     }
     if (checkModemConfig(boardconf)) {
       logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "found a board config: %s", boardconf->Name.c_str());
@@ -75,8 +77,10 @@ bool BoardFinder::checkOledConfig(BoardConfig const *boardConfig, logging::Logge
   }
   Wire.beginTransmission(boardConfig->OledAddr);
   if (!Wire.endTransmission()) {
+    Wire.end();
     return true;
   }
+  Wire.end();
   return false;
 }
 
@@ -98,9 +102,8 @@ bool BoardFinder::checkModemConfig(BoardConfig const *boardConfig) {
   SPI.transfer(0x42);
   uint8_t response = SPI.transfer(0x00);
   SPI.endTransaction();
-
   digitalWrite(boardConfig->LoraCS, HIGH);
-
+  SPI.end();
   if (response == 0x12) {
     return true;
   }
@@ -119,6 +122,7 @@ bool BoardFinder::checkPowerConfig(BoardConfig const *boardConfig, logging::Logg
   Wire.requestFrom(0x34, 1);
   int response = Wire.read();
   Wire.endTransmission();
+  Wire.end();
 
   logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "wire response: %d", response);
   if (response == 0x03) {
