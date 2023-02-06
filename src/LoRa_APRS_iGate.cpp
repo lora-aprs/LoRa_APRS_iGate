@@ -173,7 +173,6 @@ void setup() {
     pinMode(userConfig.display.overwritePin, INPUT_PULLUP);
   }
 
-  delay(5000);
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "setup done...");
 }
 
