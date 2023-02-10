@@ -61,7 +61,8 @@ void setup() {
   boardConfigs.push_back(&TTGO_LORA32_V2);
   boardConfigs.push_back(&TTGO_T_Beam_V0_7);
   boardConfigs.push_back(&TTGO_T_Beam_V1_0);
-  boardConfigs.push_back(&ETH_BOARD);
+  boardConfigs.push_back(&LILYGO_POE_ETH_BOARD);
+  boardConfigs.push_back(&WT32_ETH_BOARD);
   boardConfigs.push_back(&TRACKERD);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
   boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
@@ -99,7 +100,7 @@ void setup() {
   }
 
   if (boardConfig->Type == eTTGO_T_Beam_V1_0) {
-    Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
+    Wire.begin(boardConfig->Oled.Sda, boardConfig->Oled.Scl);
     PowerManagement powerManagement;
     if (!powerManagement.begin(Wire)) {
       LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "AXP192 init done!");
@@ -128,7 +129,7 @@ void setup() {
     LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     tcpip = true;
   }
-  if (boardConfig->Type == eETH_BOARD) {
+  if (boardConfig->Ethernet.isEthernetBoard()) {
     LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
     tcpip = true;
   }

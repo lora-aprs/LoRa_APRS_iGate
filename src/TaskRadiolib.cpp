@@ -23,8 +23,8 @@ void RadiolibTask::setFlag(void) {
 }
 
 bool RadiolibTask::setup(System &system) {
-  SPI.begin(system.getBoardConfig()->LoraSck, system.getBoardConfig()->LoraMiso, system.getBoardConfig()->LoraMosi, system.getBoardConfig()->LoraCS);
-  module = new Module(system.getBoardConfig()->LoraCS, system.getBoardConfig()->LoraIRQ, system.getBoardConfig()->LoraReset);
+  SPI.begin(system.getBoardConfig()->Lora.Sck, system.getBoardConfig()->Lora.Miso, system.getBoardConfig()->Lora.Mosi, system.getBoardConfig()->Lora.CS);
+  module = new Module(system.getBoardConfig()->Lora.CS, system.getBoardConfig()->Lora.IRQ, system.getBoardConfig()->Lora.Reset);
   radio  = new SX1278(module);
 
   config = system.getUserConfig()->lora;
