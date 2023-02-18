@@ -84,22 +84,10 @@ jobs:
     env:
       PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
     steps:
-      - name: update system
-        run: sudo apt-get update && sudo apt-get upgrade
       - name: Checkout code
         uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - name: PlatformIO Test
+        uses: karniv00l/platformio-remote-test-action@v1
         with:
-          path: |
-            ~/.cache/pip
-            ~/.platformio/.cache
-          key: ${{ runner.os }}-pio
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-      - name: Install PlatformIO Core
-        run: pip install --upgrade platformio
-      - name: list devices connected
-        run: pio remote device list 
-      - name: run tests
-        run: pio remote test -v -r
+          force-remote: true
+          verbose: true
