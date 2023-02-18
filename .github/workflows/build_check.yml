@@ -1,6 +1,7 @@
 name: Integration Tests
 
 on:
+  merge_group:
   push:
     branches:
       - '*'
