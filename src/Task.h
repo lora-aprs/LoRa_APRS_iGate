@@ -1,8 +1,7 @@
 #ifndef TASK_H_
 #define TASK_H_
 
-enum TaskNames
-{
+enum TaskNames {
   TaskAprsIs = 1,
   TaskEth,
   TaskFtp,

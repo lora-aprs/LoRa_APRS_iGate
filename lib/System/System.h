@@ -19,15 +19,15 @@ public:
 
   BoardConfig const *const   getBoardConfig() const;
   Configuration const *const getUserConfig() const;
-  TaskManager &              getTaskManager();
-  Display &                  getDisplay();
+  TaskManager               &getTaskManager();
+  Display                   &getDisplay();
   bool                       isWifiOrEthConnected() const;
   void                       connectedViaEth(bool status);
   void                       connectedViaWifi(bool status);
-  logging::Logger &          getLogger();
+  logging::Logger           &getLogger();
 
 private:
-  BoardConfig const *  _boardConfig;
+  BoardConfig const   *_boardConfig;
   Configuration const *_userConfig;
   TaskManager          _taskManager;
   Display              _display;

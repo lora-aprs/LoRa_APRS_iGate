@@ -13,8 +13,7 @@
 
 class System;
 
-enum TaskDisplayState
-{
+enum TaskDisplayState {
   Error,
   Warning,
   Okay,

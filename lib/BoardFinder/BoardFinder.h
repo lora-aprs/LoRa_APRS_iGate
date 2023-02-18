@@ -5,46 +5,94 @@
 #include <memory>
 
 #include <Arduino.h>
+#include <ETH.h>
 #include <SPI.h>
 #include <Wire.h>
 
 #include <logger.h>
 
-enum BoardType
-{
+enum BoardType {
   eHELTEC_WIFI_LORA_32_V1,
   eHELTEC_WIFI_LORA_32_V2,
   eTTGO_LORA32_V1,
   eTTGO_LORA32_V2,
   eTTGO_T_Beam_V0_7,
   eTTGO_T_Beam_V1_0,
-  eETH_BOARD,
+  eLILYGO_POE_ETH_BOARD,
+  eWT32_ETH_BOARD,
   eTRACKERD,
   eGUALTHERIUS_LORAHAM_v100,
   eGUALTHERIUS_LORAHAM_v106
 };
 
+class OledPins {
+public:
+  explicit OledPins(int8_t sda, int8_t scl, int8_t reset = -1, int8_t addr = 0x3C);
+
+  int8_t Sda;
+  int8_t Scl;
+  int8_t Reset;
+  int8_t Addr;
+};
+
+class LoraPins {
+public:
+  explicit LoraPins(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t reset, int8_t irq);
+
+  int8_t Sck;
+  int8_t Miso;
+  int8_t Mosi;
+  int8_t CS;
+  int8_t Reset;
+  int8_t IRQ;
+};
+
+class GpsPins {
+public:
+  explicit GpsPins(int8_t rx = -1, int8_t tx = -1);
+
+  int8_t Rx;
+  int8_t Tx;
+};
+
+class EthernetPins {
+public:
+  explicit EthernetPins(int8_t mdc = -1, int8_t mdio = -1, int8_t nreset = -1, int8_t addr = 0, int8_t power = -1, eth_clock_mode_t clk = ETH_CLOCK_GPIO17_OUT, eth_phy_type_t type = ETH_PHY_LAN8720);
+
+  int8_t MDC;
+  int8_t MDIO;
+  int8_t nReset;
+  int8_t Addr;
+  int8_t Power;
+
+  eth_clock_mode_t CLK;
+  eth_phy_type_t   Type;
+
+  bool isEthernetBoard() const {
+    return MDC != -1;
+  }
+};
+
+class ButtonPins {
+public:
+  explicit ButtonPins(int8_t pin = -1);
+
+  int8_t Pin;
+};
+
 class BoardConfig {
 public:
-  explicit BoardConfig(String name, BoardType type, uint8_t oledsda, uint8_t oledscl, uint8_t oledaddr, uint8_t oledreset, uint8_t lorasck, uint8_t loramiso, uint8_t loramosi, uint8_t loracs, uint8_t lorareset, uint8_t lorairq, uint8_t gpsrx, uint8_t gpstx, uint8_t button, bool needcheckpowerchip = false, bool powercheckstatus = false);
+  explicit BoardConfig(String name, BoardType type, OledPins oled, LoraPins lora, GpsPins gps = GpsPins(), EthernetPins ethernet = EthernetPins(), ButtonPins button = ButtonPins(), bool needcheckpowerchip = false, bool powercheckstatus = false);
 
   String    Name;
   BoardType Type;
 
-  uint8_t OledSda;
-  uint8_t OledScl;
-  uint8_t OledAddr;
-  uint8_t OledReset;
+  OledPins     Oled;
+  LoraPins     Lora;
+  GpsPins      Gps;
+  EthernetPins Ethernet;
 
-  uint8_t LoraSck;
-  uint8_t LoraMiso;
-  uint8_t LoraMosi;
-  uint8_t LoraCS;
-  uint8_t LoraReset;
-  uint8_t LoraIRQ;
-  uint8_t GpsRx;
-  uint8_t GpsTx;
-  uint8_t Button;
+  ButtonPins Button;
 
   bool needCheckPowerChip;
   bool powerCheckStatus;
@@ -70,7 +118,8 @@ extern BoardConfig TTGO_LORA32_V1;
 extern BoardConfig TTGO_LORA32_V2;
 extern BoardConfig TTGO_T_Beam_V0_7;
 extern BoardConfig TTGO_T_Beam_V1_0;
-extern BoardConfig ETH_BOARD;
+extern BoardConfig LILYGO_POE_ETH_BOARD;
+extern BoardConfig WT32_ETH_BOARD;
 extern BoardConfig TRACKERD;
 extern BoardConfig HELTEC_WIFI_LORA_32_V1;
 extern BoardConfig HELTEC_WIFI_LORA_32_V2;

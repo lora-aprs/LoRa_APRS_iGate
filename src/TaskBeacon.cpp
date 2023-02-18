@@ -22,8 +22,8 @@ void BeaconTask::pushButton() {
 }
 
 bool BeaconTask::setup(System &system) {
-  if (_instances++ == 0 && system.getBoardConfig()->Button > 0) {
-    _userButton = OneButton(system.getBoardConfig()->Button, true, true);
+  if (_instances++ == 0 && system.getBoardConfig()->Button.Pin != -1) {
+    _userButton = OneButton(system.getBoardConfig()->Button.Pin, true, true);
     _userButton.attachClick(pushButton);
     _send_update = false;
   }
@@ -31,8 +31,8 @@ bool BeaconTask::setup(System &system) {
   _useGps = system.getUserConfig()->beacon.use_gps;
 
   if (_useGps) {
-    if (system.getBoardConfig()->GpsRx != 0) {
-      _ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->GpsTx, system.getBoardConfig()->GpsRx);
+    if (system.getBoardConfig()->Gps.Rx != -1) {
+      _ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->Gps.Tx, system.getBoardConfig()->Gps.Rx);
     } else {
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "NO GPS found.");
       _useGps = false;

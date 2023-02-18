@@ -9,8 +9,7 @@ class APRS_IS {
 public:
   void setup(const String &user, const String &passcode, const String &tool_name, const String &version);
 
-  enum ConnectionStatus
-  {
+  enum ConnectionStatus {
     SUCCESS,
     ERROR_CONNECTION,
     ERROR_PASSCODE,

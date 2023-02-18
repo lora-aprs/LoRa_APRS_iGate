@@ -78,34 +78,18 @@ EthTask::~EthTask() {
 bool EthTask::setup(System &system) {
   WiFi.onEvent(WiFiEvent);
 
-  constexpr uint8_t          ETH_NRST      = 5;
-  constexpr uint8_t          ETH_ADDR      = 0;
-  constexpr int              ETH_POWER_PIN = -1;
-  constexpr int              ETH_MDC_PIN   = 23;
-  constexpr int              ETH_MDIO_PIN  = 18;
-  constexpr eth_phy_type_t   ETH_TYPE      = ETH_PHY_LAN8720;
-  constexpr eth_clock_mode_t ETH_CLK       = ETH_CLOCK_GPIO17_OUT; // TTGO PoE V1.0
-  // constexpr eth_clock_mode_t ETH_CLK       = ETH_CLOCK_GPIO0_OUT;  // TTGO PoE V1.2
+  if (system.getBoardConfig()->Ethernet.nReset != -1) {
+    pinMode(system.getBoardConfig()->Ethernet.nReset, OUTPUT);
+    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 0);
+    delay(200);
+    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 1);
+    delay(200);
+    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 0);
+    delay(200);
+    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 1);
+  }
 
-  // config for WT32-ETH01 - comment out upper values, proper board support will come later
-  // constexpr uint8_t          ETH_NRST      = 5;
-  // constexpr uint8_t          ETH_ADDR      = 1;
-  // constexpr int              ETH_POWER_PIN = 16;
-  // constexpr int              ETH_MDC_PIN   = 23;
-  // constexpr int              ETH_MDIO_PIN  = 18;
-  // constexpr eth_phy_type_t   ETH_TYPE      = ETH_PHY_LAN8720;
-  // constexpr eth_clock_mode_t ETH_CLK       = ETH_CLOCK_GPIO0_IN;
-
-  pinMode(ETH_NRST, OUTPUT);
-  digitalWrite(ETH_NRST, 0);
-  delay(200);
-  digitalWrite(ETH_NRST, 1);
-  delay(200);
-  digitalWrite(ETH_NRST, 0);
-  delay(200);
-  digitalWrite(ETH_NRST, 1);
-
-  ETH.begin(ETH_ADDR, ETH_POWER_PIN, ETH_MDC_PIN, ETH_MDIO_PIN, ETH_TYPE, ETH_CLK);
+  ETH.begin(system.getBoardConfig()->Ethernet.Addr, system.getBoardConfig()->Ethernet.Power, system.getBoardConfig()->Ethernet.MDC, system.getBoardConfig()->Ethernet.MDIO, system.getBoardConfig()->Ethernet.Type, system.getBoardConfig()->Ethernet.CLK);
 
   if (!system.getUserConfig()->network.DHCP) {
     ETH.config(system.getUserConfig()->network.static_.ip, system.getUserConfig()->network.static_.gateway, system.getUserConfig()->network.static_.subnet, system.getUserConfig()->network.static_.dns1, system.getUserConfig()->network.static_.dns2);

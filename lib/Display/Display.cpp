@@ -9,16 +9,16 @@ Display::~Display() {
 }
 
 void Display::setup(BoardConfig const *const boardConfig) {
-  if (boardConfig->OledReset != 0) {
-    pinMode(boardConfig->OledReset, OUTPUT);
-    digitalWrite(boardConfig->OledReset, HIGH);
+  if (boardConfig->Oled.Reset != -1) {
+    pinMode(boardConfig->Oled.Reset, OUTPUT);
+    digitalWrite(boardConfig->Oled.Reset, HIGH);
     delay(1);
-    digitalWrite(boardConfig->OledReset, LOW);
+    digitalWrite(boardConfig->Oled.Reset, LOW);
     delay(10);
-    digitalWrite(boardConfig->OledReset, HIGH);
+    digitalWrite(boardConfig->Oled.Reset, HIGH);
   }
-  Wire.begin(boardConfig->OledSda, boardConfig->OledScl);
-  _disp = new SSD1306(&Wire, boardConfig->OledAddr);
+  Wire.begin(boardConfig->Oled.Sda, boardConfig->Oled.Scl);
+  _disp = new SSD1306(&Wire, boardConfig->Oled.Addr);
 
   Bitmap bitmap(_disp->getWidth(), _disp->getHeight());
   _disp->display(&bitmap);
@@ -42,8 +42,7 @@ void Display::setDisplaySaveTimeout(uint32_t timeout) {
   _displaySaveModeTimer.setTimeout(timeout * 1000);
 }
 
-void Display::activateDistplay()
-{
+void Display::activateDistplay() {
   _disp->displayOn();
 }
 
