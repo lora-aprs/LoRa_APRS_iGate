@@ -11,20 +11,6 @@
 
 #include <logger.h>
 
-enum BoardType {
-  eHELTEC_WIFI_LORA_32_V1,
-  eHELTEC_WIFI_LORA_32_V2,
-  eTTGO_LORA32_V1,
-  eTTGO_LORA32_V2,
-  eTTGO_T_Beam_V0_7,
-  eTTGO_T_Beam_V1_0,
-  eLILYGO_POE_ETH_BOARD,
-  eWT32_ETH_BOARD,
-  eTRACKERD,
-  eGUALTHERIUS_LORAHAM_v100,
-  eGUALTHERIUS_LORAHAM_v106
-};
-
 class OledPins {
 public:
   explicit OledPins(int8_t sda, int8_t scl, int8_t reset = -1, int8_t addr = 0x3C);
@@ -80,6 +66,20 @@ public:
   int8_t Pin;
 };
 
+enum BoardType {
+  eHELTEC_WIFI_LORA_32_V1,
+  eHELTEC_WIFI_LORA_32_V2,
+  eTTGO_LORA32_V1,
+  eTTGO_LORA32_V2,
+  eTTGO_T_Beam_V0_7,
+  eTTGO_T_Beam_V1_0,
+  eLILYGO_POE_ETH_BOARD,
+  eWT32_ETH_BOARD,
+  eTRACKERD,
+  eGUALTHERIUS_LORAHAM_v100,
+  eGUALTHERIUS_LORAHAM_v106
+};
+
 class BoardConfig {
 public:
   explicit BoardConfig(String name, BoardType type, OledPins oled, LoraPins lora, GpsPins gps = GpsPins(), EthernetPins ethernet = EthernetPins(), ButtonPins button = ButtonPins(), bool needcheckpowerchip = false, bool powercheckstatus = false);
@@ -106,7 +106,9 @@ public:
 
   BoardConfig const *getBoardConfig(String name);
 
+#ifndef UNIT_TEST
 private:
+#endif
   const std::list<BoardConfig const *> &_boardConfigs;
 
   bool checkOledConfig(BoardConfig const *boardConfig, logging::Logger &logger);

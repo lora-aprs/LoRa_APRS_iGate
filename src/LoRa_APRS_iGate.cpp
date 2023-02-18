@@ -1,3 +1,4 @@
+#ifndef UNIT_TEST
 #include <map>
 
 #include <APRS-IS.h>
@@ -188,3 +189,5 @@ void loop() {
     syslogSet = true;
   }
 }
+
+#endif
