@@ -16,4 +16,4 @@ jobs:
       - name: run PlatformIO Dependabot
         uses: peterus/platformio_dependabot@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.DEPENDABOT_PAT }}
