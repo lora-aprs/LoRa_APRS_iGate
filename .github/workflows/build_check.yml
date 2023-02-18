@@ -85,6 +85,8 @@ jobs:
       PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
     steps:
       - run: sudo rm -rf /usr/local/lib/python*/dist-packages/OpenSSL
+      - name: Try and fix cryptography
+        run: sudo apt install -y libffi-dev python3-dev libssl-dev
       - name: Checkout code
         uses: actions/checkout@v3
       - name: PlatformIO Test
