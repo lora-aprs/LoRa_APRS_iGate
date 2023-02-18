@@ -2,13 +2,8 @@ name: Integration Tests
 
 on:
   merge_group:
-  push:
-    branches:
-      - '*'
-      - '!master'
   pull_request:
-    branches:
-      - master
+    types: [opened, reopened]
 
 jobs:
   build:
