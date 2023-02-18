@@ -35,6 +35,6 @@ void PowerManagement::activateOLED() {
 }
 
 // cppcheck-suppress unusedFunction
-void PowerManagement::decativateOLED() {
+void PowerManagement::deactivateOLED() {
   axp.setPowerOutPut(AXP192_DCDC1, AXP202_OFF);
 }
