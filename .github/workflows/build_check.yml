@@ -84,7 +84,7 @@ jobs:
     env:
       PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
     steps:
-        run: sudo rm -rf /usr/local/lib/python*/dist-packages/OpenSSL
+      - run: sudo rm -rf /usr/local/lib/python*/dist-packages/OpenSSL
       - name: Checkout code
         uses: actions/checkout@v3
       - name: PlatformIO Test
