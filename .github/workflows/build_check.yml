@@ -108,7 +108,7 @@ jobs:
 
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: list devices
+      - name: List Devices
         run: pio remote device list 
       - name: PlatformIO Test
         run: pio remote test -v -r --upload-port /dev/ttyUSB4 --test-port /dev/ttyUSB4
