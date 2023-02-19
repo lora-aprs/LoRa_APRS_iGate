@@ -31,7 +31,7 @@ jobs:
       - name: Build PlatformIO Project
         run: pio run
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: firmware
           path: .pio/build/lora_board/firmware.bin
@@ -73,7 +73,7 @@ jobs:
       - name: Run cppcheck and create html
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
       - name: Upload report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: Cppcheck Report
           path: output
@@ -88,14 +88,12 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          key: pip-cache
       - name: Cache PlatformIO
         uses: actions/cache@v3
         with:
           path: ~/.platformio
-          key: ${{ runner.os }}-${{ hashFiles('**/lockfiles') }}
+          key: pio-cache
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
