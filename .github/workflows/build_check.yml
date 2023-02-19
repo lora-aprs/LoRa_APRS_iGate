@@ -93,3 +93,5 @@ jobs:
         with:
           force-remote: true
           verbose: true
+          upload-port: "/dev/ttyUSB4"
+          test-port: "/dev/ttyUSB4"
