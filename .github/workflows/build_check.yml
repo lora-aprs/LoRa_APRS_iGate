@@ -52,7 +52,7 @@ jobs:
           #- 'lib/TimeLib'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run clang-format style check for C/C++ programs.
         uses: jidicula/clang-format-action@v4.10.2
         with:
@@ -66,7 +66,7 @@ jobs:
       CPPCHECK_ARGS: --enable=all --std=c++14 --inline-suppr -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
     steps:
       - name: checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - run: docker pull facthunder/cppcheck:latest
       - name: Run cppcheck and print result
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"

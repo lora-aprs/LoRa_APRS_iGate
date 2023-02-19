@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
       - name: Set up Python
@@ -23,7 +23,7 @@ jobs:
     name: Create new release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - run: sudo apt-get install python3-setuptools python3-wheel
       - run: pip3 install platformio
       - run: echo "$HOME/.local/bin" >> $GITHUB_PATH
