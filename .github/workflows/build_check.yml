@@ -80,11 +80,10 @@ jobs:
 
   remote_testing:
     name: Remote Testing
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       PLATFORMIO_AUTH_TOKEN: ${{ secrets.PLATFORMIO_AUTH_TOKEN }}
     steps:
-      - run: sudo rm -rf /usr/local/lib/python*/dist-packages/OpenSSL
       - name: Try and fix cryptography
         run: sudo apt install -y libffi-dev python3-dev libssl-dev
       - name: Checkout code
