@@ -131,9 +131,9 @@ public:
     String password;
     String topic;
     bool   will_active;
-		String will_topic;
-		String will_message;
-		String birth_message;
+    String will_topic;
+    String will_message;
+    String birth_message;
   };
 
   class Syslog {

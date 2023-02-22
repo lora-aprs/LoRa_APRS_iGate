@@ -75,9 +75,9 @@
 		"password": "",
 		"topic": "LoraAPRS/Data",
 		"will_active": false,
-        "will_topic": "LoraAPRS/State",
-        "will_message": "offline",
-        "birth_message": "online"
+		"will_topic": "LoraAPRS/State",
+		"will_message": "offline",
+		"birth_message": "online"
 	},
 	"syslog": {
 		"active": false,
