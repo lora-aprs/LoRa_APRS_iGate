@@ -3,8 +3,8 @@ name: PlatformIO Dependabot
 on:
   workflow_dispatch:
   schedule:
-    # Runs every Saturday at 00:00
-    - cron: '0 0 * * 6'
+    # Runs every day at 00:00
+    - cron: '0 0 * * *'
 
 jobs:
   dependabot:
