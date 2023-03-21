@@ -121,7 +121,7 @@ public:
 
   class MQTT {
   public:
-    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data"), will_active(false), will_topic("LoraAPRS/State"), will_message("offline"),birth_message("online") {
+    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data"), will_active(false), will_topic("LoraAPRS/State"), will_message("offline"), birth_message("online") {
     }
 
     bool   active;
