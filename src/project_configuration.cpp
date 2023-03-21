@@ -97,6 +97,13 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.mqtt.password = data["mqtt"]["password"].as<String>();
   if (data["mqtt"].containsKey("topic"))
     conf.mqtt.topic = data["mqtt"]["topic"].as<String>();
+  conf.mqtt.will_active = data["mqtt"]["will_active"] | false;
+  if (data["mqtt"].containsKey("will_topic"))
+    conf.mqtt.will_topic = data["mqtt"]["will_topic"].as<String>();
+  if (data["mqtt"].containsKey("will_message"))
+    conf.mqtt.will_message = data["mqtt"]["will_message"].as<String>();
+  if (data["mqtt"].containsKey("birth_message"))
+    conf.mqtt.birth_message = data["mqtt"]["birth_message"].as<String>();
 
   conf.syslog.active = data["syslog"]["active"] | true;
   if (data["syslog"].containsKey("server"))
@@ -161,16 +168,19 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
     v["name"]     = u.name;
     v["password"] = u.password;
   }
-  data["mqtt"]["active"]   = conf.mqtt.active;
-  data["mqtt"]["server"]   = conf.mqtt.server;
-  data["mqtt"]["port"]     = conf.mqtt.port;
-  data["mqtt"]["name"]     = conf.mqtt.name;
-  data["mqtt"]["password"] = conf.mqtt.password;
-  data["mqtt"]["topic"]    = conf.mqtt.topic;
-  data["syslog"]["active"] = conf.syslog.active;
-  data["syslog"]["server"] = conf.syslog.server;
-  data["syslog"]["port"]   = conf.syslog.port;
-  data["ntp_server"]       = conf.ntpServer;
+  data["mqtt"]["active"]        = conf.mqtt.active;
+  data["mqtt"]["server"]        = conf.mqtt.server;
+  data["mqtt"]["port"]          = conf.mqtt.port;
+  data["mqtt"]["name"]          = conf.mqtt.name;
+  data["mqtt"]["password"]      = conf.mqtt.password;
+  data["mqtt"]["topic"]         = conf.mqtt.topic;
+  data["mqtt"]["will_active"]   = conf.mqtt.will_active;
+  data["mqtt"]["will_topic"]    = conf.mqtt.will_topic;
+  data["mqtt"]["birth_message"] = conf.mqtt.birth_message;
+  data["syslog"]["active"]      = conf.syslog.active;
+  data["syslog"]["server"]      = conf.syslog.server;
+  data["syslog"]["port"]        = conf.syslog.port;
+  data["ntp_server"]            = conf.ntpServer;
 
   data["board"] = conf.board;
 }
