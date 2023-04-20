@@ -44,8 +44,13 @@ bool AprsIsTask::loop(System &system) {
 }
 
 bool AprsIsTask::connect(System &system) {
-  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port);
-  APRS_IS::ConnectionStatus status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d, with filter: '%s'", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port, system.getUserConfig()->aprs_is.filter);
+  APRS_IS::ConnectionStatus status = APRS_IS::ConnectionStatus::ERROR_CONNECTION;
+  if (system.getUserConfig()->aprs_is.filter.isEmpty()) {
+    status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
+  } else {
+    status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port, system.getUserConfig()->aprs_is.filter);
+  }
   if (status == APRS_IS::ERROR_CONNECTION) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Something went wrong on connecting! Is the server reachable?");
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "Connection failed.");

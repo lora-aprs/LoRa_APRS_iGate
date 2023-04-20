@@ -67,6 +67,7 @@ public:
     String passcode;
     String server;
     int    port;
+    String filter;
   };
 
   class Digi {
