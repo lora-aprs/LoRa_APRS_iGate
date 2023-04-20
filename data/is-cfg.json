@@ -36,7 +36,8 @@
 		"active": true,
 		"passcode": "",
 		"server": "euro.aprs2.net",
-		"port": 14580
+		"port": 14580,
+		"filter": ""
 	},
 	"digi": {
 		"active": false,
