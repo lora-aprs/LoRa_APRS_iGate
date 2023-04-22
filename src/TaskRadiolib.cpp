@@ -164,7 +164,6 @@ bool RadiolibTask::loop(System &system) {
     } else {
       if (!txEnable) {
         // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX is not enabled", timeString().c_str());
-        
       } else {
         if (transmitFlag) {
           // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX signal detected. Waiting TX", timeString().c_str());
