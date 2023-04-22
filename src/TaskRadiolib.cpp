@@ -164,7 +164,7 @@ bool RadiolibTask::loop(System &system) {
     } else {
       if (!txEnable) {
         // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX is not enabled", timeString().c_str());
-        _toModem.getElement(); // empty list, otherwise memory will get full.
+        
       } else {
         if (transmitFlag) {
           // system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX signal detected. Waiting TX", timeString().c_str());
@@ -183,6 +183,8 @@ bool RadiolibTask::loop(System &system) {
                 return true;
               }
             }
+          } else {
+            _toModem.getElement(); // empty list, otherwise memory will get full.
           }
         }
       }
