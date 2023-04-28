@@ -111,28 +111,19 @@ jobs:
   hw_testing:
     name: Hardware Testing
     runs-on: self-hosted
-    needs: build
-    strategy:
-      matrix:
-        include:
-          - board: 'board0'
-            port: '/dev/ttyUSB0'
-          - board: 'board1'
-            port: '/dev/ttyUSB1'
-          - board: 'board2'
-            port: '/dev/ttyUSB2'
     steps:
-      - name: Install PlatformIO
-        shell: bash
-        run: |
-          python -m pip install --upgrade pip
-          pip install --upgrade platformio
+      #- name: Install PlatformIO
+      #  shell: bash
+      #  run: |
+      #    python -m pip install --upgrade pip
+      #    pip install --upgrade platformio
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Download a single artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: firmware
-          path: .pio/build/lora_board/
       - name: PlatformIO Test
-        run: pio test -vv --without-building --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
+        run: |
+          for port in "${PORTS[@]}"
+          do
+            pio test -vv --upload-port $port --test-port $port
+          done
+        env:
+          PORTS: ("/dev/ttyUSB0" "/dev/ttyUSB1" "/dev/ttyUSB2")
