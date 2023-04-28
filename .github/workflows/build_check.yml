@@ -129,9 +129,7 @@ jobs:
       - name: Setup Cache
         uses: actions/cache@v3
         with:
-          path: |
-            .cache/pip
-            .platformio
+          path: .pio
           key: hw-cache
       - name: Install PlatformIO
         shell: bash
