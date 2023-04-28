@@ -133,6 +133,6 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: firmware
-          path: .pio/build/lora_board/firmware.bin
+          path: .pio/build/lora_board/
       - name: PlatformIO Test
         run: pio test -vv --without-building --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
