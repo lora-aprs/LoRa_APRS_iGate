@@ -34,6 +34,11 @@ jobs:
         with:
           name: firmware
           path: .pio/build/lora_board/firmware.bin
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build_folder
+          path: .pio
 
   formatting-check:
     name: Formatting Check
