@@ -126,11 +126,6 @@ jobs:
           - board: 'board2'
             port: '/dev/ttyUSB2'
     steps:
-      - name: Setup Cache
-        uses: actions/cache@v3
-        with:
-          path: .pio
-          key: hw-cache
       - name: Install PlatformIO
         shell: bash
         run: |
@@ -138,5 +133,9 @@ jobs:
           pip install --upgrade platformio
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build_folder
       - name: PlatformIO Test
-        run: pio test -vv --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
+        run: pio test -vv --without-building --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
