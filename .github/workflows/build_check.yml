@@ -136,4 +136,4 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: PlatformIO Test
-        run: pio test --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
+        run: pio test -v --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
