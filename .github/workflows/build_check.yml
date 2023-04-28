@@ -121,9 +121,9 @@ jobs:
         uses: actions/checkout@v3
       - name: PlatformIO Test
         run: |
+          PORTS=("/dev/ttyUSB0" "/dev/ttyUSB1" "/dev/ttyUSB2")
           for port in "${PORTS[@]}"
           do
             pio test -vv --upload-port $port --test-port $port
           done
-        env:
-          PORTS: ("/dev/ttyUSB0" "/dev/ttyUSB1" "/dev/ttyUSB2")
+          
