@@ -37,7 +37,7 @@ System        LoRaSystem;
 Configuration userConfig;
 
 DisplayTask displayTask;
-// ModemTask   modemTask(fromModem, toModem);
+//  ModemTask   modemTask(fromModem, toModem);
 RadiolibTask modemTask(fromModem, toModem);
 EthTask      ethTask;
 WifiTask     wifiTask;
