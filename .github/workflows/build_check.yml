@@ -34,11 +34,6 @@ jobs:
         with:
           name: firmware
           path: .pio/build/lora_board/firmware.bin
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build_folder
-          path: .pio
 
   formatting-check:
     name: Formatting Check
@@ -137,6 +132,7 @@ jobs:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
-          name: build_folder
+          name: firmware
+          path: .pio/build/lora_board/firmware.bin
       - name: PlatformIO Test
         run: pio test -vv --without-building --upload-port ${{ matrix.port }} --test-port ${{ matrix.port }}
