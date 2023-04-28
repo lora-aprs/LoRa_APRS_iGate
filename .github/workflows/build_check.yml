@@ -116,6 +116,7 @@ jobs:
   hw_testing:
     name: Hardware Testing
     runs-on: self-hosted
+    needs: build
     strategy:
       matrix:
         include:
