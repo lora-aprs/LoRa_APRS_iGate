@@ -153,7 +153,7 @@ BoardConfig TTGO_LORA32_V2          ("TTGO_LORA32_V2",           eTTGO_LORA32_V2
 BoardConfig TTGO_T_Beam_V0_7        ("TTGO_T_Beam_V0_7",         eTTGO_T_Beam_V0_7,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26), GpsPins(15, 12), EthernetPins(),           ButtonPins(38), true);
 BoardConfig TTGO_T_Beam_V1_0        ("TTGO_T_Beam_V1_0",         eTTGO_T_Beam_V1_0,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26), GpsPins(12, 34), EthernetPins(),           ButtonPins(38), true, true);
 BoardConfig LILYGO_POE_ETH_BOARD    ("LILYGO_POE_ETH_BOARD",     eLILYGO_POE_ETH_BOARD,     OledPins(33, 32),     LoraPins(14,  2, 15, 12,  4, 36), GpsPins(),       EthernetPins(23, 18,  5, 0, -1, ETH_CLOCK_GPIO17_OUT, ETH_PHY_LAN8720));
-BoardConfig WT32_ETH_BOARD          ("WT32_ETH_BOARD",           eWT32_ETH_BOARD,           OledPins(17,  5),     LoraPins(14,  2, 15, 12,  4, 36), GpsPins(),       EthernetPins(23, 18, -1, 1, 16, ETH_CLOCK_GPIO0_IN,   ETH_PHY_LAN8720));
+BoardConfig WT32_ETH_BOARD          ("WT32_ETH_BOARD",           eWT32_ETH_BOARD,           OledPins(17,  5),     LoraPins( 4, 12, 14, 15, 33, 32), GpsPins(),       EthernetPins(23, 18, -1, 1, 16, ETH_CLOCK_GPIO0_IN,   ETH_PHY_LAN8720));
 BoardConfig TRACKERD                ("TRACKERD",                 eTRACKERD,                 OledPins( 5,  4),     LoraPins(18, 19, 23, 16, 14, 26));
 BoardConfig HELTEC_WIFI_LORA_32_V1  ("HELTEC_WIFI_LORA_32_V1",   eHELTEC_WIFI_LORA_32_V1,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26));
 BoardConfig HELTEC_WIFI_LORA_32_V2  ("HELTEC_WIFI_LORA_32_V2",   eHELTEC_WIFI_LORA_32_V2,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26));
