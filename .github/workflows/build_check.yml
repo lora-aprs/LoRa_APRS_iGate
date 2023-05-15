@@ -134,5 +134,5 @@ jobs:
         run: pio device list 
       - name: PlatformIO Test
         if: always()
-        run: flock -w 600 --verbose /locks/pio-${{ matrix.usb_port }} -c "pio test -v --upload-port /dev/${{ matrix.usb_port }} --test-port /dev/${{ matrix.usb_port }}"
+        run: flock -w 600 --verbose /locks/pio-${{ matrix.usb_port }} -c "pio test -vvv --upload-port /dev/${{ matrix.usb_port }} --test-port /dev/${{ matrix.usb_port }}"
           
