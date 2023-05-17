@@ -47,7 +47,7 @@ jobs:
           - 'lib/NTPClient'
           - 'lib/PowerManagement'
           - 'lib/System'
-          #- 'lib/TimeLib'
+          - 'lib/TimeLib'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
