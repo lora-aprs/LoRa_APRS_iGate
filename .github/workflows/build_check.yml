@@ -44,7 +44,7 @@ jobs:
           - 'lib/BoardFinder'
           - 'lib/ConfigurationManagement'
           #- 'lib/Display'
-          #- 'lib/NTPClient'
+          - 'lib/NTPClient'
           - 'lib/PowerManagement'
           - 'lib/System'
           #- 'lib/TimeLib'
