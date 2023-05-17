@@ -25,10 +25,10 @@ NTPClient::NTPClient() {
 }
 
 NTPClient::NTPClient(long timeOffset) {
-  this->_timeOffset     = timeOffset;
+  this->_timeOffset = timeOffset;
 }
 
-NTPClient::NTPClient(const char* poolServerName) {
+NTPClient::NTPClient(const char *poolServerName) {
   this->_poolServerName = poolServerName;
 }
 
@@ -37,18 +37,18 @@ NTPClient::NTPClient(IPAddress poolServerIP) {
   this->_poolServerName = NULL;
 }
 
-NTPClient::NTPClient(const char* poolServerName, long timeOffset) {
+NTPClient::NTPClient(const char *poolServerName, long timeOffset) {
   this->_timeOffset     = timeOffset;
   this->_poolServerName = poolServerName;
 }
 
-NTPClient::NTPClient(IPAddress poolServerIP, long timeOffset){
+NTPClient::NTPClient(IPAddress poolServerIP, long timeOffset) {
   this->_timeOffset     = timeOffset;
   this->_poolServerIP   = poolServerIP;
   this->_poolServerName = NULL;
 }
 
-NTPClient::NTPClient(const char* poolServerName, long timeOffset, unsigned long updateInterval) {
+NTPClient::NTPClient(const char *poolServerName, long timeOffset, unsigned long updateInterval) {
   this->_timeOffset     = timeOffset;
   this->_poolServerName = poolServerName;
   this->_updateInterval = updateInterval;
@@ -74,23 +74,24 @@ void NTPClient::begin(unsigned int port) {
 }
 
 bool NTPClient::forceUpdate() {
-  #ifdef DEBUG_NTPClient
-    Serial.println("Update from NTP Server");
-  #endif
+#ifdef DEBUG_NTPClient
+  Serial.println("Update from NTP Server");
+#endif
 
   // flush any existing packets
-  while(this->_udp.parsePacket() != 0)
+  while (this->_udp.parsePacket() != 0)
     this->_udp.flush();
 
   this->sendNTPPacket();
 
   // Wait till data is there or timeout...
   byte timeout = 0;
-  int cb = 0;
+  int  cb      = 0;
   do {
-    delay ( 10 );
+    delay(10);
     cb = this->_udp.parsePacket();
-    if (timeout > 100) return false; // timeout after 1000 ms
+    if (timeout > 100)
+      return false; // timeout after 1000 ms
     timeout++;
   } while (cb == 0);
 
@@ -99,36 +100,37 @@ bool NTPClient::forceUpdate() {
   this->_udp.read(this->_packetBuffer, NTP_PACKET_SIZE);
 
   unsigned long highWord = word(this->_packetBuffer[40], this->_packetBuffer[41]);
-  unsigned long lowWord = word(this->_packetBuffer[42], this->_packetBuffer[43]);
+  unsigned long lowWord  = word(this->_packetBuffer[42], this->_packetBuffer[43]);
   // combine the four bytes (two words) into a long integer
   // this is NTP time (seconds since Jan 1 1900):
   unsigned long secsSince1900 = highWord << 16 | lowWord;
 
   this->_currentEpoc = secsSince1900 - SEVENZYYEARS;
 
-  return true;  // return true after successful update
+  return true; // return true after successful update
 }
 
 bool NTPClient::update() {
-  if ((millis() - this->_lastUpdate >= this->_updateInterval)     // Update after _updateInterval
-    || this->_lastUpdate == 0) {                                // Update if there was no update yet.
-    if (!this->_udpSetup || this->_port != NTP_DEFAULT_LOCAL_PORT) this->begin(this->_port); // setup the UDP client if needed
+  if ((millis() - this->_lastUpdate >= this->_updateInterval) // Update after _updateInterval
+      || this->_lastUpdate == 0) {                            // Update if there was no update yet.
+    if (!this->_udpSetup || this->_port != NTP_DEFAULT_LOCAL_PORT)
+      this->begin(this->_port); // setup the UDP client if needed
     return this->forceUpdate();
   }
-  return false;   // return false if update does not occur
+  return false; // return false if update does not occur
 }
 
 unsigned long NTPClient::getEpochTime() const {
-  return this->_timeOffset + // User offset
-         this->_currentEpoc + // Epoc returned by the NTP server
+  return this->_timeOffset +                      // User offset
+         this->_currentEpoc +                     // Epoc returned by the NTP server
          ((millis() - this->_lastUpdate) / 1000); // Time since last update
 }
 
 int NTPClient::getDay() const {
-  return (((this->getEpochTime()  / 86400L) + 4 ) % 7); //0 is Sunday
+  return (((this->getEpochTime() / 86400L) + 4) % 7); // 0 is Sunday
 }
 int NTPClient::getHours() const {
-  return ((this->getEpochTime()  % 86400L) / 3600);
+  return ((this->getEpochTime() % 86400L) / 3600);
 }
 int NTPClient::getMinutes() const {
   return ((this->getEpochTime() % 3600) / 60);
@@ -138,15 +140,15 @@ int NTPClient::getSeconds() const {
 }
 
 String NTPClient::getFormattedTime() const {
-  unsigned long rawTime = this->getEpochTime();
-  unsigned long hours = (rawTime % 86400L) / 3600;
-  String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
+  unsigned long rawTime  = this->getEpochTime();
+  unsigned long hours    = (rawTime % 86400L) / 3600;
+  String        hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
 
-  unsigned long minutes = (rawTime % 3600) / 60;
-  String minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
+  unsigned long minutes   = (rawTime % 3600) / 60;
+  String        minuteStr = minutes < 10 ? "0" + String(minutes) : String(minutes);
 
-  unsigned long seconds = rawTime % 60;
-  String secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
+  unsigned long seconds   = rawTime % 60;
+  String        secondStr = seconds < 10 ? "0" + String(seconds) : String(seconds);
 
   return hoursStr + ":" + minuteStr + ":" + secondStr;
 }
@@ -158,15 +160,15 @@ void NTPClient::end() {
 }
 
 void NTPClient::setTimeOffset(int timeOffset) {
-  this->_timeOffset     = timeOffset;
+  this->_timeOffset = timeOffset;
 }
 
 void NTPClient::setUpdateInterval(unsigned long updateInterval) {
   this->_updateInterval = updateInterval;
 }
 
-void NTPClient::setPoolServerName(const char* poolServerName) {
-    this->_poolServerName = poolServerName;
+void NTPClient::setPoolServerName(const char *poolServerName) {
+  this->_poolServerName = poolServerName;
 }
 
 void NTPClient::sendNTPPacket() {
@@ -175,19 +177,19 @@ void NTPClient::sendNTPPacket() {
   // Initialize values needed to form NTP request
   // (see URL above for details on the packets)
 
-  this->_packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-  this->_packetBuffer[1] = 0;     // Stratum, or type of clock
-  this->_packetBuffer[2] = 6;     // Polling Interval
-  this->_packetBuffer[3] = 0xEC;  // Peer Clock Precision
+  this->_packetBuffer[0] = 0b11100011; // LI, Version, Mode
+  this->_packetBuffer[1] = 0;          // Stratum, or type of clock
+  this->_packetBuffer[2] = 6;          // Polling Interval
+  this->_packetBuffer[3] = 0xEC;       // Peer Clock Precision
   // 8 bytes of zero for Root Delay & Root Dispersion
-  this->_packetBuffer[12]  = 49;
-  this->_packetBuffer[13]  = 0x4E;
-  this->_packetBuffer[14]  = 49;
-  this->_packetBuffer[15]  = 52;
+  this->_packetBuffer[12] = 49;
+  this->_packetBuffer[13] = 0x4E;
+  this->_packetBuffer[14] = 49;
+  this->_packetBuffer[15] = 52;
 
   // all NTP fields have been given values, now
   // you can send a packet requesting a timestamp:
-  if  (this->_poolServerName) {
+  if (this->_poolServerName) {
     this->_udp.beginPacket(this->_poolServerName, 123);
   } else {
     this->_udp.beginPacket(this->_poolServerIP, 123);
