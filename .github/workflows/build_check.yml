@@ -85,7 +85,7 @@ jobs:
     name: Hardware Testing
     strategy:
       matrix:
-        usb_port: [ttyUSB0]
+        usb_port: [ttyUSB0, ttyUSB1, ttyUSB2, ttyUSB3, ttyUSB4]
     runs-on: [self-hosted, "${{ matrix.usb_port }}"]
     steps:
       - uses: actions/cache@v3
