@@ -120,7 +120,6 @@ bool RadiolibTask::loop(System &system) {
     if (transmitFlag) { // transmitted.
       if (transmissionState == RADIOLIB_ERR_NONE) {
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] TX done", timeString().c_str());
-
       } else {
         system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] transmitFlag failed, code %d", timeString().c_str(), transmissionState);
       }
@@ -129,6 +128,8 @@ bool RadiolibTask::loop(System &system) {
 
       txWaitTimer.setTimeout(preambleDurationMilliSec * 2);
       txWaitTimer.start();
+
+      rxEnable = true; // set correct RX frequency again with startRX function
 
     } else { // received.
       String str;
