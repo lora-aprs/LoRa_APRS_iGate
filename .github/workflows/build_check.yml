@@ -79,7 +79,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run PlatformIO Check
-        run: pio check --fail-on-defect high -e lora_board
+        run: pio check --fail-on-defect high --fail-on-defect medium --fail-on-defect low -e lora_board
+
+  cppcheck-docker:
+    name: Run cppcheck in Docker
+    runs-on: ubuntu-latest
+    env:
+      CPPCHECK_ARGS: --enable=all --std=c++20 --inline-suppr -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - run: docker pull facthunder/cppcheck:latest
+      - name: Run cppcheck and print result
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"
+      - name: Run cppcheck and create html
+        run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
+      - name: Upload report
+        uses: actions/upload-artifact@v3
+        with:
+          name: Cppcheck Report
+          path: output
 
   hw_testing:
     name: Hardware Testing
