@@ -44,7 +44,7 @@ bool AprsIsTask::loop(System &system) {
 }
 
 bool AprsIsTask::connect(System &system) {
-  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d, with filter: '%s'", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port, system.getUserConfig()->aprs_is.filter);
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "connecting to APRS-IS server: %s on port: %d, with filter: '%s'", system.getUserConfig()->aprs_is.server.c_str(), system.getUserConfig()->aprs_is.port, system.getUserConfig()->aprs_is.filter.c_str());
   APRS_IS::ConnectionStatus status = APRS_IS::ConnectionStatus::ERROR_CONNECTION;
   if (system.getUserConfig()->aprs_is.filter.isEmpty()) {
     status = _aprs_is.connect(system.getUserConfig()->aprs_is.server, system.getUserConfig()->aprs_is.port);
