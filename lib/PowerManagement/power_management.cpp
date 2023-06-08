@@ -1,7 +1,7 @@
 
 #include "power_management.h"
 
-PowerManagement::PowerManagement() {
+PowerManagement::PowerManagement() : axp() {
 }
 
 bool PowerManagement::begin(TwoWire &port) {

@@ -30,9 +30,11 @@ bool AprsIsTask::loop(System &system) {
     return false;
   }
 
-  std::shared_ptr<APRSMessage> msg = _aprs_is.getAPRSMessage();
-  if (msg) {
-    _toModem.addElement(msg);
+  {
+    std::shared_ptr<APRSMessage> msg = _aprs_is.getAPRSMessage();
+    if (msg) {
+      _toModem.addElement(msg);
+    }
   }
 
   if (!_toAprsIs.empty()) {
