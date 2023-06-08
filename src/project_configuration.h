@@ -17,6 +17,9 @@ public:
 
   class Hostname {
   public:
+    Hostname() : overwrite(false) {
+    }
+
     bool   overwrite;
     String name;
   };
@@ -48,7 +51,7 @@ public:
 
   class Beacon {
   public:
-    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15) {
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15), send_on_hf(false) {
     }
 
     String message;
@@ -56,6 +59,7 @@ public:
     double positionLongitude;
     bool   use_gps;
     int    timeout;
+    bool   send_on_hf;
   };
 
   class APRS_IS {
@@ -72,16 +76,15 @@ public:
 
   class Digi {
   public:
-    Digi() : active(false), beacon(true) {
+    Digi() : active(false) {
     }
 
     bool active;
-    bool beacon;
   };
 
   class LoRa {
   public:
-    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
+    LoRa() : frequencyRx(433775000), gainRx(0), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
     }
 
     long    frequencyRx;
