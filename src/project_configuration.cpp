@@ -45,8 +45,9 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
   conf.beacon.positionLongitude = data["beacon"]["position"]["longitude"] | 0.0;
   conf.beacon.use_gps           = data["beacon"]["use_gps"] | false;
   conf.beacon.timeout           = data["beacon"]["timeout"] | 15;
-  conf.aprs_is.active           = data["aprs_is"]["active"] | true;
+  conf.beacon.send_on_hf        = data["beacon"]["send_on_hf"] | false;
 
+  conf.aprs_is.active = data["aprs_is"]["active"] | true;
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("passcode"))
     conf.aprs_is.passcode = data["aprs_is"]["passcode"].as<String>();
   if (data.containsKey("aprs_is") && data["aprs_is"].containsKey("server"))
@@ -56,7 +57,6 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.aprs_is.filter = data["aprs_is"]["filter"].as<String>();
 
   conf.digi.active = data["digi"]["active"] | false;
-  conf.digi.beacon = data["digi"]["beacon"] | false;
 
   conf.lora.frequencyRx     = data["lora"]["frequency_rx"] | 433775000;
   conf.lora.gainRx          = data["lora"]["gain_rx"] | 0;
@@ -145,13 +145,13 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["beacon"]["position"]["longitude"] = conf.beacon.positionLongitude;
   data["beacon"]["use_gps"]               = conf.beacon.use_gps;
   data["beacon"]["timeout"]               = conf.beacon.timeout;
+  data["beacon"]["send_on_hf"]            = conf.beacon.send_on_hf;
   data["aprs_is"]["active"]               = conf.aprs_is.active;
   data["aprs_is"]["passcode"]             = conf.aprs_is.passcode;
   data["aprs_is"]["server"]               = conf.aprs_is.server;
   data["aprs_is"]["port"]                 = conf.aprs_is.port;
   data["aprs_is"]["filter"]               = conf.aprs_is.filter;
   data["digi"]["active"]                  = conf.digi.active;
-  data["digi"]["beacon"]                  = conf.digi.beacon;
   data["lora"]["frequency_rx"]            = conf.lora.frequencyRx;
   data["lora"]["gain_rx"]                 = conf.lora.gainRx;
   data["lora"]["frequency_tx"]            = conf.lora.frequencyTx;

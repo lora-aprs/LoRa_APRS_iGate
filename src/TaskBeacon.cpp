@@ -116,7 +116,7 @@ bool BeaconTask::sendBeacon(System &system) {
     _toAprsIs.addElement(_beaconMsg);
   }
 
-  if (system.getUserConfig()->digi.beacon) {
+  if (system.getUserConfig()->beacon.send_on_hf) {
     _toModem.addElement(_beaconMsg);
   }
 
