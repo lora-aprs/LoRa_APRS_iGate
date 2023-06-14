@@ -8,7 +8,7 @@
 
 class MQTTTask : public Task {
 public:
-  MQTTTask(TaskQueue<std::shared_ptr<APRSMessage>> &toMQTT);
+  explicit MQTTTask(TaskQueue<std::shared_ptr<APRSMessage>> &toMQTT);
   virtual ~MQTTTask();
 
   virtual bool setup(System &system) override;
