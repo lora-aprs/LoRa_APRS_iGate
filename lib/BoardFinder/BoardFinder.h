@@ -69,6 +69,7 @@ public:
 enum BoardType {
   eHELTEC_WIFI_LORA_32_V1,
   eHELTEC_WIFI_LORA_32_V2,
+  eHELTEC_WIFI_LORA_32_V3,
   eTTGO_LORA32_V1,
   eTTGO_LORA32_V2,
   eTTGO_T_Beam_V0_7,
@@ -125,6 +126,7 @@ extern BoardConfig WT32_ETH_BOARD;
 extern BoardConfig TRACKERD;
 extern BoardConfig HELTEC_WIFI_LORA_32_V1;
 extern BoardConfig HELTEC_WIFI_LORA_32_V2;
+extern BoardConfig HELTEC_WIFI_LORA_32_V3;
 extern BoardConfig GUALTHERIUS_LORAHAM_v100;
 extern BoardConfig GUALTHERIUS_LORAHAM_v106;
 
