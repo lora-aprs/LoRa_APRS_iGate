@@ -104,9 +104,10 @@ jobs:
     name: Hardware Testing
     runs-on: ubuntu-latest
     steps:
-      - uses: convictional/trigger-workflow-and-wait@v1.6.1
+      - uses: convictional/trigger-workflow-and-wait@v1.6.5
         with:
           owner: peterus
           repo: ESP-Boards
           github_token: ${{ secrets.PAT }}
           workflow_file_name: lora_aprs_igate.yml
+          github_user: peterus
