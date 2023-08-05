@@ -4,20 +4,15 @@
 
 #include "TaskRadiolib.h"
 
-volatile bool RadiolibTask::_modemInterruptOccured = false;
+volatile bool RadiolibTask::_modemInterruptOccurred = false;
 
-RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _module(0), _radio(0), _rxEnable(false), _txEnable(false), _fromModem(fromModem), _toModem(toModem), _transmitFlag(false), _frequencyTx(0.0), _frequencyRx(0.0), _frequenciesAreSame(false) {
+RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _modem(0), _rxEnable(false), _txEnable(false), _fromModem(fromModem), _toModem(toModem) {
 }
 
 RadiolibTask::~RadiolibTask() {
-  _radio->clearDio0Action();
 }
 
 bool RadiolibTask::setup(System &system) {
-  SPI.begin(system.getBoardConfig()->Lora.Sck, system.getBoardConfig()->Lora.Miso, system.getBoardConfig()->Lora.Mosi, system.getBoardConfig()->Lora.CS);
-  _module = new Module(system.getBoardConfig()->Lora.CS, system.getBoardConfig()->Lora.IRQ, system.getBoardConfig()->Lora.Reset);
-  _radio  = new SX1278(_module);
-
   _rxEnable = true;
   _txEnable = system.getUserConfig()->lora.tx_enable;
 
@@ -28,30 +23,24 @@ bool RadiolibTask::setup(System &system) {
     _frequenciesAreSame = true;
   }
 
-  float BWkHz = (float)system.getUserConfig()->lora.signalBandwidth / 1000;
-
   const uint16_t preambleLength = 8;
 
-  int16_t state = _radio->begin(_frequencyRx, BWkHz, system.getUserConfig()->lora.spreadingFactor, system.getUserConfig()->lora.codingRate4, RADIOLIB_SX127X_SYNC_WORD, system.getUserConfig()->lora.power, preambleLength, system.getUserConfig()->lora.gainRx);
+  if (system.getBoardConfig()->Lora.Modem == eSX1278) {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1278", timeString().c_str());
+    _modem = new Modem_SX1278();
+  } else if (system.getBoardConfig()->Lora.Modem == eSX1262) {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1262", timeString().c_str());
+    _modem = new Modem_SX1262();
+  } else {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] Modem not correctly defined!", timeString().c_str());
+  }
+
+  int16_t state = _modem->begin(system.getBoardConfig()->Lora, system.getUserConfig()->lora, preambleLength, setFlag);
   if (state != RADIOLIB_ERR_NONE) {
     decodeError(system, state);
   }
 
-  state = _radio->setCRC(true);
-  if (state != RADIOLIB_ERR_NONE) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] setCRC failed, code %d", timeString().c_str(), state);
-    decodeError(system, state);
-  }
-
-  _radio->setDio0Action(setFlag, RISING);
-
-  if (_rxEnable) {
-    startRX(system);
-  }
-
-  if (system.getUserConfig()->lora.tx_enable && system.getUserConfig()->lora.power > 17) {
-    _radio->setCurrentLimit(140);
-  }
+  startRX(system);
 
   uint32_t preambleDurationMilliSec = ((uint64_t)(preambleLength + 4) << (system.getUserConfig()->lora.spreadingFactor + 10 /* to milli-sec */)) / system.getUserConfig()->lora.signalBandwidth;
   _txWaitTimer.setTimeout(preambleDurationMilliSec * 2);
@@ -61,7 +50,15 @@ bool RadiolibTask::setup(System &system) {
 }
 
 bool RadiolibTask::loop(System &system) {
-  if (_modemInterruptOccured) {
+  String str;
+  int    state = _modem->receive(str);
+  if (state == RADIOLIB_ERR_NONE) {
+    Serial.println("RadiolibTask::loop: RADIOLIB_ERR_NONE");
+  } else if (state == RADIOLIB_ERR_RX_TIMEOUT) {
+    Serial.println("RadiolibTask::loop: RADIOLIB_ERR_RX_TIMEOUT");
+  }
+
+  if (_modemInterruptOccurred) {
     handleModemInterrupt(system);
   } else if (_txWaitTimer.check() && !_toModem.empty()) {
     handleTXing(system);
@@ -70,11 +67,12 @@ bool RadiolibTask::loop(System &system) {
 }
 
 void RadiolibTask::setFlag(void) {
-  _modemInterruptOccured = true;
+  Serial.println("RadiolibTask::setFlag");
+  _modemInterruptOccurred = true;
 }
 
 void RadiolibTask::handleModemInterrupt(System &system) {
-  _modemInterruptOccured = false;
+  _modemInterruptOccurred = false;
 
   if (_transmitFlag) { // transmitted
     _transmitFlag = false;
@@ -86,20 +84,20 @@ void RadiolibTask::handleModemInterrupt(System &system) {
 
   // received
   String str;
-  int    state = _radio->readData(str);
+  int    state = _modem->readData(str);
   if (state != RADIOLIB_ERR_NONE) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] readData failed, code %d", timeString().c_str(), state);
     return;
   }
   if (str.substring(0, 3) != "<\xff\x01") {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Unknown packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %fHz", timeString().c_str(), str.c_str(), _radio->getRSSI(), _radio->getSNR(), -_radio->getFrequencyError());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Unknown packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %fHz", timeString().c_str(), str.c_str(), _modem->getRSSI(), _modem->getSNR(), -_modem->getFrequencyError());
     return;
   }
 
   std::shared_ptr<APRSMessage> msg = std::shared_ptr<APRSMessage>(new APRSMessage());
   msg->decode(str.substring(3));
   _fromModem.addElement(msg);
-  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Received packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %fHz", timeString().c_str(), msg->toString().c_str(), _radio->getRSSI(), _radio->getSNR(), -_radio->getFrequencyError());
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] Received packet '%s' with RSSI %.0fdBm, SNR %.2fdB and FreqErr %fHz", timeString().c_str(), msg->toString().c_str(), _modem->getRSSI(), _modem->getSNR(), -_modem->getFrequencyError());
   system.getDisplay().addFrame(std::shared_ptr<DisplayFrame>(new TextFrame("LoRa", msg->toString().c_str())));
 }
 
@@ -121,7 +119,7 @@ void RadiolibTask::handleTXing(System &system) {
 
   // we are currently RXing
   static bool rxsignaldetected_print = false;
-  if (_frequenciesAreSame && (_radio->getModemStatus() & 0x01) == 0x01) {
+  if (_frequenciesAreSame && (_modem->getModemStatus() & 0x01) == 0x01) {
     if (!rxsignaldetected_print) {
       rxsignaldetected_print = true;
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] RX signal detected. Waiting TX", timeString().c_str());
@@ -138,7 +136,7 @@ void RadiolibTask::handleTXing(System &system) {
 
 void RadiolibTask::startRX(System &system) {
   if (!_frequenciesAreSame) {
-    int16_t state = _radio->setFrequency(_frequencyRx);
+    int16_t state = _modem->setFrequency(_frequencyRx);
     if (state != RADIOLIB_ERR_NONE) {
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startRX failed, Freq update, code %d", timeString().c_str(), state);
       decodeError(system, state);
@@ -146,7 +144,7 @@ void RadiolibTask::startRX(System &system) {
     }
   }
 
-  int16_t state = _radio->startReceive();
+  int16_t state = _modem->startReceive();
   if (state != RADIOLIB_ERR_NONE) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startRX failed, code %d", timeString().c_str(), state);
     decodeError(system, state);
@@ -155,7 +153,7 @@ void RadiolibTask::startRX(System &system) {
 
 void RadiolibTask::startTX(System &system, String &str) {
   if (!_frequenciesAreSame) {
-    int16_t state = _radio->setFrequency(_frequencyTx);
+    int16_t state = _modem->setFrequency(_frequencyTx);
     if (state != RADIOLIB_ERR_NONE) {
       system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startTX failed, Freq update, code %d", timeString().c_str(), state);
       decodeError(system, state);
@@ -164,7 +162,7 @@ void RadiolibTask::startTX(System &system, String &str) {
     }
   }
 
-  int16_t state = _radio->startTransmit(str);
+  int16_t state = _modem->startTransmit(str);
   if (state != RADIOLIB_ERR_NONE) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] startTX failed, code %d", timeString().c_str(), state);
     decodeError(system, state);
