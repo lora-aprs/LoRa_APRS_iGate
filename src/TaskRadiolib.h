@@ -4,7 +4,7 @@
 #include "project_configuration.h"
 #include <APRS-Decoder.h>
 #include <BoardFinder.h>
-#include <RadioLib.h>
+#include <LoRaModem.h>
 #include <TaskManager.h>
 
 class RadiolibTask : public Task {
@@ -16,8 +16,7 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  Module *_module;
-  SX1278 *_radio;
+  LoRaModem *_modem;
 
   bool _rxEnable;
   bool _txEnable;
@@ -25,7 +24,7 @@ private:
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromModem;
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
 
-  static volatile bool _modemInterruptOccured;
+  static volatile bool _modemInterruptOccurred;
 
   Timer _txWaitTimer;
 

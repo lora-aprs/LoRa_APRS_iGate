@@ -21,16 +21,22 @@ public:
   int8_t Addr;
 };
 
+enum LoraModem {
+  eSX1278,
+  eSX1268,
+};
+
 class LoraPins {
 public:
-  explicit LoraPins(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t reset, int8_t irq);
+  explicit LoraPins(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t reset, int8_t irq, LoraModem modem);
 
-  int8_t Sck;
-  int8_t Miso;
-  int8_t Mosi;
-  int8_t CS;
-  int8_t Reset;
-  int8_t IRQ;
+  int8_t    Sck;
+  int8_t    Miso;
+  int8_t    Mosi;
+  int8_t    CS;
+  int8_t    Reset;
+  int8_t    IRQ;
+  LoraModem Modem;
 };
 
 class GpsPins {

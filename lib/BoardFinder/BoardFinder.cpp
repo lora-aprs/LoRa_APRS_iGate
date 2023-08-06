@@ -7,7 +7,7 @@
 OledPins::OledPins(int8_t sda, int8_t scl, int8_t reset, int8_t addr) : Sda(sda), Scl(scl), Reset(reset), Addr(addr) {
 }
 
-LoraPins::LoraPins(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t reset, int8_t irq) : Sck(sck), Miso(miso), Mosi(mosi), CS(cs), Reset(reset), IRQ(irq) {
+LoraPins::LoraPins(int8_t sck, int8_t miso, int8_t mosi, int8_t cs, int8_t reset, int8_t irq, LoraModem modem) : Sck(sck), Miso(miso), Mosi(mosi), CS(cs), Reset(reset), IRQ(irq), Modem(modem) {
 }
 
 GpsPins::GpsPins(int8_t rx, int8_t tx) : Rx(rx), Tx(tx) {
@@ -30,6 +30,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
   logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "searching for OLED...");
 
   for (BoardConfig const *boardconf : _boardConfigs) {
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "trying board config: %s", boardconf->Name.c_str());
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf, logger) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
       Wire.begin(boardconf->Oled.Sda, boardconf->Oled.Scl);
@@ -48,6 +49,7 @@ BoardConfig const *BoardFinder::searchBoardConfig(logging::Logger &logger) {
   logger.log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "could not find OLED, will search for the modem now...");
 
   for (BoardConfig const *boardconf : _boardConfigs) {
+    logger.log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, MODULE_NAME, "trying board config: %s", boardconf->Name.c_str());
     if (boardconf->needCheckPowerChip && checkPowerConfig(boardconf, logger) == boardconf->powerCheckStatus) {
       PowerManagement powerManagement;
       Wire.begin(boardconf->Oled.Sda, boardconf->Oled.Scl);
@@ -148,16 +150,16 @@ bool BoardFinder::checkPowerConfig(BoardConfig const *boardConfig, logging::Logg
 }
 
 // clang-format off
-BoardConfig TTGO_LORA32_V1          ("TTGO_LORA32_V1",           eTTGO_LORA32_V1,           OledPins( 4, 15),     LoraPins( 5, 19, 27, 18, 14, 26));
-BoardConfig TTGO_LORA32_V2          ("TTGO_LORA32_V2",           eTTGO_LORA32_V2,           OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26));
-BoardConfig TTGO_T_Beam_V0_7        ("TTGO_T_Beam_V0_7",         eTTGO_T_Beam_V0_7,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26), GpsPins(15, 12), EthernetPins(),           ButtonPins(38), true);
-BoardConfig TTGO_T_Beam_V1_0        ("TTGO_T_Beam_V1_0",         eTTGO_T_Beam_V1_0,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26), GpsPins(12, 34), EthernetPins(),           ButtonPins(38), true, true);
-BoardConfig LILYGO_POE_ETH_BOARD    ("LILYGO_POE_ETH_BOARD",     eLILYGO_POE_ETH_BOARD,     OledPins(33, 32),     LoraPins(14,  2, 15, 12,  4, 36), GpsPins(),       EthernetPins(23, 18,  5, 0, -1, ETH_CLOCK_GPIO17_OUT, ETH_PHY_LAN8720));
-BoardConfig WT32_ETH_BOARD          ("WT32_ETH_BOARD",           eWT32_ETH_BOARD,           OledPins(17,  5),     LoraPins( 4, 12, 14, 15, 33, 32), GpsPins(),       EthernetPins(23, 18, -1, 1, 16, ETH_CLOCK_GPIO0_IN,   ETH_PHY_LAN8720));
-BoardConfig TRACKERD                ("TRACKERD",                 eTRACKERD,                 OledPins( 5,  4),     LoraPins(18, 19, 23, 16, 14, 26));
-BoardConfig HELTEC_WIFI_LORA_32_V1  ("HELTEC_WIFI_LORA_32_V1",   eHELTEC_WIFI_LORA_32_V1,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26));
-BoardConfig HELTEC_WIFI_LORA_32_V2  ("HELTEC_WIFI_LORA_32_V2",   eHELTEC_WIFI_LORA_32_V2,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26));
-BoardConfig HELTEC_WIFI_LORA_32_V3  ("HELTEC_WIFI_LORA_32_V3",   eHELTEC_WIFI_LORA_32_V3,   OledPins( 17, 18, 21), LoraPins( 9, 11, 10, 8, 12, 13));
-BoardConfig GUALTHERIUS_LORAHAM_v100("GUALTHERIUS_LORAHAM_v100", eGUALTHERIUS_LORAHAM_v100, OledPins(17, 16),     LoraPins(18, 19, 23,  5, 13, 35));
-BoardConfig GUALTHERIUS_LORAHAM_v106("GUALTHERIUS_LORAHAM_v106", eGUALTHERIUS_LORAHAM_v106, OledPins(17, 16),     LoraPins(18, 19, 23,  2, 13, 35));
+BoardConfig TTGO_LORA32_V1          ("TTGO_LORA32_V1",           eTTGO_LORA32_V1,           OledPins( 4, 15),     LoraPins( 5, 19, 27, 18, 14, 26, eSX1278));
+BoardConfig TTGO_LORA32_V2          ("TTGO_LORA32_V2",           eTTGO_LORA32_V2,           OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26, eSX1278));
+BoardConfig TTGO_T_Beam_V0_7        ("TTGO_T_Beam_V0_7",         eTTGO_T_Beam_V0_7,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26, eSX1278), GpsPins(15, 12), EthernetPins(),           ButtonPins(38), true);
+BoardConfig TTGO_T_Beam_V1_0        ("TTGO_T_Beam_V1_0",         eTTGO_T_Beam_V1_0,         OledPins(21, 22),     LoraPins( 5, 19, 27, 18, 14, 26, eSX1278), GpsPins(12, 34), EthernetPins(),           ButtonPins(38), true, true);
+BoardConfig LILYGO_POE_ETH_BOARD    ("LILYGO_POE_ETH_BOARD",     eLILYGO_POE_ETH_BOARD,     OledPins(33, 32),     LoraPins(14,  2, 15, 12,  4, 36, eSX1278), GpsPins(),       EthernetPins(23, 18,  5, 0, -1, ETH_CLOCK_GPIO17_OUT, ETH_PHY_LAN8720));
+BoardConfig WT32_ETH_BOARD          ("WT32_ETH_BOARD",           eWT32_ETH_BOARD,           OledPins(17,  5),     LoraPins( 4, 12, 14, 15, 33, 32, eSX1278), GpsPins(),       EthernetPins(23, 18, -1, 1, 16, ETH_CLOCK_GPIO0_IN,   ETH_PHY_LAN8720));
+BoardConfig TRACKERD                ("TRACKERD",                 eTRACKERD,                 OledPins( 5,  4),     LoraPins(18, 19, 23, 16, 14, 26, eSX1278));
+BoardConfig HELTEC_WIFI_LORA_32_V1  ("HELTEC_WIFI_LORA_32_V1",   eHELTEC_WIFI_LORA_32_V1,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26, eSX1278));
+BoardConfig HELTEC_WIFI_LORA_32_V2  ("HELTEC_WIFI_LORA_32_V2",   eHELTEC_WIFI_LORA_32_V2,   OledPins( 4, 15, 16), LoraPins( 5, 19, 27, 18, 14, 26, eSX1278));
+BoardConfig HELTEC_WIFI_LORA_32_V3  ("HELTEC_WIFI_LORA_32_V3",   eHELTEC_WIFI_LORA_32_V3,   OledPins(17, 18, 21), LoraPins( 9, 11, 10,  8, 12, 14, eSX1268));
+BoardConfig GUALTHERIUS_LORAHAM_v100("GUALTHERIUS_LORAHAM_v100", eGUALTHERIUS_LORAHAM_v100, OledPins(17, 16),     LoraPins(18, 19, 23,  5, 13, 35, eSX1278));
+BoardConfig GUALTHERIUS_LORAHAM_v106("GUALTHERIUS_LORAHAM_v106", eGUALTHERIUS_LORAHAM_v106, OledPins(17, 16),     LoraPins(18, 19, 23,  2, 13, 35, eSX1278));
 // clang-format on
