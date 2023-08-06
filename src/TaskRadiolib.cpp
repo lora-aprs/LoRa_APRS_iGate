@@ -6,7 +6,7 @@
 
 volatile bool RadiolibTask::_modemInterruptOccurred = false;
 
-RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _modem(0), _rxEnable(false), _txEnable(false), _fromModem(fromModem), _toModem(toModem) {
+RadiolibTask::RadiolibTask(TaskQueue<std::shared_ptr<APRSMessage>> &fromModem, TaskQueue<std::shared_ptr<APRSMessage>> &toModem) : Task(TASK_RADIOLIB, TaskRadiolib), _modem(0), _rxEnable(false), _txEnable(false), _fromModem(fromModem), _toModem(toModem), _transmitFlag(false), _frequencyTx(0.0), _frequencyRx(0.0), _frequenciesAreSame(false) {
 }
 
 RadiolibTask::~RadiolibTask() {
@@ -28,9 +28,9 @@ bool RadiolibTask::setup(System &system) {
   if (system.getBoardConfig()->Lora.Modem == eSX1278) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1278", timeString().c_str());
     _modem = new Modem_SX1278();
-  } else if (system.getBoardConfig()->Lora.Modem == eSX1262) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1262", timeString().c_str());
-    _modem = new Modem_SX1262();
+  } else if (system.getBoardConfig()->Lora.Modem == eSX1268) {
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1268", timeString().c_str());
+    _modem = new Modem_SX1268();
   } else {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] Modem not correctly defined!", timeString().c_str());
   }
@@ -50,14 +50,6 @@ bool RadiolibTask::setup(System &system) {
 }
 
 bool RadiolibTask::loop(System &system) {
-  String str;
-  int    state = _modem->receive(str);
-  if (state == RADIOLIB_ERR_NONE) {
-    Serial.println("RadiolibTask::loop: RADIOLIB_ERR_NONE");
-  } else if (state == RADIOLIB_ERR_RX_TIMEOUT) {
-    Serial.println("RadiolibTask::loop: RADIOLIB_ERR_RX_TIMEOUT");
-  }
-
   if (_modemInterruptOccurred) {
     handleModemInterrupt(system);
   } else if (_txWaitTimer.check() && !_toModem.empty()) {
@@ -67,7 +59,6 @@ bool RadiolibTask::loop(System &system) {
 }
 
 void RadiolibTask::setFlag(void) {
-  Serial.println("RadiolibTask::setFlag");
   _modemInterruptOccurred = true;
 }
 
@@ -175,106 +166,106 @@ void RadiolibTask::startTX(System &system, String &str) {
 void RadiolibTask::decodeError(System &system, int16_t state) {
   switch (state) {
   case RADIOLIB_ERR_UNKNOWN:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 unknown error.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx unknown error.", timeString().c_str());
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_CHIP_NOT_FOUND:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, chip not found.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, chip not found.", timeString().c_str());
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_PACKET_TOO_LONG:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 packet too long.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx packet too long.", timeString().c_str());
     break;
   case RADIOLIB_ERR_TX_TIMEOUT:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 tx timeout.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx tx timeout.", timeString().c_str());
     break;
   case RADIOLIB_ERR_RX_TIMEOUT:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 rx timeout.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx rx timeout.", timeString().c_str());
     break;
   case RADIOLIB_ERR_CRC_MISMATCH:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 crc mismatch.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx crc mismatch.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_BANDWIDTH:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied bandwidth value (%fkHz) is invalid for this module. Should be 7800, 10400, 15600, 20800, 31250, 41700 ,62500, 125000, 250000, 500000.", timeString().c_str(), system.getUserConfig()->lora.signalBandwidth / 1000);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied bandwidth value (%fkHz) is invalid for this module. Should be 7800, 10400, 15600, 20800, 31250, 41700 ,62500, 125000, 250000, 500000.", timeString().c_str(), system.getUserConfig()->lora.signalBandwidth / 1000);
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_SPREADING_FACTOR:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied spreading factor value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.spreadingFactor);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied spreading factor value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.spreadingFactor);
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_CODING_RATE:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied coding rate value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.codingRate4);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied coding rate value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.codingRate4);
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_FREQUENCY:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied frequency value (%fMHz) is invalid for this module.", timeString().c_str(), _frequencyRx);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied frequency value (%fMHz) is invalid for this module.", timeString().c_str(), _frequencyRx);
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_OUTPUT_POWER:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied output power value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.power);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied output power value (%d) is invalid for this module.", timeString().c_str(), system.getUserConfig()->lora.power);
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_CURRENT_LIMIT:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied current limit is invalid.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied current limit is invalid.", timeString().c_str());
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_PREAMBLE_LENGTH:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied preamble length is invalid.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied preamble length is invalid.", timeString().c_str());
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_GAIN:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, The supplied gain value (%d) is invalid.", timeString().c_str(), system.getUserConfig()->lora.gainRx);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, The supplied gain value (%d) is invalid.", timeString().c_str(), system.getUserConfig()->lora.gainRx);
     _rxEnable = false;
     break;
   case RADIOLIB_ERR_WRONG_MODEM:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, wrong modem selected.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, wrong modem selected.", timeString().c_str());
     _rxEnable = false;
     _txEnable = false;
     break;
   case RADIOLIB_ERR_INVALID_NUM_SAMPLES:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid number of samples.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid number of samples.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_RSSI_OFFSET:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid RSSI offset.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid RSSI offset.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_ENCODING:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid encoding.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid encoding.", timeString().c_str());
     break;
   case RADIOLIB_ERR_LORA_HEADER_DAMAGED:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 LoRa header damaged.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx LoRa header damaged.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_DIO_PIN:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid DIO pin.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid DIO pin.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_RSSI_THRESHOLD:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid RSSI threshold.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid RSSI threshold.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_BIT_RATE:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid bit rate.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid bit rate.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_FREQUENCY_DEVIATION:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid frequency deviation.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid frequency deviation.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_RX_BANDWIDTH:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid rx bandwidth.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid rx bandwidth.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_SYNC_WORD:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid sync word.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid sync word.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_DATA_SHAPING:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid data shaping.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid data shaping.", timeString().c_str());
     break;
   case RADIOLIB_ERR_INVALID_MODULATION:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 invalid modulation.", timeString().c_str());
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx invalid modulation.", timeString().c_str());
     break;
   default:
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX1278 init failed, code %d", timeString().c_str(), state);
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] SX12xx init failed, code %d", timeString().c_str(), state);
     _rxEnable = false;
     _txEnable = false;
   }

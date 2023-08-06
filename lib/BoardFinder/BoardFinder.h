@@ -23,7 +23,7 @@ public:
 
 enum LoraModem {
   eSX1278,
-  eSX1262,
+  eSX1268,
 };
 
 class LoraPins {

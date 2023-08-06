@@ -8,6 +8,9 @@
 
 class LoRaModem {
 public:
+  LoRaModem() : _module(0) {
+  }
+
   virtual ~LoRaModem() {
   }
 
@@ -32,6 +35,8 @@ protected:
 
 class Modem_SX1278 : public LoRaModem {
 public:
+  Modem_SX1278();
+
   int16_t begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
 
   int16_t readData(String &str) override;
@@ -51,8 +56,10 @@ private:
   SX1278 *_radio;
 };
 
-class Modem_SX1262 : public LoRaModem {
+class Modem_SX1268 : public LoRaModem {
 public:
+  Modem_SX1268();
+
   int16_t begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
 
   int16_t readData(String &str) override;

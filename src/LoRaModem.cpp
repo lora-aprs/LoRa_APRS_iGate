@@ -1,6 +1,9 @@
 #include "LoRaModem.h"
 
 // SX1278
+Modem_SX1278::Modem_SX1278() : _radio(0) {
+}
+
 int16_t Modem_SX1278::begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
   float _frequencyRx = (float)lora_config.frequencyRx / 1000000;
   float BWkHz        = (float)lora_config.signalBandwidth / 1000;
@@ -64,7 +67,10 @@ uint8_t Modem_SX1278::getModemStatus() {
 }
 
 // SX1262
-int16_t Modem_SX1262::begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
+Modem_SX1268::Modem_SX1268() : _radio(0) {
+}
+
+int16_t Modem_SX1268::begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
   float _frequencyRx = (float)lora_config.frequencyRx / 1000000;
   float BWkHz        = (float)lora_config.signalBandwidth / 1000;
 
@@ -90,38 +96,38 @@ int16_t Modem_SX1262::begin(const LoraPins &lora_pins, const Configuration::LoRa
   return RADIOLIB_ERR_NONE;
 }
 
-int16_t Modem_SX1262::readData(String &str) {
+int16_t Modem_SX1268::readData(String &str) {
   return _radio->readData(str);
 }
 
-int16_t Modem_SX1262::setFrequency(float freq) {
+int16_t Modem_SX1268::setFrequency(float freq) {
   return _radio->setFrequency(freq);
 }
 
-int16_t Modem_SX1262::startReceive() {
+int16_t Modem_SX1268::startReceive() {
   return _radio->startReceive();
 }
 
-int16_t Modem_SX1262::startTransmit(String &str) {
+int16_t Modem_SX1268::startTransmit(String &str) {
   return _radio->startTransmit(str);
 }
 
-int16_t Modem_SX1262::receive(String &str) {
+int16_t Modem_SX1268::receive(String &str) {
   return _radio->receive(str);
 }
 
-float Modem_SX1262::getRSSI() {
+float Modem_SX1268::getRSSI() {
   return _radio->getRSSI();
 }
 
-float Modem_SX1262::getSNR() {
+float Modem_SX1268::getSNR() {
   return _radio->getSNR();
 }
 
-float Modem_SX1262::getFrequencyError() {
+float Modem_SX1268::getFrequencyError() {
   return _radio->getFrequencyError();
 }
 
-uint8_t Modem_SX1262::getModemStatus() {
+uint8_t Modem_SX1268::getModemStatus() {
   return 0;
 }
