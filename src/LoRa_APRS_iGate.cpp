@@ -22,7 +22,7 @@
 #include "TaskWifi.h"
 #include "project_configuration.h"
 
-#define VERSION     "23.31.00"
+#define VERSION     "23.31.01"
 #define MODULE_NAME "Main"
 
 String create_lat_aprs(double lat);
