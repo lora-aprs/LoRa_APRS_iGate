@@ -1,8 +1,8 @@
 #ifndef TASK_OTA_H_
 #define TASK_OTA_H_
 
+#include "System/TaskManager.h"
 #include <ArduinoOTA.h>
-#include <TaskManager.h>
 
 class OTATask : public Task {
 public:

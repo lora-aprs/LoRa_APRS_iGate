@@ -1,10 +1,10 @@
 #ifndef TASK_APRS_IS_H_
 #define TASK_APRS_IS_H_
 
-#include <APRS-IS.h>
+#include "APRS-IS/APRS-IS.h"
+#include "System/TaskManager.h"
+#include "System/Timer.h"
 #include <APRSMessage.h>
-#include <TaskManager.h>
-#include <Timer.h>
 
 class AprsIsTask : public Task {
 public:

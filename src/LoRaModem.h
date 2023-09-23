@@ -3,7 +3,7 @@
 
 #include <RadioLib.h>
 
-#include "BoardFinder.h"
+#include "BoardFinder/BoardFinder.h"
 #include "project_configuration.h"
 
 class LoRaModem {
