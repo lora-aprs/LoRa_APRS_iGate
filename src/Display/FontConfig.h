@@ -27,17 +27,17 @@
 // #define FONT    FixedSys_11_Desc            // good allround font
 // #define FONT    Gabriola_12_Desc            // schön, aber nicht besonders nützlich
 // #define FONT    Gabriola_20_Desc
-//#define FONT    HoloLens_12_Desc            // kleine Schrift, gut zu lesen, elegant
-//#define FONT    HoloLens_20_Desc
+// #define FONT    HoloLens_12_Desc            // kleine Schrift, gut zu lesen, elegant
+// #define FONT    HoloLens_20_Desc
 // #define FONT    Neuropol_12_Desc            // modern, breite Buchstaben
-//#define FONT    Roboto_12_Desc              // almost like Terminal, little bit more elegant
+// #define FONT    Roboto_12_Desc              // almost like Terminal, little bit more elegant
 // #define FONT    Open_12_Desc                // kleine Schrift, gut lesbar, klassisch
 // #define FONT    Tahoma_10_Desc              // gute allround Schrift, was fuers Grobe
-#define FONT    Terminal_8_Desc             // if you need lots of space, still readable
-//#define FONT    Terminal_11_Desc            // good allround font
-// #define FONT    Times_12_Desc               // dazu braucht man nichts sagen, wirkt altbacken
-// #define FONT    Trebuchet_12_Desc           // gute Schrift, wenn es etwas bold sein darf
-// #define FONT    Verdana_12_Desc             // ausgewogen, gut lesbar, bolder als Trebuchet
+#define FONT Terminal_8_Desc // if you need lots of space, still readable
+// #define FONT    Terminal_11_Desc            // good allround font
+//  #define FONT    Times_12_Desc               // dazu braucht man nichts sagen, wirkt altbacken
+//  #define FONT    Trebuchet_12_Desc           // gute Schrift, wenn es etwas bold sein darf
+//  #define FONT    Verdana_12_Desc             // ausgewogen, gut lesbar, bolder als Trebuchet
 
 // These fonts are fancy fonts
 // #define FONT    Amadeus_12_Desc
@@ -48,10 +48,10 @@
 // #define FONT    Seaside_12_Desc             // Art D'eco
 // #define FONT    Waker_12_Desc               // was fuer zb Halloween
 
-#define FONT_CHAR_SPACING  2
+#define FONT_CHAR_SPACING 2
 
 #include "Fonts/FontDesc.h"
 
-fontDesc_t const * getSystemFont();
+fontDesc_t const *getSystemFont();
 
 #endif
