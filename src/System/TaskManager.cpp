@@ -48,7 +48,6 @@ bool TaskManager::loop(System &system) {
   return ret;
 }
 
-// cppcheck-suppress unusedFunction
 void StatusFrame::drawStatusPage(Bitmap &bitmap) {
   int y = 0;
   for (Task const *const task : _tasks) {

@@ -16,12 +16,10 @@ void PowerManagement::activateLoRa() {
   axp.setPowerOutPut(AXP192_LDO2, AXP202_ON);
 }
 
-// cppcheck-suppress unusedFunction
 void PowerManagement::deactivateLoRa() {
   axp.setPowerOutPut(AXP192_LDO2, AXP202_OFF);
 }
 
-// cppcheck-suppress unusedFunction
 void PowerManagement::activateGPS() {
   axp.setPowerOutPut(AXP192_LDO3, AXP202_ON);
 }
@@ -34,7 +32,6 @@ void PowerManagement::activateOLED() {
   axp.setPowerOutPut(AXP192_DCDC1, AXP202_ON);
 }
 
-// cppcheck-suppress unusedFunction
 void PowerManagement::deactivateOLED() {
   axp.setPowerOutPut(AXP192_DCDC1, AXP202_OFF);
 }
