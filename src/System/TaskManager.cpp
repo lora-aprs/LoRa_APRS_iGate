@@ -51,7 +51,7 @@ bool TaskManager::loop(System &system) {
 // cppcheck-suppress unusedFunction
 void StatusFrame::drawStatusPage(Bitmap &bitmap) {
   int y = 0;
-  for (Task *task : _tasks) {
+  for (Task const *const task : _tasks) {
     int x = bitmap.drawString(0, y, (task->getName()).substring(0, task->getName().indexOf("Task")));
     x     = bitmap.drawString(x, y, ": ");
     if (task->getStateInfo() == "") {
