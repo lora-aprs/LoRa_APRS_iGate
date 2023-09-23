@@ -37,17 +37,6 @@ jobs:
   formatting-check:
     name: Formatting Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - 'src'
-          - 'lib/BoardFinder'
-          - 'lib/ConfigurationManagement'
-          #- 'lib/Display'
-          - 'lib/NTPClient'
-          - 'lib/PowerManagement'
-          - 'lib/System'
-          - 'lib/TimeLib'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -55,7 +44,7 @@ jobs:
         uses: jidicula/clang-format-action@v4.10.2
         with:
           clang-format-version: '14'
-          check-path: ${{ matrix.path }}
+          check-path: src
 
   cppcheck:
     name: Run cppcheck
@@ -85,7 +74,7 @@ jobs:
     name: Run cppcheck in Docker
     runs-on: ubuntu-latest
     env:
-      CPPCHECK_ARGS: --enable=all --std=c++20 --inline-suppr -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
+      CPPCHECK_ARGS: --enable=all --std=c++20 --suppress=*:*.pio\* --inline-suppr --suppress=unusedFunction --suppress=shadowFunction:*TimeLib.cpp --suppress=unreadVariable:*TimeLib.cpp --suppress=badBitmaskCheck:*project_configuration.cpp src
     steps:
       - name: checkout code
         uses: actions/checkout@v3

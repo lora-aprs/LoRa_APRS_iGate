@@ -1,11 +1,11 @@
 #ifndef TASK_LORA_H_
 #define TASK_LORA_H_
 
+#include "BoardFinder/BoardFinder.h"
+#include "LoRaModem.h"
+#include "System/TaskManager.h"
 #include "project_configuration.h"
 #include <APRS-Decoder.h>
-#include <BoardFinder.h>
-#include <LoRaModem.h>
-#include <TaskManager.h>
 
 class RadiolibTask : public Task {
 public:

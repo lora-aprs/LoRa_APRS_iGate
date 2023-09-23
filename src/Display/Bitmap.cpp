@@ -1,50 +1,41 @@
 #include "Bitmap.h"
 #include "FontConfig.h"
 #include "OLEDDisplay.h"
-//#include "OLEDDisplayFonts.h"
 
-// cppcheck-suppress unusedFunction
 Bitmap::Bitmap(uint width, uint height) : _width(width), _height(height), _buffer(0) {
   allocateBuffer();
 }
 
-// cppcheck-suppress unusedFunction
 Bitmap::Bitmap(OLEDDisplay *display) : _width(display->getWidth()), _height(display->getHeight()), _buffer(0) {
   allocateBuffer();
 }
 
-// cppcheck-suppress unusedFunction
 Bitmap::~Bitmap() {
   if (_buffer != 0) {
     delete _buffer;
   }
 }
 
-// cppcheck-suppress unusedFunction
 uint Bitmap::getWidth() const {
   return _width;
 }
 
-// cppcheck-suppress unusedFunction
 uint Bitmap::getHeight() const {
   return _height;
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::setPixel(int x, int y) {
   if (x >= 0 && x < _width && y >= 0 && y < _height) {
     _buffer[x + (y / 8) * _width] |= (1 << (y % 8));
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::clearPixel(int x, int y) {
   if (x >= 0 && x < _width && y >= 0 && y < _height) {
     _buffer[x + (y / 8) * _width] &= ~(1 << (y % 8));
   }
 }
 
-// cppcheck-suppress unusedFunction
 bool Bitmap::getPixel(int x, int y) const {
   if (x >= 0 && x < _width && y >= 0 && y < _height) {
     return _buffer[x + (y / 8) * _width] & (1 << (y % 8));
@@ -52,12 +43,10 @@ bool Bitmap::getPixel(int x, int y) const {
   return false;
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::clear() {
   memset(_buffer, 0, _width * _height / 8);
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawLine(int x0, int y0, int x1, int y1) {
   int dx  = abs(x1 - x0);
   int dy  = abs(y1 - y0);
@@ -82,7 +71,6 @@ void Bitmap::drawLine(int x0, int y0, int x1, int y1) {
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawHorizontalLine(int x, int y, int length) {
   if (y < 0 || y >= _height) {
     return;
@@ -93,7 +81,6 @@ void Bitmap::drawHorizontalLine(int x, int y, int length) {
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawVerticalLine(int x, int y, int length) {
   if (x < 0 || x >= _width) {
     return;
@@ -104,7 +91,6 @@ void Bitmap::drawVerticalLine(int x, int y, int length) {
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawRect(int x, int y, int width, int height) {
   drawHorizontalLine(x, y, width);
   drawVerticalLine(x, y, height);
@@ -112,14 +98,12 @@ void Bitmap::drawRect(int x, int y, int width, int height) {
   drawHorizontalLine(x, y + height - 1, width);
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::fillRect(int x, int y, int width, int height) {
   for (int i = 0; i < width; i++) {
     drawVerticalLine(x + i, y, height);
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawCircle(int x0, int y0, int radius) {
   int x  = 0;
   int y  = radius;
@@ -148,7 +132,6 @@ void Bitmap::drawCircle(int x0, int y0, int radius) {
   setPixel(x0, y0 - radius);
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::fillCircle(int x0, int y0, int radius) {
   int x  = 0;
   int y  = radius;
@@ -170,7 +153,6 @@ void Bitmap::fillCircle(int x0, int y0, int radius) {
   drawHorizontalLine(x0 - radius, y0, 2 * radius);
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawCircleQuads(int x0, int y0, int radius, int quads) {
   int x  = 0;
   int y  = radius;
@@ -214,7 +196,6 @@ void Bitmap::drawCircleQuads(int x0, int y0, int radius, int quads) {
   }
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawProgressBar(int x, int y, int width, int height, int progress) {
   int radius       = height / 2;
   int xRadius      = x + radius;
@@ -234,7 +215,6 @@ void Bitmap::drawProgressBar(int x, int y, int width, int height, int progress) 
   fillCircle(xRadius + maxProgressWidth, yRadius, innerRadius);
 }
 
-// cppcheck-suppress unusedFunction
 int Bitmap::drawChar(int x, int y, char c) {
   fontDesc_t const *font = getSystemFont();
 
@@ -277,7 +257,6 @@ int Bitmap::drawChar(int x, int y, char c) {
   return x + FONT_CHAR_SPACING;
 }
 
-// cppcheck-suppress unusedFunction
 int Bitmap::drawString(int x, int y, String text) {
   int next_x = x;
   for (int i = 0; i < text.length(); i++) {
@@ -286,7 +265,6 @@ int Bitmap::drawString(int x, int y, String text) {
   return next_x;
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawStringf(int x, int y, char *buffer, String format, ...) {
   va_list myargs;
   va_start(myargs, format);
@@ -295,7 +273,6 @@ void Bitmap::drawStringf(int x, int y, char *buffer, String format, ...) {
   drawString(x, y, buffer);
 }
 
-// cppcheck-suppress unusedFunction
 int Bitmap::drawStringLF(int x, int y, String text) {
   fontDesc_t const *font   = getSystemFont();
   int               next_x = x;
@@ -309,7 +286,6 @@ int Bitmap::drawStringLF(int x, int y, String text) {
   return next_x;
 }
 
-// cppcheck-suppress unusedFunction
 void Bitmap::drawStringLFf(int x, int y, char *buffer, String format, ...) {
   va_list myargs;
   va_start(myargs, format);
@@ -346,7 +322,6 @@ void Bitmap::drawStringLFf(int x, int y, char *buffer, String format, ...) {
         }
 }*/
 
-// cppcheck-suppress unusedFunction
 void Bitmap::allocateBuffer() {
   _buffer = new uint8_t[_width * _height / 8];
   clear();

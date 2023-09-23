@@ -34,7 +34,6 @@
 
 #include "Bitmap.h"
 #include <Arduino.h>
-//#include "OLEDDisplayFonts.h"
 
 // Display commands
 #define CHARGEPUMP          0x8D

@@ -4,10 +4,10 @@
 #include <logger.h>
 #include <memory>
 
+#include "BoardFinder/BoardFinder.h"
+#include "ConfigurationManagement/configuration.h"
+#include "Display/Display.h"
 #include "TaskManager.h"
-#include <BoardFinder.h>
-#include <Display.h>
-#include <configuration.h>
 
 class System {
 public:
