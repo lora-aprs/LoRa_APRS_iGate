@@ -1,8 +1,8 @@
 #ifndef TASK_NTP_H_
 #define TASK_NTP_H_
 
-#include <NTPClient.h>
-#include <TaskManager.h>
+#include "NTPClient/NTPClient.h"
+#include "System/TaskManager.h"
 
 class NTPTask : public Task {
 public:

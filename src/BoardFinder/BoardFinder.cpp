@@ -1,6 +1,6 @@
 #include "BoardFinder.h"
+#include "PowerManagement/power_management.h"
 #include <logger.h>
-#include <power_management.h>
 
 #define MODULE_NAME "BoardFinder"
 

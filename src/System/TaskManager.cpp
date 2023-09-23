@@ -1,5 +1,5 @@
 #include "TaskManager.h"
-#include <FontConfig.h>
+#include "Display/FontConfig.h"
 #include <logger.h>
 
 #define MODULE_NAME "TaskManager"

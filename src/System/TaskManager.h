@@ -5,9 +5,9 @@
 #include <list>
 #include <memory>
 
-#include <BoardFinder.h>
-#include <Display.h>
-#include <configuration.h>
+#include "BoardFinder/BoardFinder.h"
+#include "ConfigurationManagement/configuration.h"
+#include "Display/Display.h"
 
 #include "TaskQueue.h"
 
