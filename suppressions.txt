@@ -1,49 +1,14 @@
 // cppcheck suppressions
-assertWithSideEffect
 
-// TODO: need to come back to these
-//duplInheritedMember
+unusedFunction
 
-// TODO:
-// "Using memset() on struct which contains a floating point number."
-// tried:
-//   if (std::is_floating_point<T>::value) {
-//     p = 0;
-// in src/mesh/MemoryPool.h
-//memsetClassFloat
+// ignore "external" library issues
+shadowFunction:*TimeLib.cpp
+unreadVariable:*TimeLib.cpp
 
-//knownConditionTrueFalse
-
-// no real downside/harm in these
-//unusedFunction
-//unusedPrivateFunction
-
-// most likely due to a cppcheck configuration issue (like missing an include)
-//syntaxError
-
-// try to quiet a few
-//useInitializationList:src/main.cpp
-//useInitializationList
-
-// I don't want to go back and cast function pointers just to appease a tools insatiable thirst for immutability
-//constParameterCallback
-
-//redundantInitialization
-
-//cstyleCast:src/mesh/MemoryPool.h:71
-//cstyleCast
+// ignore bitmask from ArduinoJson
+badBitmaskCheck:*project_configuration.cpp
 
 // ignore stuff that is not ours
 *:.pio/*
 *:*/libdeps/*
-*:*/generated/*
-//noExplicitConstructor:*/mqtt/*
-//postfixOperator:*/mqtt/*
-
-// these two caused issues
-//missingOverride
-//virtualCallInConstructor
-
-//passedByValue:*/RedirectablePrint.h
-
-//internalAstError:*/CrossPlatformCryptoEngine.cpp

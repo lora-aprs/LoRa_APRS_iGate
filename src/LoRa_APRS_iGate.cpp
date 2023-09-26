@@ -2,7 +2,6 @@
 #include <map>
 
 #include "APRS-IS/APRS-IS.h"
-#include "BoardFinder/BoardFinder.h"
 #include "PowerManagement/power_management.h"
 #include "System/System.h"
 #include "System/TaskManager.h"
@@ -57,68 +56,35 @@ void setup() {
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "LoRa APRS iGate by OE5BPA (Peter Buchegger)");
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Version: %s", VERSION);
 
-  std::list<BoardConfig const *> boardConfigs;
-  boardConfigs.push_back(&TTGO_LORA32_V1);
-  boardConfigs.push_back(&TTGO_LORA32_V2);
-  boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V1);
-  boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V2);
-  boardConfigs.push_back(&HELTEC_WIFI_LORA_32_V3);
-  boardConfigs.push_back(&LILYGO_POE_ETH_BOARD);
-  boardConfigs.push_back(&WT32_ETH_BOARD);
-  boardConfigs.push_back(&TRACKERD);
-  boardConfigs.push_back(&GUALTHERIUS_LORAHAM_v100);
-  boardConfigs.push_back(&GUALTHERIUS_LORAHAM_v106);
-  boardConfigs.push_back(&TTGO_T_Beam_V0_7);
-  boardConfigs.push_back(&TTGO_T_Beam_V1_0);
-
   ProjectConfigurationManagement confmg(LoRaSystem.getLogger());
   confmg.readConfiguration(LoRaSystem.getLogger(), userConfig);
 
-  BoardFinder        finder(boardConfigs);
-  BoardConfig const *boardConfig = finder.getBoardConfig(userConfig.board);
-  if (!boardConfig) {
-    boardConfig = finder.searchBoardConfig(LoRaSystem.getLogger());
-    if (!boardConfig) {
-      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Board config not set and search failed!");
-      while (true)
-        ;
-    } else {
-      userConfig.board = boardConfig->Name;
-      confmg.writeConfiguration(LoRaSystem.getLogger(), userConfig);
-      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "will restart board now!");
-      ESP.restart();
-    }
-  }
-
-  LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Board %s loaded.", boardConfig->Name.c_str());
-
-  LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Will start watchdog now...");
+  /*LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Will start watchdog now...");
   if (esp_task_wdt_init(10, true) != ESP_OK) {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog init failed!");
   } else {
     if (esp_task_wdt_add(NULL) != ESP_OK) {
       LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog add failed!");
     }
-  }
+  }*/
 
-  if (boardConfig->Type == eTTGO_T_Beam_V1_0) {
-    Wire.begin(boardConfig->Oled.Sda, boardConfig->Oled.Scl);
-    PowerManagement powerManagement;
-    if (!powerManagement.begin(Wire)) {
-      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "AXP192 init done!");
-    } else {
-      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "AXP192 init failed!");
-    }
-    powerManagement.activateLoRa();
-    powerManagement.activateOLED();
-    if (userConfig.beacon.use_gps) {
-      powerManagement.activateGPS();
-    } else {
-      powerManagement.deactivateGPS();
-    }
+#ifdef TBEAM_V10
+  Wire.begin(SDA, SCL);
+  PowerManagement powerManagement;
+  if (!powerManagement.begin(Wire)) {
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "AXP192 init done!");
+  } else {
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "AXP192 init failed!");
   }
+  powerManagement.activateLoRa();
+  powerManagement.activateOLED();
+  if (userConfig.beacon.use_gps) {
+    powerManagement.activateGPS();
+  } else {
+    powerManagement.deactivateGPS();
+  }
+#endif
 
-  LoRaSystem.setBoardConfig(boardConfig);
   LoRaSystem.setUserConfig(&userConfig);
   LoRaSystem.getTaskManager().addTask(&displayTask);
   LoRaSystem.getTaskManager().addTask(&modemTask);
@@ -131,10 +97,11 @@ void setup() {
     LoRaSystem.getTaskManager().addAlwaysRunTask(&wifiTask);
     tcpip = true;
   }
-  if (boardConfig->Ethernet.isEthernetBoard()) {
-    LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-    tcpip = true;
-  }
+
+#ifdef TINTERNET_POE
+  LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
+  tcpip = true;
+#endif
 
   if (tcpip) {
     LoRaSystem.getTaskManager().addTask(&otaTask);
@@ -152,7 +119,7 @@ void setup() {
     }
   }
 
-  esp_task_wdt_reset();
+  // esp_task_wdt_reset();
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
   LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
@@ -161,7 +128,7 @@ void setup() {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "You have to change your settings in 'data/is-cfg.json' and upload it via 'Upload File System image'!");
     LoRaSystem.getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
     while (true) {
-      esp_task_wdt_reset();
+      // esp_task_wdt_reset();
     }
   }
   if ((!userConfig.aprs_is.active) && !(userConfig.digi.active)) {
@@ -182,7 +149,7 @@ void setup() {
 volatile bool syslogSet = false;
 
 void loop() {
-  esp_task_wdt_reset();
+  // esp_task_wdt_reset();
   LoRaSystem.getTaskManager().loop(LoRaSystem);
   if (LoRaSystem.isWifiOrEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
     LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);

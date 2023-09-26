@@ -3,7 +3,6 @@
 
 #include <RadioLib.h>
 
-#include "BoardFinder/BoardFinder.h"
 #include "project_configuration.h"
 
 class LoRaModem {
@@ -14,7 +13,7 @@ public:
   virtual ~LoRaModem() {
   }
 
-  virtual int16_t begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) = 0;
+  virtual int16_t begin(const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) = 0;
 
   virtual int16_t readData(String &str) = 0;
 
@@ -33,11 +32,12 @@ protected:
   Module *_module;
 };
 
+#ifdef USE_SX1278
 class Modem_SX1278 : public LoRaModem {
 public:
   Modem_SX1278();
 
-  int16_t begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
+  int16_t begin(const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
 
   int16_t readData(String &str) override;
 
@@ -56,11 +56,12 @@ private:
   SX1278 *_radio;
 };
 
+#elif defined(USE_SX1268)
 class Modem_SX1268 : public LoRaModem {
 public:
   Modem_SX1268();
 
-  int16_t begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
+  int16_t begin(const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) override;
 
   int16_t readData(String &str) override;
 
@@ -78,5 +79,6 @@ public:
 private:
   SX1262 *_radio;
 };
+#endif
 
 #endif

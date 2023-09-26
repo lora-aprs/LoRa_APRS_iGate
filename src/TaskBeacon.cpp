@@ -22,21 +22,23 @@ void BeaconTask::pushButton() {
 }
 
 bool BeaconTask::setup(System &system) {
-  if (_instances++ == 0 && system.getBoardConfig()->Button.Pin != -1) {
-    _userButton = OneButton(system.getBoardConfig()->Button.Pin, true, true);
+#ifdef KEY_BUILTIN
+  if (_instances++ == 0 && KEY_BUILTIN != 0) {
+    _userButton = OneButton(KEY_BUILTIN, true, true);
     _userButton.attachClick(pushButton);
     _send_update = false;
   }
+#endif
 
   _useGps = system.getUserConfig()->beacon.use_gps;
 
   if (_useGps) {
-    if (system.getBoardConfig()->Gps.Rx != -1) {
-      _ss.begin(9600, SERIAL_8N1, system.getBoardConfig()->Gps.Tx, system.getBoardConfig()->Gps.Rx);
-    } else {
-      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "NO GPS found.");
-      _useGps = false;
-    }
+#if defined(GPS_RX_PIN) && defined(GPS_TX_PIN)
+    _ss.begin(9600, SERIAL_8N1, GPS_TX_PIN, GPS_RX_PIN);
+#else
+    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "NO GPS found.");
+    _useGps = false;
+#endif
   }
   // setup beacon
   _beacon_timer.setTimeout(system.getUserConfig()->beacon.timeout * 60 * 1000);
