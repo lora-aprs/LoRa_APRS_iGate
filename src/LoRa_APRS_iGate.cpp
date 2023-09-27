@@ -35,6 +35,15 @@ TaskQueue<std::shared_ptr<APRSMessage>> toMQTT;
 System        LoRaSystem;
 Configuration userConfig;
 
+#ifdef HAS_AXP192
+AXP192           axp;
+PowerManagement *powerManagement = &axp;
+#endif
+#ifdef HAS_AXP2101
+AXP2101          axp;
+PowerManagement *powerManagement = &axp;
+#endif
+
 DisplayTask displayTask;
 //  ModemTask   modemTask(fromModem, toModem);
 RadiolibTask modemTask(fromModem, toModem);
@@ -68,21 +77,21 @@ void setup() {
     }
   }*/
 
-#ifdef TBEAM_V10
+#if defined(HAS_AXP192) || defined(HAS_AXP2101)
   Wire.begin(SDA, SCL);
-  PowerManagement powerManagement;
-  if (!powerManagement.begin(Wire)) {
-    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "AXP192 init done!");
+  if (powerManagement->begin(Wire)) {
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, "PMU", "init done!");
   } else {
-    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "AXP192 init failed!");
+    LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, "PMU", "init failed!");
   }
-  powerManagement.activateLoRa();
-  powerManagement.activateOLED();
+  powerManagement->activateLoRa();
+  powerManagement->activateOLED();
   if (userConfig.beacon.use_gps) {
-    powerManagement.activateGPS();
+    powerManagement->activateGPS();
   } else {
-    powerManagement.deactivateGPS();
+    powerManagement->deactivateGPS();
   }
+  // powerManagement->activateMeasurement();
 #endif
 
   LoRaSystem.setUserConfig(&userConfig);
@@ -98,7 +107,7 @@ void setup() {
     tcpip = true;
   }
 
-#ifdef TINTERNET_POE
+#ifdef T_INTERNET_POE
   LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
   tcpip = true;
 #endif
