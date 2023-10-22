@@ -1,12 +1,14 @@
 #ifndef UNIT_TEST
 #include <map>
 
+#include <esp_task_wdt.h>
+#include <logger.h>
+
 #include "APRS-IS/APRS-IS.h"
+#include "Board.h"
 #include "PowerManagement/power_management.h"
 #include "System/System.h"
 #include "System/TaskManager.h"
-#include <esp_task_wdt.h>
-#include <logger.h>
 
 #include "TaskAprsIs.h"
 #include "TaskBeacon.h"
@@ -61,21 +63,22 @@ void setup() {
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
   setWiFiLogger(&LoRaSystem.getLogger());
-  delay(500);
+  delay(1000);
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "LoRa APRS iGate by OE5BPA (Peter Buchegger)");
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Version: %s", VERSION);
+  LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Board: %s", getBoardName().c_str());
 
   ProjectConfigurationManagement confmg(LoRaSystem.getLogger());
   confmg.readConfiguration(LoRaSystem.getLogger(), userConfig);
 
-  /*LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Will start watchdog now...");
+  LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "Will start watchdog now...");
   if (esp_task_wdt_init(10, true) != ESP_OK) {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog init failed!");
   } else {
     if (esp_task_wdt_add(NULL) != ESP_OK) {
       LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Watchdog add failed!");
     }
-  }*/
+  }
 
 #if defined(HAS_AXP192) || defined(HAS_AXP2101)
   Wire.begin(SDA, SCL);
@@ -128,16 +131,16 @@ void setup() {
     }
   }
 
-  // esp_task_wdt_reset();
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().setup(LoRaSystem);
 
-  LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION);
+  LoRaSystem.getDisplay().showSpashScreen("LoRa APRS iGate", VERSION, getBoardName());
 
   if (userConfig.callsign == "NOCALL-10") {
     LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "You have to change your settings in 'data/is-cfg.json' and upload it via 'Upload File System image'!");
     LoRaSystem.getDisplay().showStatusScreen("ERROR", "You have to change your settings in 'data/is-cfg.json' and upload it via \"Upload File System image\"!");
     while (true) {
-      // esp_task_wdt_reset();
+      esp_task_wdt_reset();
     }
   }
   if ((!userConfig.aprs_is.active) && !(userConfig.digi.active)) {
@@ -158,7 +161,7 @@ void setup() {
 volatile bool syslogSet = false;
 
 void loop() {
-  // esp_task_wdt_reset();
+  esp_task_wdt_reset();
   LoRaSystem.getTaskManager().loop(LoRaSystem);
   if (LoRaSystem.isWifiOrEthConnected() && LoRaSystem.getUserConfig()->syslog.active && !syslogSet) {
     LoRaSystem.getLogger().setSyslogServer(LoRaSystem.getUserConfig()->syslog.server, LoRaSystem.getUserConfig()->syslog.port, LoRaSystem.getUserConfig()->callsign);

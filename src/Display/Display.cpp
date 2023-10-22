@@ -95,12 +95,14 @@ void Display::setStatusFrame(std::shared_ptr<StatusFrame> frame) {
   _statusFrame = frame;
 }
 
-void Display::showSpashScreen(String firmwareTitle, String version) {
+void Display::showSpashScreen(String firmwareTitle, String version, String boardname) {
   Bitmap bitmap(_disp);
   bitmap.drawString(0, 10, firmwareTitle);
   bitmap.drawString(0, 20, version);
   bitmap.drawString(0, 35, "by Peter Buchegger");
   bitmap.drawString(30, 45, "OE5BPA");
+  bitmap.drawString(0, 55, "for board");
+  bitmap.drawString(0, 65, boardname);
   _disp->display(&bitmap);
 }
 

@@ -28,7 +28,7 @@ public:
 
   void setup();
   // setup functions
-  void showSpashScreen(String firmwareTitle, String version);
+  void showSpashScreen(String firmwareTitle, String version, String boardname);
   void setStatusFrame(std::shared_ptr<StatusFrame> frame);
   void showStatusScreen(String header, String text);
 
