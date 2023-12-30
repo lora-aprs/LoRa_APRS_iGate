@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     name: Compile Firmware
+    strategy:
+      matrix:
+        boards: [heltec-v1, tlora-v1, tbeam, t_internet_poe, heltec-v3, tlora-v2, heltec-v2_0, tbeam-s3-core, tbeam_axp2101]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/cache@v3
@@ -27,12 +30,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Build PlatformIO Project
-        run: pio run
+        run: pio run -e ${{ matrix.boards }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: firmware
-          path: .pio/build/lora_board/firmware.bin
+          path: .pio/build/**/firmware.bin
 
   formatting-check:
     name: Formatting Check
@@ -68,7 +71,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Run PlatformIO Check
-        run: pio check --fail-on-defect high --fail-on-defect medium --fail-on-defect low -e lora_board
+        run: pio check --fail-on-defect high --fail-on-defect medium --fail-on-defect low
 
   cppcheck-docker:
     name: Run cppcheck in Docker
