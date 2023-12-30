@@ -4,9 +4,9 @@
 #include <OneButton.h>
 #include <TinyGPS++.h>
 
+#include "System/TaskManager.h"
 #include <APRSMessage.h>
 #include <TaskMQTT.h>
-#include <TaskManager.h>
 
 class BeaconTask : public Task {
 public:

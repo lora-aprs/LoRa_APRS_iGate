@@ -42,8 +42,8 @@
 #include "Fonts/Tahoma_12.h"
 #include "Fonts/Tahoma_20.h"
 #include "Fonts/Tahoma_24.h"*/
-#include "Fonts/Terminal_8.h"
 #include "Fonts/Terminal_11.h"
+#include "Fonts/Terminal_8.h"
 /*#include "Fonts/Times_12.h"
 #include "Fonts/Times_20.h"
 #include "Fonts/Times_24.h"
@@ -61,7 +61,6 @@
 
 #include "FontConfig.h"
 
-fontDesc_t const * getSystemFont()
-{
-	return &FONT;
+fontDesc_t const *getSystemFont() {
+  return &FONT;
 }

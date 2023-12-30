@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <unity.h>
 
-#include <BoardFinder.h>
+#include "BoardFinder/BoardFinder.h"
 
 std::list<BoardConfig const *> boardConfigs;
 logging::Logger                logger;

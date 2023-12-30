@@ -1,7 +1,7 @@
 #ifndef TASK_WIFI_H_
 #define TASK_WIFI_H_
 
-#include <TaskManager.h>
+#include "System/TaskManager.h"
 #include <WiFiMulti.h>
 
 class WifiTask : public Task {

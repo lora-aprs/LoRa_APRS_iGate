@@ -1,10 +1,10 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
+#include "BoardFinder/BoardFinder.h"
+#include "Display/SSD1306.h"
+#include "System/Timer.h"
 #include <Arduino.h>
-#include <BoardFinder.h>
-#include <SSD1306.h>
-#include <Timer.h>
 #include <Wire.h>
 #include <list>
 #include <map>

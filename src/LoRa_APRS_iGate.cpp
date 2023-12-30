@@ -1,13 +1,13 @@
 #ifndef UNIT_TEST
 #include <map>
 
-#include <APRS-IS.h>
-#include <BoardFinder.h>
-#include <System.h>
-#include <TaskManager.h>
+#include "APRS-IS/APRS-IS.h"
+#include "BoardFinder/BoardFinder.h"
+#include "PowerManagement/power_management.h"
+#include "System/System.h"
+#include "System/TaskManager.h"
 #include <esp_task_wdt.h>
 #include <logger.h>
-#include <power_management.h>
 
 #include "TaskAprsIs.h"
 #include "TaskBeacon.h"
