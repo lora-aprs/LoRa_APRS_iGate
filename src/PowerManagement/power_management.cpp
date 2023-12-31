@@ -96,9 +96,9 @@ double AXP192::getBatteryVoltage() {
 // cppcheck-suppress unusedFunction
 double AXP192::getBatteryChargeDischargeCurrent() {
   if (isCharging()) {
-    return ((XPowersAXP192 *)_pmu)->getBatteryChargeCurrent();
+    return static_cast<XPowersAXP192 *>(_pmu)->getBatteryChargeCurrent();
   }
-  return -1.0 * ((XPowersAXP192 *)_pmu)->getBattDischargeCurrent();
+  return -1.0 * static_cast<XPowersAXP192 *>(_pmu)->getBattDischargeCurrent();
 }
 
 bool AXP192::isBatteryConnect() {

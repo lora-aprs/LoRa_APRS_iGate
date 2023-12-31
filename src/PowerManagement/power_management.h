@@ -38,56 +38,50 @@ class AXP192 : public PowerManagement {
 public:
   AXP192();
 
-  bool begin(TwoWire &port);
+  bool begin(TwoWire &port) override;
 
-  void activateLoRa();
-  void deactivateLoRa();
+  void activateLoRa() override;
+  void deactivateLoRa() override;
 
-  void activateGPS();
-  void deactivateGPS();
+  void activateGPS() override;
+  void deactivateGPS() override;
 
-  void activateOLED();
-  void deactivateOLED();
+  void activateOLED() override;
+  void deactivateOLED() override;
 
-  void enableChgLed();
-  void disableChgLed();
+  void activateMeasurement() override;
+  void deactivateMeasurement() override;
 
-  void activateMeasurement();
-  void deactivateMeasurement();
+  double getBatteryVoltage() override;
+  double getBatteryChargeDischargeCurrent() override;
 
-  double getBatteryVoltage();
-  double getBatteryChargeDischargeCurrent();
-
-  bool isBatteryConnect();
-  bool isCharging();
+  bool isBatteryConnect() override;
+  bool isCharging() override;
 };
 
 class AXP2101 : public PowerManagement {
 public:
   AXP2101();
 
-  bool begin(TwoWire &port);
+  bool begin(TwoWire &port) override;
 
-  void activateLoRa();
-  void deactivateLoRa();
+  void activateLoRa() override;
+  void deactivateLoRa() override;
 
-  void activateGPS();
-  void deactivateGPS();
+  void activateGPS() override;
+  void deactivateGPS() override;
 
-  void activateOLED();
-  void deactivateOLED();
+  void activateOLED() override;
+  void deactivateOLED() override;
 
-  void enableChgLed();
-  void disableChgLed();
+  void activateMeasurement() override;
+  void deactivateMeasurement() override;
 
-  void activateMeasurement();
-  void deactivateMeasurement();
+  double getBatteryVoltage() override;
+  double getBatteryChargeDischargeCurrent() override;
 
-  double getBatteryVoltage();
-  double getBatteryChargeDischargeCurrent();
-
-  bool isBatteryConnect();
-  bool isCharging();
+  bool isBatteryConnect() override;
+  bool isCharging() override;
 };
 
 #endif
