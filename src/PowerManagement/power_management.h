@@ -1,25 +1,87 @@
 #ifndef POWER_MANAGEMENT_H_
 #define POWER_MANAGEMENT_H_
 
-#include <Arduino.h>
-#include <axp20x.h>
+#include <Wire.h>
+#include <XPowersLibInterface.hpp>
 
 class PowerManagement {
 public:
-  PowerManagement();
-  bool begin(TwoWire &port);
+  ~PowerManagement() {
+  }
 
-  void activateLoRa();
-  void deactivateLoRa();
+  virtual bool begin(TwoWire &port) = 0;
 
-  void activateGPS();
-  void deactivateGPS();
+  virtual void activateLoRa()   = 0;
+  virtual void deactivateLoRa() = 0;
 
-  void activateOLED();
-  void deactivateOLED();
+  virtual void activateGPS()   = 0;
+  virtual void deactivateGPS() = 0;
 
-private:
-  AXP20X_Class axp;
+  virtual void activateOLED()   = 0;
+  virtual void deactivateOLED() = 0;
+
+  virtual void activateMeasurement()   = 0;
+  virtual void deactivateMeasurement() = 0;
+
+  virtual double getBatteryVoltage() = 0;
+
+  virtual double getBatteryChargeDischargeCurrent() = 0;
+
+  virtual bool isBatteryConnect() = 0;
+  virtual bool isCharging()       = 0;
+
+protected:
+  XPowersLibInterface *_pmu = 0;
+};
+
+class AXP192 : public PowerManagement {
+public:
+  AXP192();
+
+  bool begin(TwoWire &port) override;
+
+  void activateLoRa() override;
+  void deactivateLoRa() override;
+
+  void activateGPS() override;
+  void deactivateGPS() override;
+
+  void activateOLED() override;
+  void deactivateOLED() override;
+
+  void activateMeasurement() override;
+  void deactivateMeasurement() override;
+
+  double getBatteryVoltage() override;
+  double getBatteryChargeDischargeCurrent() override;
+
+  bool isBatteryConnect() override;
+  bool isCharging() override;
+};
+
+class AXP2101 : public PowerManagement {
+public:
+  AXP2101();
+
+  bool begin(TwoWire &port) override;
+
+  void activateLoRa() override;
+  void deactivateLoRa() override;
+
+  void activateGPS() override;
+  void deactivateGPS() override;
+
+  void activateOLED() override;
+  void deactivateOLED() override;
+
+  void activateMeasurement() override;
+  void deactivateMeasurement() override;
+
+  double getBatteryVoltage() override;
+  double getBatteryChargeDischargeCurrent() override;
+
+  bool isBatteryConnect() override;
+  bool isCharging() override;
 };
 
 #endif

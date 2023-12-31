@@ -10,7 +10,7 @@ DisplayTask::~DisplayTask() {
 }
 
 bool DisplayTask::setup(System &system) {
-  system.getDisplay().setup(system.getBoardConfig());
+  system.getDisplay().setup();
   if (system.getUserConfig()->display.turn180) {
     system.getDisplay().turn180();
   }

@@ -1,7 +1,6 @@
 #ifndef TASK_LORA_H_
 #define TASK_LORA_H_
 
-#include "BoardFinder/BoardFinder.h"
 #include "LoRaModem.h"
 #include "System/TaskManager.h"
 #include "project_configuration.h"

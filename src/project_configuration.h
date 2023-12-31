@@ -1,7 +1,6 @@
 #ifndef PROJECT_CONFIGURATION_H_
 #define PROJECT_CONFIGURATION_H_
 
-#include "BoardFinder/BoardFinder.h"
 #include "ConfigurationManagement/configuration.h"
 
 class Configuration {

@@ -25,17 +25,17 @@ bool RadiolibTask::setup(System &system) {
 
   const uint16_t preambleLength = 8;
 
-  if (system.getBoardConfig()->Lora.Modem == eSX1278) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1278", timeString().c_str());
-    _modem = new Modem_SX1278();
-  } else if (system.getBoardConfig()->Lora.Modem == eSX1268) {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1268", timeString().c_str());
-    _modem = new Modem_SX1268();
-  } else {
-    system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "[%s] Modem not correctly defined!", timeString().c_str());
-  }
+#ifdef USE_SX1278
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1278", timeString().c_str());
+  _modem = new Modem_SX1278();
+#elif defined(USE_SX1268)
+  system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_DEBUG, getName(), "[%s] using SX1268", timeString().c_str());
+  _modem = new Modem_SX1268();
+#else
+#error "Modem not correctly defined!"
+#endif
 
-  int16_t state = _modem->begin(system.getBoardConfig()->Lora, system.getUserConfig()->lora, preambleLength, setFlag);
+  int16_t state = _modem->begin(system.getUserConfig()->lora, preambleLength, setFlag);
   if (state != RADIOLIB_ERR_NONE) {
     decodeError(system, state);
   }

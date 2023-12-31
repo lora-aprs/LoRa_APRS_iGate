@@ -5,7 +5,6 @@
 #include <list>
 #include <memory>
 
-#include "BoardFinder/BoardFinder.h"
 #include "ConfigurationManagement/configuration.h"
 #include "Display/Display.h"
 
