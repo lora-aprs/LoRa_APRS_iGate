@@ -112,10 +112,10 @@ void setup() {
 
 #ifdef T_INTERNET_POE
   LoRaSystem.getTaskManager().addAlwaysRunTask(&ethTask);
-  tcpip = true;
+  tcpip = true; // cppcheck-suppress redundantAssignment
 #endif
 
-  if (tcpip) {
+  if (tcpip) { // cppcheck-suppress knownConditionTrueFalse
     LoRaSystem.getTaskManager().addTask(&otaTask);
     LoRaSystem.getTaskManager().addTask(&ntpTask);
     if (userConfig.ftp.active) {
