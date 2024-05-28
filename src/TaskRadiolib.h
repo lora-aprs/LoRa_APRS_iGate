@@ -1,11 +1,11 @@
 #ifndef TASK_LORA_H_
 #define TASK_LORA_H_
 
+#include "BoardFinder/BoardFinder.h"
+#include "LoRaModem.h"
+#include "System/TaskManager.h"
 #include "project_configuration.h"
 #include <APRS-Decoder.h>
-#include <BoardFinder.h>
-#include <RadioLib.h>
-#include <TaskManager.h>
 
 class RadiolibTask : public Task {
 public:
@@ -16,26 +16,33 @@ public:
   virtual bool loop(System &system) override;
 
 private:
-  Module *module;
-  SX1278 *radio;
+  LoRaModem *_modem;
 
-  Configuration::LoRa config;
-
-  bool rxEnable, txEnable;
+  bool _rxEnable;
+  bool _txEnable;
 
   TaskQueue<std::shared_ptr<APRSMessage>> &_fromModem;
   TaskQueue<std::shared_ptr<APRSMessage>> &_toModem;
 
-  static volatile bool enableInterrupt; // Need to catch interrupt or not.
-  static volatile bool operationDone;   // Caught IRQ or not.
+  static volatile bool _modemInterruptOccurred;
+
+  Timer _txWaitTimer;
+
+  bool _transmitFlag;
+
+  float _frequencyTx;
+  float _frequencyRx;
+  bool  _frequenciesAreSame;
 
   static void setFlag(void);
 
-  int16_t startRX(uint8_t mode);
-  int16_t startTX(String &str);
+  void startRX(System &system);
+  void startTX(System &system, String &str);
 
-  uint32_t preambleDurationMilliSec;
-  Timer    txWaitTimer;
+  void handleModemInterrupt(System &system);
+  void handleTXing(System &system);
+
+  void decodeError(System &system, int16_t state);
 };
 
 #endif

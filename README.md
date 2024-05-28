@@ -1,7 +1,6 @@
 # LoRa APRS iGate
 
-![Build check and build](https://github.com/lora-aprs/LoRa_APRS_iGate/workflows/Build%20check%20and%20build/badge.svg)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/0b7452d5b3b747b88c736e253dda51e6)](https://app.codacy.com/gh/lora-aprs/LoRa_APRS_iGate?utm_source=github.com&utm_medium=referral&utm_content=lora-aprs/LoRa_APRS_iGate&utm_campaign=Badge_Grade_Dashboard)
+[![Integration Tests](https://github.com/lora-aprs/LoRa_APRS_iGate/actions/workflows/build_check.yml/badge.svg)](https://github.com/lora-aprs/LoRa_APRS_iGate/actions/workflows/build_check.yml)
 
 The LoRa APRS iGate will work with very cheep hardware which you can buy from amazon, ebay or aliexpress.
 Try it out and be part of the APRS network.
@@ -54,14 +53,14 @@ Keep in mind: you need a 433MHz version!
 
 The best success is to use PlatformIO (and it is the only platform where I can support you). 
 
-* Go to [PlatformIO](https://platformio.org/) download and install the IDE. 
-* If installed open the IDE, go to the left side and klick on 'extensions' then search for 'PatformIO' and install.
+* Go to [PlatformIO](https://platformio.org/) download and install the IDE.
+* If installed open the IDE, go to the left side and click on 'extensions' then search for 'PlatformIO' and install.
 * When installed click 'the ant head' on the left and choose import the project on the right.
 * Just open the folder and you can compile the Firmware.
 
 ### Configuration
 
-* You can find all nessesary settings to change for your configuration in **data/is-cfg.json**.
+* You can find all necessary settings to change for your configuration in **data/is-cfg.json**.
 * To upload it to your board you have to do this via **Upload File System image** in PlatformIO!
 * To find the 'Upload File System image' click the PlatformIO symbol (the little alien) on the left side, choose your configuration, click on 'Platform' and search for 'Upload File System image'.
 
@@ -88,7 +87,7 @@ so the version will be: 20.46.0
 ## Future plans
 
 * [x] show time until next beaconing
-* [ ] show login issues from IS server
+* [x] show login issues from IS server
 * [ ] add better OLED library to support multiple different OLEDs
 * [x] add support to turn OLED on, off and dimming
 * [ ] add support for temperature chips (BMExxx)
@@ -117,4 +116,3 @@ The 'wrong' display works too but you have to change VCC and GND by wire !
 The [LoRa APRS WiKi Displays](https://github.com/lora-aprs/LoRa_APRS_Tracker/wiki/Displays) page has more details.
 
 Feel free to add hints!
-

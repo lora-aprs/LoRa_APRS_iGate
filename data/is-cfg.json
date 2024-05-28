@@ -30,17 +30,18 @@
 			"longitude": 0.000000
 		},
 		"use_gps": false,
-		"timeout": 15
+		"timeout": 15,
+		"send_on_hf": false
 	},
 	"aprs_is": {
 		"active": true,
 		"passcode": "",
 		"server": "euro.aprs2.net",
-		"port": 14580
+		"port": 14580,
+		"filter": ""
 	},
 	"digi": {
-		"active": false,
-		"beacon": false
+		"active": false
 	},
 	"lora": {
 		"frequency_rx": 433775000,
@@ -73,11 +74,15 @@
 		"port": 1883,
 		"name": "",
 		"password": "",
-		"topic": "LoraAPRS/Data"
+		"topic": "LoraAPRS/Data",
+		"will_active": false,
+		"will_topic": "LoraAPRS/State",
+		"will_message": "offline",
+		"birth_message": "online"
 	},
 	"syslog": {
-		"active": true,
-		"server": "syslog.lora-aprs.info",
+		"active": false,
+		"server": "",
 		"port": 514
 	},
 	"ntp_server": "pool.ntp.org"

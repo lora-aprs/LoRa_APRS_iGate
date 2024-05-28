@@ -54,9 +54,19 @@ bool MQTTTask::loop(System &system) {
 }
 
 bool MQTTTask::connect(System &system) {
+  bool result = false;
   system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connecting to MQTT broker: %s on port %d", system.getUserConfig()->mqtt.server.c_str(), system.getUserConfig()->mqtt.port);
-  if (_MQTT.connect(system.getUserConfig()->callsign.c_str(), system.getUserConfig()->mqtt.name.c_str(), system.getUserConfig()->mqtt.password.c_str())) {
+  if (system.getUserConfig()->mqtt.will_active) {
+    result = _MQTT.connect(system.getUserConfig()->callsign.c_str(), system.getUserConfig()->mqtt.name.c_str(), system.getUserConfig()->mqtt.password.c_str(), system.getUserConfig()->mqtt.will_topic.c_str(), 0, true, system.getUserConfig()->mqtt.will_message.c_str());
+  } else {
+    result = _MQTT.connect(system.getUserConfig()->callsign.c_str(), system.getUserConfig()->mqtt.name.c_str(), system.getUserConfig()->mqtt.password.c_str());
+  }
+  if (result) {
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connected to MQTT broker as: %s", system.getUserConfig()->callsign.c_str());
+    if (system.getUserConfig()->mqtt.will_active) {
+      system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Sending birth message to MQTT.");
+      _MQTT.publish(system.getUserConfig()->mqtt.will_topic.c_str(), system.getUserConfig()->mqtt.birth_message.c_str(), true);
+    }
     return true;
   }
   system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, getName(), "Connecting to MQTT broker failed. Try again later.");

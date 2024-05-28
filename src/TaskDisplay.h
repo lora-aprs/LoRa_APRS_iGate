@@ -1,8 +1,8 @@
 #ifndef TASK_DISPLAY_H_
 #define TASK_DISPLAY_H_
 
-#include <Display.h>
-#include <TaskManager.h>
+#include "Display/Display.h"
+#include "System/TaskManager.h"
 
 class DisplayTask : public Task {
 public:

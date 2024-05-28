@@ -1,29 +1,35 @@
-name: Integreation Tests
+name: Integration Tests
 
 on:
-  push:
-    branches:
-      - '*'
-      - '!master'
+  merge_group:
   pull_request:
-    branches:
-      - master
 
 jobs:
   build:
     name: Compile Firmware
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: compile-cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Install PlatformIO
-        run: python -m pip install --upgrade pip platformio
-      - name: Run PlatformIO CI
-        run: platformio run
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Build PlatformIO Project
+        run: pio run
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: firmware
           path: .pio/build/lora_board/firmware.bin
@@ -31,41 +37,54 @@ jobs:
   formatting-check:
     name: Formatting Check
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        path:
-          - 'src'
-          - 'lib/BoardFinder'
-          - 'lib/ConfigurationManagement'
-          #- 'lib/Display'
-          #- 'lib/NTPClient'
-          - 'lib/PowerManagement'
-          - 'lib/System'
-          #- 'lib/TimeLib'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Run clang-format style check for C/C++ programs.
-        uses: jidicula/clang-format-action@v4.5.0
+        uses: jidicula/clang-format-action@v4.10.2
         with:
-          clang-format-version: '11'
-          check-path: ${{ matrix.path }}
+          clang-format-version: '14'
+          check-path: src
 
   cppcheck:
     name: Run cppcheck
     runs-on: ubuntu-latest
+    steps:
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            ~/.platformio/.cache
+          key: check-cache
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install PlatformIO
+        shell: bash
+        run: |
+          python -m pip install --upgrade pip
+          pip install --upgrade platformio
+
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Run PlatformIO Check
+        run: pio check --fail-on-defect high --fail-on-defect medium --fail-on-defect low -e lora_board
+
+  cppcheck-docker:
+    name: Run cppcheck in Docker
+    runs-on: ubuntu-latest
     env:
-      CPPCHECK_ARGS: --enable=all --std=c++14 --inline-suppr -I lib/BoardFinder -I lib/ConfigurationManagement -I lib/Display -I lib/LoRa -I lib/LoRa_APRS -I lib/NTPClient -I lib/PowerManagement -I lib/System -I lib/TimeLib -i lib/Display -i lib/LoRa -i lib/NTPClient -i lib/TimeLib src lib
+      CPPCHECK_ARGS: --enable=all --std=c++20 --suppress=*:*.pio\* --inline-suppr --suppress=unusedFunction --suppress=shadowFunction:*TimeLib.cpp --suppress=unreadVariable:*TimeLib.cpp --suppress=badBitmaskCheck:*project_configuration.cpp src
     steps:
       - name: checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - run: docker pull facthunder/cppcheck:latest
       - name: Run cppcheck and print result
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"
       - name: Run cppcheck and create html
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
       - name: Upload report
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: Cppcheck Report
           path: output

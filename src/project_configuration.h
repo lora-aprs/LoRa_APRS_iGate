@@ -1,8 +1,8 @@
 #ifndef PROJECT_CONFIGURATION_H_
 #define PROJECT_CONFIGURATION_H_
 
-#include <BoardFinder.h>
-#include <configuration.h>
+#include "BoardFinder/BoardFinder.h"
+#include "ConfigurationManagement/configuration.h"
 
 class Configuration {
 public:
@@ -17,6 +17,9 @@ public:
 
   class Hostname {
   public:
+    Hostname() : overwrite(false) {
+    }
+
     bool   overwrite;
     String name;
   };
@@ -48,7 +51,7 @@ public:
 
   class Beacon {
   public:
-    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15) {
+    Beacon() : message("LoRa iGATE & Digi, Info: github.com/peterus/LoRa_APRS_iGate"), positionLatitude(0.0), positionLongitude(0.0), use_gps(false), timeout(15), send_on_hf(false) {
     }
 
     String message;
@@ -56,6 +59,7 @@ public:
     double positionLongitude;
     bool   use_gps;
     int    timeout;
+    bool   send_on_hf;
   };
 
   class APRS_IS {
@@ -67,20 +71,20 @@ public:
     String passcode;
     String server;
     int    port;
+    String filter;
   };
 
   class Digi {
   public:
-    Digi() : active(false), beacon(true) {
+    Digi() : active(false) {
     }
 
     bool active;
-    bool beacon;
   };
 
   class LoRa {
   public:
-    LoRa() : frequencyRx(433775000), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
+    LoRa() : frequencyRx(433775000), gainRx(0), frequencyTx(433775000), power(20), spreadingFactor(12), signalBandwidth(125000), codingRate4(5), tx_enable(true) {
     }
 
     long    frequencyRx;
@@ -121,7 +125,7 @@ public:
 
   class MQTT {
   public:
-    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data") {
+    MQTT() : active(false), server(""), port(1883), name(""), password(""), topic("LoraAPRS/Data"), will_active(false), will_topic("LoraAPRS/State"), will_message("offline"), birth_message("online") {
     }
 
     bool   active;
@@ -130,11 +134,15 @@ public:
     String name;
     String password;
     String topic;
+    bool   will_active;
+    String will_topic;
+    String will_message;
+    String birth_message;
   };
 
   class Syslog {
   public:
-    Syslog() : active(true), server("syslog.lora-aprs.info"), port(514) {
+    Syslog() : active(true), server(""), port(514) {
     }
 
     bool   active;
