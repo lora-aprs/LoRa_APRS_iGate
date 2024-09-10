@@ -4,7 +4,7 @@
 
 #include "project_configuration.h"
 
-void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf) {
+void ProjectConfigurationManagement::readProjectConfiguration(JsonDocument &data, Configuration &conf) {
   if (data.containsKey("callsign"))
     conf.callsign = data["callsign"].as<String>();
 
@@ -119,7 +119,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(DynamicJsonDocumen
     conf.board = data["board"].as<String>();
 }
 
-void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) {
+void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &conf, JsonDocument &data) {
   data["callsign"] = conf.callsign;
 
   if (!conf.network.DHCP) {
