@@ -176,8 +176,8 @@ public:
   }
 
 private:
-  virtual void readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf) override;
-  virtual void writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) override;
+  virtual void readProjectConfiguration(JsonDocument &data, Configuration &conf) override;
+  virtual void writeProjectConfiguration(Configuration &conf, JsonDocument &data) override;
 };
 
 #endif

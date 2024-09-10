@@ -23,7 +23,7 @@ void ConfigurationManagement::readConfiguration(logging::Logger &logger, Configu
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Failed to open file for reading, using default configuration.");
     return;
   }
-  DynamicJsonDocument  data(2048);
+  JsonDocument  data;
   DeserializationError error = deserializeJson(data, file);
   if (error) {
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Failed to read file, using default configuration.");
@@ -44,7 +44,7 @@ void ConfigurationManagement::writeConfiguration(logging::Logger &logger, Config
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Failed to open file for writing...");
     return;
   }
-  DynamicJsonDocument data(2048);
+  JsonDocument data;
 
   writeProjectConfiguration(conf, data);
 
