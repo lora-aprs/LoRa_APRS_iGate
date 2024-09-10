@@ -2,7 +2,7 @@
 #define TASK_WIFI_H_
 
 #include "System/TaskManager.h"
-#include <WiFiMulti.h>
+#include "System/WiFiMulti.h"
 
 class WifiTask : public Task {
 public:

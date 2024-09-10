@@ -38,7 +38,7 @@ bool WifiTask::setup(System &system) {
 }
 
 bool WifiTask::loop(System &system) {
-  const uint8_t wifi_status = _wiFiMulti.run();
+  const uint8_t wifi_status = _wiFiMulti.run(5000U, true);
   if (wifi_status != WL_CONNECTED) {
     system.connectedViaWifi(false);
     system.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, getName(), "WiFi not connected!");
