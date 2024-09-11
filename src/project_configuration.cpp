@@ -134,9 +134,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   }
 
   data["wifi"]["active"] = conf.wifi.active;
-  JsonArray aps          = data["wifi"].createNestedArray("AP");
+  JsonArray aps          = data["wifi"]["AP"].to<JsonArray>();
   for (Configuration::Wifi::AP ap : conf.wifi.APs) {
-    JsonObject v  = aps.createNestedObject();
+    JsonObject v  = aps.add<JsonObject>();
     v["SSID"]     = ap.SSID;
     v["password"] = ap.password;
   }
@@ -165,9 +165,9 @@ void ProjectConfigurationManagement::writeProjectConfiguration(Configuration &co
   data["display"]["overwrite_pin"]        = conf.display.overwritePin;
   data["display"]["turn180"]              = conf.display.turn180;
   data["ftp"]["active"]                   = conf.ftp.active;
-  JsonArray users                         = data["ftp"].createNestedArray("user");
+  JsonArray users                         = data["ftp"]["user"].to<JsonArray>();
   for (Configuration::Ftp::User u : conf.ftp.users) {
-    JsonObject v  = users.createNestedObject();
+    JsonObject v  = users.add<JsonObject>();
     v["name"]     = u.name;
     v["password"] = u.password;
   }
