@@ -29,7 +29,7 @@ bool MQTTTask::loop(System &system) {
   if (!_toMQTT.empty()) {
     std::shared_ptr<APRSMessage> msg = _toMQTT.getElement();
 
-    DynamicJsonDocument data(1024);
+    JsonDocument data;
     data["source"]      = msg->getSource();
     data["destination"] = msg->getDestination();
     data["path"]        = msg->getPath();
