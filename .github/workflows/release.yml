@@ -13,7 +13,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
       - run: pip install GitPython
       - name: check version
         run: ./scripts/check_version.py
