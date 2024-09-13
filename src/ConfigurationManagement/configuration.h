@@ -22,8 +22,8 @@ public:
   void writeConfiguration(logging::Logger &logger, Configuration &conf);
 
 private:
-  virtual void readProjectConfiguration(DynamicJsonDocument &data, Configuration &conf)  = 0;
-  virtual void writeProjectConfiguration(Configuration &conf, DynamicJsonDocument &data) = 0;
+  virtual void readProjectConfiguration(JsonDocument &data, Configuration &conf)  = 0;
+  virtual void writeProjectConfiguration(Configuration &conf, JsonDocument &data) = 0;
 
   const String mFilePath;
 };
