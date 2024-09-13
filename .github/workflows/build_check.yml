@@ -34,7 +34,7 @@ jobs:
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: firmware
+          name: firmware_${{ matrix.boards }}
           path: .pio/build/**/firmware.bin
 
   formatting-check:
