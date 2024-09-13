@@ -23,7 +23,7 @@ void ConfigurationManagement::readConfiguration(logging::Logger &logger, Configu
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "Failed to open file for reading, using default configuration.");
     return;
   }
-  JsonDocument  data;
+  JsonDocument         data;
   DeserializationError error = deserializeJson(data, file);
   if (error) {
     logger.log(logging::LoggerLevel::LOGGER_LEVEL_WARN, MODULE_NAME, "Failed to read file, using default configuration.");
