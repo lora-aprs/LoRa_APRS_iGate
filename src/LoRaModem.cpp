@@ -1,15 +1,21 @@
 #include "LoRaModem.h"
 
 // SX1278
+#ifdef USE_SX1278
 Modem_SX1278::Modem_SX1278() : _radio(0) {
 }
 
-int16_t Modem_SX1278::begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
+int16_t Modem_SX1278::begin(const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
   float _frequencyRx = (float)lora_config.frequencyRx / 1000000;
   float BWkHz        = (float)lora_config.signalBandwidth / 1000;
 
-  SPI.begin(lora_pins.Sck, lora_pins.Miso, lora_pins.Mosi, lora_pins.CS);
-  _module = new Module(lora_pins.CS, lora_pins.IRQ, lora_pins.Reset);
+#if defined(LORA_SCK) && defined(LORA_MISO) && defined(LORA_MOSI) && defined(LORA_CS)
+  SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
+  _module = new Module(LORA_CS, LORA_IRQ, LORA_RST);
+#else
+  SPI.begin(SCK, MISO, MOSI, SS);
+  _module = new Module(SS, DIO0, RST_LoRa);
+#endif
 
   _radio        = new SX1278(_module);
   int16_t state = _radio->begin(_frequencyRx, BWkHz, lora_config.spreadingFactor, lora_config.codingRate4, RADIOLIB_SX127X_SYNC_WORD, lora_config.power, preambleLength, lora_config.gainRx);
@@ -67,15 +73,21 @@ uint8_t Modem_SX1278::getModemStatus() {
 }
 
 // SX1262
+#elif defined(USE_SX1268)
 Modem_SX1268::Modem_SX1268() : _radio(0) {
 }
 
-int16_t Modem_SX1268::begin(const LoraPins &lora_pins, const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
+int16_t Modem_SX1268::begin(const Configuration::LoRa &lora_config, const uint16_t preambleLength, void (*setFlag)()) {
   float _frequencyRx = (float)lora_config.frequencyRx / 1000000;
   float BWkHz        = (float)lora_config.signalBandwidth / 1000;
 
-  SPI.begin(lora_pins.Sck, lora_pins.Miso, lora_pins.Mosi, lora_pins.CS);
-  _module = new Module(lora_pins.CS, lora_pins.IRQ, lora_pins.Reset, 13);
+#if defined(LORA_SCK) && defined(LORA_MISO) && defined(LORA_MOSI) && defined(LORA_CS)
+  SPI.begin(LORA_SCK, LORA_MISO, LORA_MOSI, LORA_CS);
+  _module = new Module(LORA_CS, LORA_IRQ, LORA_RST, BUSY_LoRa);
+#else
+  SPI.begin(SCK, MISO, MOSI, SS);
+  _module = new Module(SS, DIO0, RST_LoRa, BUSY_LoRa);
+#endif
 
   _radio        = new SX1262(_module);
   int16_t state = _radio->begin(_frequencyRx, BWkHz, lora_config.spreadingFactor, lora_config.codingRate4, RADIOLIB_SX126X_SYNC_WORD_PRIVATE, lora_config.power, preambleLength);
@@ -131,3 +143,4 @@ float Modem_SX1268::getFrequencyError() {
 uint8_t Modem_SX1268::getModemStatus() {
   return 0;
 }
+#endif

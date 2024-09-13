@@ -1,0 +1,14 @@
+// cppcheck suppressions
+
+unusedFunction
+
+// ignore "external" library issues
+shadowFunction:*TimeLib.cpp
+unreadVariable:*TimeLib.cpp
+
+// ignore bitmask from ArduinoJson
+badBitmaskCheck:*project_configuration.cpp
+
+// ignore stuff that is not ours
+*:.pio/*
+*:*/libdeps/*

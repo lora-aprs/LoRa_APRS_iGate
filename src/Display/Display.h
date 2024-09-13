@@ -1,7 +1,6 @@
 #ifndef DISPLAY_H_
 #define DISPLAY_H_
 
-#include "BoardFinder/BoardFinder.h"
 #include "Display/SSD1306.h"
 #include "System/Timer.h"
 #include <Arduino.h>
@@ -27,9 +26,9 @@ public:
   Display();
   ~Display();
 
-  void setup(BoardConfig const *const boardConfig);
+  void setup();
   // setup functions
-  void showSpashScreen(String firmwareTitle, String version);
+  void showSpashScreen(String firmwareTitle, String version, String boardname);
   void setStatusFrame(std::shared_ptr<StatusFrame> frame);
   void showStatusScreen(String header, String text);
 

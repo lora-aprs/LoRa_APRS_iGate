@@ -78,18 +78,19 @@ EthTask::~EthTask() {
 bool EthTask::setup(System &system) {
   WiFi.onEvent(WiFiEvent);
 
-  if (system.getBoardConfig()->Ethernet.nReset != -1) {
-    pinMode(system.getBoardConfig()->Ethernet.nReset, OUTPUT);
-    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 0);
+#ifdef T_INTERNET_POE
+  if (ETH_NRESET != -1) {
+    pinMode(ETH_NRESET, OUTPUT);
+    digitalWrite(ETH_NRESET, 0);
     delay(200);
-    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 1);
+    digitalWrite(ETH_NRESET, 1);
     delay(200);
-    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 0);
+    digitalWrite(ETH_NRESET, 0);
     delay(200);
-    digitalWrite(system.getBoardConfig()->Ethernet.nReset, 1);
+    digitalWrite(ETH_NRESET, 1);
   }
 
-  ETH.begin(system.getBoardConfig()->Ethernet.Addr, system.getBoardConfig()->Ethernet.Power, system.getBoardConfig()->Ethernet.MDC, system.getBoardConfig()->Ethernet.MDIO, system.getBoardConfig()->Ethernet.Type, system.getBoardConfig()->Ethernet.CLK);
+  ETH.begin(ETH_ADDR, ETH_POWER, ETH_MDC, ETH_MDIO, (eth_phy_type_t)ETH_TYPE, (eth_clock_mode_t)ETH_CLOCK);
 
   if (!system.getUserConfig()->network.DHCP) {
     ETH.config(system.getUserConfig()->network.static_.ip, system.getUserConfig()->network.static_.gateway, system.getUserConfig()->network.static_.subnet, system.getUserConfig()->network.static_.dns1, system.getUserConfig()->network.static_.dns2);
@@ -99,6 +100,7 @@ bool EthTask::setup(System &system) {
   } else {
     ETH.setHostname(system.getUserConfig()->callsign.c_str());
   }
+#endif
 
   return true;
 }

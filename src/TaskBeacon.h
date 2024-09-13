@@ -31,7 +31,7 @@ private:
   static uint      _instances;
   static OneButton _userButton;
   static bool      _send_update;
-  static void      pushButton();
+  static void      pushButton(); // cppcheck-suppress unusedPrivateFunction
 };
 
 #endif
