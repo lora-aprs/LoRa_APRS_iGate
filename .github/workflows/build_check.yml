@@ -12,7 +12,7 @@ jobs:
         boards: [heltec-v1, tlora-v1, tbeam, t_internet_poe, heltec-v3, tlora-v2, heltec-v2_0, tbeam-s3-core, tbeam_axp2101]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cache/pip
@@ -28,11 +28,11 @@ jobs:
           pip install --upgrade platformio
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Build PlatformIO Project
         run: pio run -e ${{ matrix.boards }}
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: firmware
           path: .pio/build/**/firmware.bin
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run clang-format style check for C/C++ programs.
         uses: jidicula/clang-format-action@v4.10.2
         with:
@@ -53,7 +53,7 @@ jobs:
     name: Run cppcheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: |
             ~/.cache/pip
@@ -69,7 +69,7 @@ jobs:
           pip install --upgrade platformio
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Run PlatformIO Check
         run: pio check --fail-on-defect high --fail-on-defect medium --fail-on-defect low
 
@@ -80,14 +80,14 @@ jobs:
       CPPCHECK_ARGS: --enable=all --std=c++20 --suppress=*:*.pio\* --inline-suppr --suppress=unusedFunction --suppress=shadowFunction:*TimeLib.cpp --suppress=unreadVariable:*TimeLib.cpp --suppress=badBitmaskCheck:*project_configuration.cpp src
     steps:
       - name: checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - run: docker pull facthunder/cppcheck:latest
       - name: Run cppcheck and print result
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck $CPPCHECK_ARGS"
       - name: Run cppcheck and create html
         run: docker run --rm -v ${PWD}:/src facthunder/cppcheck:latest /bin/bash -c "cppcheck --xml $CPPCHECK_ARGS 2> report.xml && cppcheck-htmlreport --file=report.xml --report-dir=output"
       - name: Upload report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Cppcheck Report
           path: output
