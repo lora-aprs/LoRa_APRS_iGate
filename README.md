@@ -1,3 +1,14 @@
+# Status update – September 2025
+
+Over the past year, my focus has shifted to other projects, and I’ve decided it’s time to close the chapter on this one. I will no longer provide updates or support, and the repository will be archived.
+
+This project has been a fun journey, and I’d like to thank everyone who used, contributed, or shared feedback along the way. Your interest and support kept it alive far longer than I originally expected.
+
+If you’re looking for a great alternative, I recommend [CA2RXU LoRa APRS Tracker/Station](https://github.com/richonguzman/LoRa_APRS_Tracker).
+
+73,
+OE5BPA
+
 # LoRa APRS iGate
 
 [![Integration Tests](https://github.com/lora-aprs/LoRa_APRS_iGate/actions/workflows/build_check.yml/badge.svg)](https://github.com/lora-aprs/LoRa_APRS_iGate/actions/workflows/build_check.yml)
