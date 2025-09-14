@@ -1,4 +1,9 @@
 #include "SSD1306.h"
+#include "../System/System.h"
+
+#define MODULE_NAME "SSD1306"
+
+extern System        LoRaSystem;
 
 SSD1306::SSD1306(TwoWire *wire, uint8_t address, OLEDDISPLAY_GEOMETRY g) : OLEDDisplay(g), _wire(wire), _address(address) {
   sendInitCommands();
@@ -23,7 +28,11 @@ void SSD1306::internDisplay(Bitmap *bitmap) {
       Wire.write(bitmap->_buffer[i]);
       i++;
     }
-    Wire.endTransmission();
+    int ret = Wire.endTransmission();
+    if (ret != 0)
+    {
+        LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "send bitmap error");
+    }
   }
 }
 
@@ -31,5 +40,9 @@ void SSD1306::sendCommand(uint8_t command) {
   _wire->beginTransmission(_address);
   _wire->write(0x80);
   _wire->write(command);
-  _wire->endTransmission();
+  int ret = _wire->endTransmission();
+  if (ret != 0)
+  {
+      LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_ERROR, MODULE_NAME, "command error");
+  }
 }
