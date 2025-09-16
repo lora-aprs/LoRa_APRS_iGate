@@ -25,7 +25,7 @@ bool DisplayTask::setup(System &system) {
 }
 
 bool DisplayTask::loop(System &system) {
-  if (system.getUserConfig()->display.overwritePin != 0 && !digitalRead(system.getUserConfig()->display.overwritePin)) {
+  if (system.getUserConfig()->display.overwritePin != -1 && !digitalRead(system.getUserConfig()->display.overwritePin)) {
     system.getDisplay().activateDistplay();
   }
   system.getDisplay().update();

@@ -62,6 +62,13 @@ BeaconTask   beaconTask(toModem, toAprsIs);
 void setup() {
   Serial.begin(115200);
   LoRaSystem.getLogger().setSerial(&Serial);
+
+#ifdef HELTEC_V3
+  // Power the display
+  pinMode(36, OUTPUT);
+  digitalWrite(36, LOW);
+#endif
+
   setWiFiLogger(&LoRaSystem.getLogger());
   delay(1000);
   LoRaSystem.getLogger().log(logging::LoggerLevel::LOGGER_LEVEL_INFO, MODULE_NAME, "LoRa APRS iGate by OE5BPA (Peter Buchegger)");
@@ -150,7 +157,7 @@ void setup() {
       ;
   }
 
-  if (userConfig.display.overwritePin != 0) {
+  if (userConfig.display.overwritePin != -1) {
     pinMode(userConfig.display.overwritePin, INPUT);
     pinMode(userConfig.display.overwritePin, INPUT_PULLUP);
   }

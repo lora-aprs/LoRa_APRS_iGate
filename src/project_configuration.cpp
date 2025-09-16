@@ -69,7 +69,7 @@ void ProjectConfigurationManagement::readProjectConfiguration(JsonDocument &data
 
   conf.display.alwaysOn     = data["display"]["always_on"] | true;
   conf.display.timeout      = data["display"]["timeout"] | 10;
-  conf.display.overwritePin = data["display"]["overwrite_pin"] | 0;
+  conf.display.overwritePin = data["display"]["overwrite_pin"] | -1;
   conf.display.turn180      = data["display"]["turn180"] | true;
 
   conf.ftp.active = data["ftp"]["active"] | false;
